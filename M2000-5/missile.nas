@@ -148,6 +148,8 @@ var MISSILE = {
         m.alt     = nil;
         m.pitch   = 0;
         m.hdg     = nil;
+
+        m.max_g_current = m.max_g;
         
         #SwSoundOnOff.setValue(1);
         #settimer(func(){ SwSoundVol.setValue(vol_search); m.search() }, 1);
@@ -263,7 +265,7 @@ var MISSILE = {
         me.pitchN.setDoubleValue(ac_pitch);
         me.rollN.setDoubleValue(ac_roll);
         
-        me.coord.set_latlon(alat, alon, me.ac.alt());
+        me.coord.set_latlon(alat, alon, aalt * FT2M);
         
         me.model.getNode("latitude-deg-prop", 1).setValue(me.latN.getPath());
         me.model.getNode("longitude-deg-prop", 1).setValue(me.lonN.getPath());
@@ -375,6 +377,19 @@ var MISSILE = {
         var rs = environment.rho_sndspeed(alt_ft);
         var rho = rs[0];
         var sound_fps = rs[1];
+
+        # density for 0ft and 50kft:
+        #print("0:"~rho_sndspeed(0)[0]);       = 0.0023769
+        #print("50k:"~rho_sndspeed(50000)[0]); = 0.00036159
+        #
+        # a aim-9j can do 22G at sealevel, 13G at 50Kft
+        # 13G = 22G * 0.5909
+        #
+        # extra/inter-polation:
+        # f(x) = y1 + ((x - x1) / (x2 - x1)) * (y2 - y1)
+        # calculate its performance at current air density:
+        me.max_g_current = me.max_g+((rho-0.0023769)/(0.00036159-0.0023769))*(me.max_g*0.5909-me.max_g);
+        #print("max-g="~me.max_g_current);
         
         # Adjust Cd by Mach number. The equations are based on curves
         # for a conventional shell/bullet (no boat-tail).
@@ -447,14 +462,14 @@ var MISSILE = {
             {
                 # here will be set the max angle of pitch and the max angle
                 # of heading to avoid G overload
-                var myG = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), mass, dt);
-                if(me.max_g < myG)
+                var myG = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), dt);
+                if(me.max_g_current < myG)
                 {
                     #print("MyG");
-                    var MyCoef = max_G_Rotation(me.track_signal_e, me.track_signal_h, total_s_ft, mass, 1, me.max_g);
+                    var MyCoef = max_G_Rotation(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), dt, me.max_g_current);
                     me.track_signal_e = me.track_signal_e * MyCoef;
                     me.track_signal_h = me.track_signal_h * MyCoef;
-                    myG = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), mass, dt);
+                    myG = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), dt);
                 }
                 pitch_deg += me.track_signal_e;
                 hdg_deg += me.track_signal_h;
@@ -471,7 +486,7 @@ var MISSILE = {
         me.latN.setDoubleValue(me.coord.lat());
         me.lonN.setDoubleValue(me.coord.lon());
         me.altN.setDoubleValue(alt_ft);
-        me.coord.set_alt(alt_ft);
+        me.coord.set_alt(alt_ft * FT2M);
         me.pitchN.setDoubleValue(pitch_deg);
         me.hdgN.setDoubleValue(hdg_deg);
         
@@ -504,8 +519,8 @@ var MISSILE = {
                 # if not exploded, check if the missile can keep the lock
                 if(me.free == 0)
                 {
-                    var g = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), mass, dt);
-                    if(g > me.max_g)
+                    var g = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), dt);
+                    if(g > me.max_g_current)
                     {
                         # target unreachable, fly free.
                         me.free = 1;
@@ -613,7 +628,7 @@ var MISSILE = {
                 0.1);
             
             t_alt = next_alt;
-            me.t_coord.set_latlon(nextGeo.lat(), nextGeo.lon(), t_alt);
+            me.t_coord.set_latlon(nextGeo.lat(), nextGeo.lon(), t_alt * FT2M);
             
             #print("Alt: ", t_alt, " Lat", me.Tgt.get_Latitude(), " Long : ", me.Tgt.get_Longitude());
             
@@ -740,6 +755,15 @@ var MISSILE = {
                 e_gain = 0;
                 h_gain = 0;
             }
+
+            if (me.curr_tgt_e > me.max_seeker_dev or me.curr_tgt_e < (-1 * me.max_seeker_dev)
+                  or me.curr_tgt_h > me.max_seeker_dev or me.curr_tgt_h < (-1 * me.max_seeker_dev)) {
+                # target is not in missile seeker view anymore
+                me.free = 1;
+                e_gain = 0;
+                h_gain = 0;
+            }
+            
             #print((me.update_track_time-me.StartTime-1)/2);
             # compute target deviation variation then seeker move to keep
             # this deviation constant.
@@ -786,7 +810,7 @@ var MISSILE = {
     
     poximity_detection: func()
     {
-        me.t_coord.set_latlon(me.Tgt.get_Latitude(), me.Tgt.get_Longitude(), me.Tgt.get_altitude());
+        me.t_coord.set_latlon(me.Tgt.get_Latitude(), me.Tgt.get_Longitude(), me.Tgt.get_altitude() * FT2M);
         var cur_dir_dist_m = me.coord.direct_distance_to(me.t_coord);
         var BC = cur_dir_dist_m;
         var AC = me.direct_dist_m;
@@ -855,7 +879,7 @@ var MISSILE = {
                     var wh_mass = me.weight_whead_lbs / slugs_to_lbs;
                     print("FOX2: me.direct_dist_m = ", me.direct_dist_m, " time ", getprop("sim/time/elapsed-sec"));
                     impact_report(me.t_coord, wh_mass, "missile"); # pos, alt, mass_slug, (speed_mps)
-                    var phrase = me.Tgt.get_Callsign() ~ " has been hit by " ~ me.NameOfMissile ~ ". Distance of impact " ~ sprintf( "%01.0f", me.direct_dist_m) ~ " meters";
+                    var phrase = sprintf( me.NameOfMissile~" exploded: %01.1f", me.direct_dist_m) ~ " meters from: " ~ me.Tgt.get_Callsign();
                     if(MPMessaging.getValue()  == 1)
                     {
                         setprop("/sim/multiplay/chat", phrase);
@@ -1026,7 +1050,7 @@ var impact_report = func(pos, mass_slug, string){
     }
     var impact = n.getChild(string, i, 1);
     
-    impact.getNode("impact/elevation-m", 1).setValue(pos.alt() * FT2M);
+    impact.getNode("impact/elevation-m", 1).setValue(pos.alt());
     impact.getNode("impact/latitude-deg", 1).setValue(pos.lat());
     impact.getNode("impact/longitude-deg", 1).setValue(pos.lon());
     impact.getNode("mass-slug", 1).setValue(mass_slug);
@@ -1038,44 +1062,48 @@ var impact_report = func(pos, mass_slug, string){
     setprop("ai/models/model-impact", impact_str);
 }
 
-steering_speed_G = func(steering_e_deg, steering_h_deg, s_fps, mass, dt)
-{
-    # get G number from steering (e, h) in deg, speed in ft/s and mass in slugs.
-    var steer_deg = math.sqrt((steering_e_deg * steering_e_deg) + (steering_h_deg * steering_h_deg));
-    var radius_ft = math.abs(s_fps / math.cos((90 - steer_deg) * D2R));
-    var g = (mass * s_fps * s_fps / radius_ft * dt) / g_fps;
-    #print("#### R = ", radius_ft, " G = ", g);
-    return(g);
+var steering_speed_G = func(steering_e_deg, steering_h_deg, s_fps, dt) {
+    # Get G number from steering (e, h) in deg, speed in ft/s.
+    var steer_deg = math.sqrt((steering_e_deg*steering_e_deg) + (steering_h_deg*steering_h_deg));
+
+    # next speed vector
+    var vector_next_x = math.cos(steer_deg*D2R)*s_fps;
+    var vector_next_y = math.sin(steer_deg*D2R)*s_fps;
+    
+    # present speed vector
+    var vector_now_x = s_fps;
+    var vector_now_y = 0;
+
+    # subtract the vectors from each other
+    var dv = math.sqrt((vector_now_x - vector_next_x)*(vector_now_x - vector_next_x)+(vector_now_y - vector_next_y)*(vector_now_y - vector_next_y));
+
+    # calculate g-force
+    # dv/dt=a
+    var g = (dv/dt) / g_fps;
+
+    # old calc with circle:
+    #var radius_ft = math.abs(s_fps / math.sin(steer_deg*D2R));
+    #var g = ( (s_fps * s_fps) / radius_ft ) / g_fps;
+    #print("#### R = ", radius_ft, " G = ", g); ##########################################################
+    return g;
 }
 
-var max_G_Rotation = func(steering_e_deg, steering_h_deg, s_fps, mass, dt, gMax){
-    # get G number from steering (e, h) in deg, speed in ft/s and mass in slugs.
-    # this function is for calculate the maximum angle without overload G
-    
-    var steer_deg = math.sqrt((steering_e_deg * steering_e_deg) + (steering_h_deg * steering_h_deg));
-    var radius_ft = math.abs(s_fps / math.cos(90 - steer_deg));
-    var g = (mass * s_fps * s_fps / radius_ft * dt) / g_fps;
-    
-    # isolation of Radius
-    if(s_fps < 1)
-    {
-        s_fps = 1;
+var max_G_Rotation = func(steering_e_deg, steering_h_deg, s_fps, dt, gMax) {
+    var guess = 1;
+    var coef = 1;
+    var lastgoodguess = 1;
+
+    for(var i=1;i<25;i+=1){
+        coef = coef/2;
+        var new_g = steering_speed_G(steering_e_deg*guess, steering_h_deg*guess, s_fps, dt);
+        if (new_g < gMax) {
+            lastgoodguess = guess;
+            guess = guess + coef;
+        } else {
+            guess = guess - coef;
+        }
     }
-    var radius_ft2 = (mass * s_fps * s_fps * dt) / ((gMax * 0.9) * g_fps);
-    if(math.abs(s_fps/radius_ft2) < 1)
-    {
-        var steer_rad_theoric = math.acos(math.abs(s_fps / radius_ft2));
-        var steer_deg_theoric = 90 - (steer_rad_theoric * R2D);
-    }
-    else
-    {
-        var steer_rad_theoric = 1;
-        var steer_deg_theoric = 1;
-    }
-    var radius_ft_th = math.abs(s_fps / math.cos((90 - steer_deg_theoric) * D2R));
-    var g_th = (mass * s_fps * s_fps / radius_ft_th * dt) / g_fps;
-    #print ("Max G ", gMax, " Actual G ", g, "steer_deg_theoric ", steer_deg_theoric);
-    return(steer_deg_theoric / steer_deg);
+    return lastgoodguess;
 }
 
 # HUD clamped target blinker
