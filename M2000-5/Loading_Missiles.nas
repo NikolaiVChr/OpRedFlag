@@ -26,6 +26,8 @@ var Loading_missile = func(name)
     var fox               = "nothing";
     var rail              = "true";
     var cruisealt         = 0;
+    var minSpeed          = 0.8;
+    var angle             = 30;
     
     if(name == "Matra MICA")
     {
@@ -73,6 +75,7 @@ var Loading_missile = func(name)
         fox = "Fox 3";
         rail = "false";
         cruisealt = 0;
+        minSpeed          = 0.9;
     }
     elsif(name == "Matra R550 Magic 2")
     {
@@ -119,6 +122,7 @@ var Loading_missile = func(name)
         fox = "Fox 2";
         rail = "true";
         cruisealt = 0;
+        minSpeed          = 0.8;
     }
     elsif(name == "GBU16")
     {
@@ -347,5 +351,7 @@ var Loading_missile = func(name)
     setprop("controls/armament/missile/fox", fox);
     setprop("controls/armament/missile/rail", rail);
     setprop("controls/armament/missile/cruise_alt", cruisealt);
+    setprop("controls/armament/missile/min-speed-for-guiding-mach", minSpeed);
+    setprop("controls/armament/missile/seeker-angular-speed-dps", angle);
     return 1;
 }
