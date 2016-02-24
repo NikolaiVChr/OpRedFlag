@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+  <nopreview/>
+
+   <name>ExternalFlame</name>
+   <path>thrust_flame.ac</path>
+
+   <offsets> 
+    <x-m>0</x-m>
+    <y-m>0</y-m>
+    <z-m>0</z-m>
+    <heading-deg>0</heading-deg>
+   </offsets>
+   
+
+  <animation>
+    <type>select</type>
+    <object-name>Bounding_box</object-name>
+    <nopreview/>
+    <condition>
+     <property>/sim/rendering/shaders/skydome</property><!-- als -->
+     <property>sim/multiplay/generic/int[4]</property><!-- engines/engine[0]/augmentation -->
+     <not>
+      <property>sim/multiplay/generic/int[8]</property><!-- engines/engine[0]/is-reversed -->
+     </not>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>scale</type>
+    <object-name>Bounding_box</object-name>
+    <nopreview/>
+    <property>sim/multiplay/generic/float[3]</property><!-- engines/engine[0]/nozzle-pos-norm -->
+    <x-min>0.2</x-min>
+    <y-min>0.565</y-min>
+    <z-min>0.565</z-min>
+    <x-max>1.0</x-max>
+    <y-max>0.565</y-max>
+    <z-max>0.565</z-max>
+    <x-factor>1.0</x-factor>
+    <y-factor>1.0</y-factor>
+    <z-factor>1.0</z-factor>
+  </animation>
+
+</PropertyList>
