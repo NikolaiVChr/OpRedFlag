@@ -2,13 +2,13 @@ Done, needs testing
 ===================
 Make AI version of Viggen for Raider1.
 Defeat spam filter with hit/fire messages.
+Accuracy of M2000 missiles.
+Improve drastic the quality of acceleration to degree function in proportional navigation.
 
 Fairly small tasks
 ==================
 Make cannon work on F-15
-Accuracy of M2000 missiles.
 Implement damage formula Raider1 found to damage code.
-Improve drastic the quality of acceleration to degree function in proportional navigation.
 
 Bigger tasks
 ============
