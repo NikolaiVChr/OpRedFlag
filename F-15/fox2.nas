@@ -738,7 +738,7 @@ print("Model ",missile_model);
 
 				#var phrase = sprintf( "%01.0f", me.direct_dist_m) ~ "meters";
 				if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
-					setprop("/sim/multiplay/chat", phrase);
+					setprop("/sim/multiplay/chat", defeatSpamFilter(phrase));
 				} else {
 					setprop("/sim/messages/atc", phrase);
 				}
@@ -748,7 +748,8 @@ print(phrase);
 				me.t_coord.apply_course_distance(t_bearing_deg, t_dist_m);
 				me.t_coord.set_alt(new_t_alt_m);		
 				var wh_mass = me.weight_whead_lbs / slugs_to_lbs;
-				print("FOX2: me.direct_dist_m = ",  me.direct_dist_m, " time ",getprop("sim/time/elapsed-sec"));
+				#print("FOX2: me.direct_dist_m = ",  me.direct_dist_m, " time ",getprop("sim/time/elapsed-sec"));
+				print(phrase);
 				impact_report(me.t_coord, wh_mass, "missile"); # pos, alt, mass_slug,(speed_mps)
 
 				me.animate_explosion();
@@ -1031,3 +1032,18 @@ SW_reticle_Blinker = aircraft.light.new("sim/model/f15/lighting/hud-sw-reticle-s
 setprop("sim/model/f15/lighting/hud-sw-reticle-switch/enabled", 1);
 
 setprop("sim/model/f15/systems/armament/mp-messaging",1);
+
+
+var spams = 0;
+
+var defeatSpamFilter = func (str) {
+  spams += 1;
+  if (spams == 15) {
+    spams = 1;
+  }
+  str = str~":";
+  for (var i = 1; i <= spams; i+=1) {
+    str = str~".";
+  }
+  return str;
+}
