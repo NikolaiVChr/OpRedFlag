@@ -57,6 +57,7 @@ var MISSILE = {
         m.track_signal_h    = 0; # this is directly used as input signal for the steering command.
         m.t_coord           = geo.Coord.new().set_latlon(0, 0, 0);
         m.last_t_coord      = m.t_coord;
+        m.before_last_t_coord = nil;
         #m.next_t_coord      = m.t_coord;
         m.direct_dist_m     = nil;
         m.diveToken      = 0; #this is for cruise missile. when the token is 1, the dive can start....
@@ -90,6 +91,7 @@ var MISSILE = {
         m.min_speed_for_guiding = getprop("controls/armament/missile/min-speed-for-guiding-mach");
         m.angular_speed         = getprop("controls/armament/missile/seeker-angular-speed-dps");
         m.last_coord        = nil;
+        m.before_last_coord = nil;
         
         # Find the next index for "models/model" and create property node.
         # Find the next index for "ai/models/missile" and create property node.
@@ -327,7 +329,8 @@ var MISSILE = {
         }
         me.life_time += dt;
         # record coords so we can give the latest nearest position for impact.
-        me.last_coord = geo.Coord.new().set_latlon(me.coord.lat(), me.coord.lon(), me.coord.alt());
+        me.before_last_coord = geo.Coord.new(me.last_coord);
+        me.last_coord = geo.Coord.new(me.coord);
         
         # calculate speed vector before steering corrections.
         
@@ -820,102 +823,88 @@ var MISSILE = {
     
     poximity_detection: func()
     {
-        me.t_coord.set_latlon(me.Tgt.get_Latitude(), me.Tgt.get_Longitude(), me.Tgt.get_altitude() * FT2M);
+        #me.t_coord.set_latlon(me.Tgt.get_Latitude(), me.Tgt.get_Longitude(), me.Tgt.get_altitude() * FT2M);
         var cur_dir_dist_m = me.coord.direct_distance_to(me.t_coord);
-        var BC = cur_dir_dist_m;
-        var AC = me.direct_dist_m;
-        if(me.last_coord != nil)
-        {
-            var AB = me.last_coord.direct_distance_to(me.coord);
+        if (me.direct_dist_m == nil) {
+            me.direct_dist_m = cur_dir_dist_m;
+            return 1;
         }
-        # 
-        #  A_______C'______ B
-        #   \      |      /     We have a system  :   x²   = CB² - C'B²
-        #    \     |     /                            C'B  = AB  - AC'
-        #     \    |x   /                             AC'² = A'C² + x²
-        #      \   |   /
-        #       \  |  /        Then, if I made no mistake : x² = BC² - ((BC²-AC²+AB²)/(2AB))²
-        #        \ | /
-        #         \|/
-        #          C
-        # C is the target. A is the last missile positioin and B tha actual. 
-        # For very high speed (more than 1000 m /seconds) we need to know if,
-        # between the position A and the position B, the distance x to the 
-        # target is enough short to proxiimity detection.
-        
-        # get current direct distance.
-        #print("me.direct_dist_m = ", me.direct_dist_m);
-        
-        if(me.direct_dist_m != nil)
-        {
-            var x2 = BC * BC - (((BC * BC - AC * AC + AB * AB) / (2 * AB)) * ((BC * BC - AC * AC + AB * AB) / (2 * AB)));
-            if(BC * BC - x2 < AB * AB)
-            {
-                # this is to check if AC' < AB
-                if(x2 > 0)
-                {
-                    cur_dir_dist_m = math.sqrt(x2);
+        if ( cur_dir_dist_m > me.direct_dist_m and cur_dir_dist_m < 250) {
+            #print("passed target");
+            # distance to target increase, trigger explosion.
+
+
+            var min_distance = me.direct_dist_m;
+            var explosion_coord = me.last_coord;
+            #print("min1 "~min_distance);
+            #print("last_t to t    : "~me.last_t_coord.direct_distance_to(me.t_coord));
+            #print("last to current: "~me.last_coord.direct_distance_to(me.coord));
+            for (var i = 0.1; i < 1; i += 0.1) {
+                var t_coord = me.interpolate(me.last_t_coord, me.t_coord, i);
+                var coord = me.interpolate(me.last_coord, me.coord, i);
+                var dist = coord.direct_distance_to(t_coord);
+                if (dist < min_distance) {
+                    min_distance = dist;
+                    explosion_coord = coord;
                 }
-                #print(" Dist=", y3, "AC =", AC, " AB=", AB, " BC=", BC);
             }
-            #print(me.last_coord.alt());
-            #print("cur_dir_dist_m = ", cur_dir_dist_m, " me.direct_dist_m = ", me.direct_dist_m);
+            #print("min2 "~min_distance);
+            if (me.before_last_coord != nil and me.before_last_t_coord != nil) {
+                for (var i = 0.1; i < 1; i += 0.1) {
+                    var t_coord = me.interpolate(me.before_last_t_coord, me.last_t_coord, i);
+                    var coord = me.interpolate(me.before_last_coord, me.last_coord, i);
+                    var dist = coord.direct_distance_to(t_coord);
+                    if (dist < min_distance) {
+                        min_distance = dist;
+                        explosion_coord = coord;
+                    }
+                }
+            }
+
             
-            if(me.tpsApproch == 0)
+            var phrase = sprintf( me.NameOfMissile~" exploded: %01.1f", min_distance) ~ " meters from: " ~ me.Tgt.get_Callsign();
+            if(MPMessaging.getValue()  == 1)
             {
-                me.tpsApproch = props.globals.getNode("/sim/time/elapsed-sec", 1).getValue();
+                setprop("/sim/multiplay/chat", defeatSpamFilter(phrase));
             }
             else
             {
-                me.vApproch = (me.direct_dist_m-cur_dir_dist_m) / (props.globals.getNode("/sim/time/elapsed-sec", 1).getValue() - me.tpsApproch);
-                me.tpsApproch = props.globals.getNode("/sim/time/elapsed-sec", 1).getValue();
-                #print(me.vApproch);
+                setprop("/sim/messages/atc", phrase);
             }
-            
-            if(cur_dir_dist_m > me.direct_dist_m and me.direct_dist_m < me.maxExplosionRange * 2)
-            {
-                if(me.direct_dist_m < me.maxExplosionRange)
-                {
-                    # distance to target increase, trigger explosion.
-                    # get missile relative position to the target at last frame.
-                    var t_bearing_deg = me.last_t_coord.course_to(me.last_coord);
-                    var t_delta_alt_m = me.last_coord.alt() - me.last_t_coord.alt();
-                    var new_t_alt_m = me.t_coord.alt() + t_delta_alt_m;
-                    var t_dist_m  = math.sqrt(math.abs((me.direct_dist_m * me.direct_dist_m)-(t_delta_alt_m * t_delta_alt_m)));
-                    # create impact coords from this previous relative position
-                    # applied to target current coord.
-                    me.t_coord.apply_course_distance(t_bearing_deg, t_dist_m);
-                    me.t_coord.set_alt(new_t_alt_m);
-                    var wh_mass = me.weight_whead_lbs / slugs_to_lbs;
-                    #print("FOX2: me.direct_dist_m = ", me.direct_dist_m, " time ", getprop("sim/time/elapsed-sec"));
-                    impact_report(me.t_coord, wh_mass, "missile"); # pos, alt, mass_slug, (speed_mps)
-                    var phrase = sprintf( me.NameOfMissile~" exploded: %01.1f", me.direct_dist_m) ~ " meters from: " ~ me.Tgt.get_Callsign();
-                    if(MPMessaging.getValue()  == 1)
-                    {
-                        setprop("/sim/multiplay/chat", defeatSpamFilter(phrase));
-                    }
-                    else
-                    {
-                        setprop("/sim/messages/atc", phrase);
-                    }
-                    print(phrase);
-                    me.animate_explosion();
-                    me.Tgt = nil;
-                    return(0);
-                }
-                else
-                {
-                    if(me.life_time > 3 and me.free == 0)
-                    {
-                        # you don't have a second chance. Missile missed
-                        me.free = 1;
-                    }
-                }
-            }
+            print(phrase);
+
+            # get missile relative position to the target at last frame.
+            var t_bearing_deg = me.last_t_coord.course_to(me.last_coord);
+            var t_delta_alt_m = me.last_coord.alt() - me.last_t_coord.alt();
+            var new_t_alt_m = me.t_coord.alt() + t_delta_alt_m;
+            var t_dist_m  = math.sqrt(math.abs((me.direct_dist_m * me.direct_dist_m)-(t_delta_alt_m * t_delta_alt_m)));
+            # create impact coords from this previous relative position
+            # applied to target current coord.
+            me.t_coord.apply_course_distance(t_bearing_deg, t_dist_m);
+            me.t_coord.set_alt(new_t_alt_m);
+            var wh_mass = me.weight_whead_lbs / slugs_to_lbs;
+            #print("FOX2: me.direct_dist_m = ", me.direct_dist_m, " time ", getprop("sim/time/elapsed-sec"));
+            impact_report(me.t_coord, wh_mass, "missile"); # pos, alt, mass_slug, (speed_mps)
+
+            me.animate_explosion();
+            me.Tgt = nil;
+            return(0);
         }
-        me.last_t_coord = me.t_coord;
+        me.before_last_t_coord = geo.Coord.new(me.last_t_coord);
+        me.last_t_coord = geo.Coord.new(me.t_coord);
         me.direct_dist_m = cur_dir_dist_m;
         return(1);
+    },
+
+    interpolate: func (start, end, fraction) {
+        var x = (start.x()*(1-fraction)+end.x()*fraction);
+        var y = (start.y()*(1-fraction)+end.y()*fraction);
+        var z = (start.z()*(1-fraction)+end.z()*fraction);
+
+        var c = geo.Coord.new();
+        c.set_xyz(x,y,z);
+
+        return c;
     },
     
     check_t_in_fov: func(){
