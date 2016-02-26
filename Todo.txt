@@ -9,6 +9,7 @@ Fairly small tasks
 ==================
 Make cannon work on F-15
 Implement damage formula Raider1 found to damage code.
+Look at Mirage's use of me.free to make sure it can hit after it goes free.
 
 Bigger tasks
 ============

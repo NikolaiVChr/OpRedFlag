@@ -35,6 +35,8 @@ var AIM9 = {
 		m.TgtLat_prop       = nil;
 		m.TgtAlt_prop       = nil;
 		m.TgtHdg_prop       = nil;
+		m.TgtSpeed_prop     = nil;
+		m.TgtPitch_prop     = nil;
 		m.update_track_time = 0;
 		m.seeker_dev_e      = 0; # Seeker elevation, deg.
 		m.seeker_dev_h      = 0; # Seeker horizon, deg.
@@ -124,6 +126,8 @@ var AIM9 = {
 		m.last_cruise_or_loft = 0;
 		m.old_speed_horz_fps = nil;
 		m.old_speed_fps = 0;
+		m.last_t_norm_speed = nil;
+		m.last_t_elev_norm_speed = nil;
 
 		SwSoundOnOff.setValue(1);
 
@@ -347,14 +351,14 @@ var AIM9 = {
 		var gravity_fps                 = me.free == 1?g_fps * dt:0;
 		if (me.free == 1) {
 			# pitch according to old speed from last update
-			pitch_deg = math.atan2(-me.s_down, dist_h_ft/dt) * R2D;
+			#pitch_deg = math.atan2(-me.s_down, dist_h_ft/dt) * R2D;
 		}
 
 		# Add gravity to the vertical speed (no ground interaction yet).
-		speed_down_fps += gravity_fps;
+		#speed_down_fps += gravity_fps;
 		
 		# Calculate altitude and elevation velocity vector (no incidence here).
-		var alt_ft = me.altN.getValue() - (speed_down_fps * dt);
+		var alt_ft = me.altN.getValue() - ((speed_down_fps + g_fps) * dt);
 		#pitch_deg = math.atan2( speed_down_fps, speed_horizontal_fps ) * R2D;
 		
 		# this is commented, cause the missile just falls due to gravity, it doesn't pitch
@@ -527,7 +531,7 @@ var AIM9 = {
 
 			var loft_angle = 45;
 			var loft_minimum = 10;# miles
-			var cruise_minimum = 5;# miles
+			var cruise_minimum = 7.5;# miles
 			var cruise_or_loft = 0;
 			if ( me.life_time < me.thrust_duration_1 and t_dist_m * M2NM > loft_minimum
 				 and me.coord.alt() * M2FT < me.loft_alt
@@ -564,8 +568,24 @@ var AIM9 = {
 
 					#print(sprintf("LOS-rate=%.2f rad/s - closing-rate=%.1f ft/s",line_of_sight_rate_rps,closing_rate_fps));
 
+					# calculate target acc as normal to LOS line:
+					var t_heading        = me.TgtHdg_prop.getValue();
+					var t_pitch          = me.TgtPitch_prop.getValue();
+					var t_speed          = me.TgtSpeed_prop.getValue()*KT2FPS;#true airspeed
+					var t_horz_speed     = t_speed - math.abs(math.sin(t_pitch*D2R)*t_speed);
+					var t_LOS_norm_head  = t_course + 90;
+					var t_LOS_norm_speed = math.cos((t_LOS_norm_head - t_heading)*D2R)*t_horz_speed;
+
+					if (me.last_t_norm_speed == nil) {
+						me.last_t_norm_speed = t_LOS_norm_speed;
+					}
+
+					var t_LOS_norm_acc   = (t_LOS_norm_speed - me.last_t_norm_speed)/dt;
+
+					me.last_t_norm_speed = t_LOS_norm_speed;
+
 					# acceleration perpendicular to instantaneous line of sight in feet/sec^2
-					var acc_sideways_ftps2 = proportionality_constant*line_of_sight_rate_rps*horz_closing_rate_fps;
+					var acc_sideways_ftps2 = proportionality_constant*line_of_sight_rate_rps*horz_closing_rate_fps+proportionality_constant*t_LOS_norm_acc/2;
 
 					#print(sprintf("commanded-perpendicular-acceleration=%.1f ft/s^2", acc_sideways_ftps2));
 
@@ -579,7 +599,21 @@ var AIM9 = {
 					if (cruise_or_loft == 0 and me.last_cruise_or_loft == 0) {
 						var vert_closing_rate_fps = (me.dist_direct_last - dist_curr_direct)*M2FT/dt_;
 						var line_of_sight_rate_up_rps = D2R*(t_elev_deg-me.last_t_elev_deg)/dt_;#((me.curr_tgt_e-me.last_tgt_e)*D2R)/dt;
-						var acc_upwards_ftps2 = proportionality_constant*line_of_sight_rate_up_rps*vert_closing_rate_fps;
+						# calculate target acc as normal to LOS line: (up acc is positive)
+						var t_approach_bearing             = t_course + 180;
+						var t_horz_speed_away_from_missile = -math.cos((t_approach_bearing - t_heading)*D2R)* t_horz_speed;
+						var t_horz_comp_speed              = math.cos((90+t_elev_deg)*D2R)*t_horz_speed_away_from_missile;
+						var t_vert_comp_speed              = math.sin(t_pitch*D2R)*t_speed*math.cos(t_elev_deg*D2R);
+						var t_LOS_elev_norm_speed          = t_horz_comp_speed + t_vert_comp_speed;
+
+						if (me.last_t_elev_norm_speed == nil) {
+							me.last_t_elev_norm_speed = t_LOS_elev_norm_speed;
+						}
+
+						var t_LOS_elev_norm_acc            = (t_LOS_elev_norm_speed - me.last_t_elev_norm_speed)/dt;
+						me.last_t_elev_norm_speed          = t_LOS_elev_norm_speed;
+
+						var acc_upwards_ftps2 = proportionality_constant*line_of_sight_rate_up_rps*vert_closing_rate_fps+proportionality_constant*t_LOS_elev_norm_acc/2;
 						var commanded_upwards_vector_length_fps = acc_upwards_ftps2*dt;
 						dev_e = math.atan2(commanded_upwards_vector_length_fps, velocity_vector_length_fps)*R2D;
 						#print(sprintf("vert leading by %.1f deg", me.curr_tgt_e));
@@ -662,7 +696,7 @@ var AIM9 = {
 
 		        var min_distance = me.direct_dist_m;
 				var explosion_coord = me.last_coord;
-				for (var i = 0.1; i < 1; i += 0.1) {
+				for (var i = 0.05; i < 1; i += 0.05) {
 					var t_coord = me.interpolate(me.last_t_coord, me.t_coord, i);
 					var coord = me.interpolate(me.last_coord, me.coord, i);
 					var dist = coord.direct_distance_to(t_coord);
@@ -672,7 +706,7 @@ var AIM9 = {
 					}
 				}
 				if (me.before_last_coord != nil and me.before_last_t_coord != nil) {
-					for (var i = 0.1; i < 1; i += 0.1) {
+					for (var i = 0.05; i < 1; i += 0.05) {
 						var t_coord = me.interpolate(me.before_last_t_coord, me.last_t_coord, i);
 						var coord = me.interpolate(me.before_last_coord, me.last_coord, i);
 						var dist = coord.direct_distance_to(t_coord);
@@ -770,12 +804,15 @@ var AIM9 = {
 				me.status = 1;
 				SwSoundVol.setValue(vol_weak_track);
 				me.Tgt = tgt;
-				var t_pos_str = me.Tgt.string ~ "/position";
-				var t_ori_str = me.Tgt.string ~ "/orientation";
-				me.TgtLon_prop       = props.globals.getNode(t_pos_str).getChild("longitude-deg");
-				me.TgtLat_prop       = props.globals.getNode(t_pos_str).getChild("latitude-deg");
-				me.TgtAlt_prop       = props.globals.getNode(t_pos_str).getChild("altitude-ft");
-				me.TgtHdg_prop       = props.globals.getNode(t_ori_str).getChild("true-heading-deg");
+				var t_pos_str = me.Tgt.getChild("position");
+				var t_ori_str = me.Tgt.getChild("orientation");
+				var t_vel_str = me.Tgt.getChild("velocities");
+				me.TgtLon_prop       = t_pos_str.getChild("longitude-deg");
+				me.TgtLat_prop       = t_pos_str.getChild("latitude-deg");
+				me.TgtAlt_prop       = t_pos_str.getChild("altitude-ft");
+				me.TgtHdg_prop       = t_ori_str.getChild("true-heading-deg");
+				me.TgtPitch_prop     = t_ori_str.getChild("pitch-deg");
+				me.TgtSpeed_prop     = t_vel_str.getChild("true-airspeed-kt");
 				settimer(func me.update_track(nil), 2);
 				return;
 			}
