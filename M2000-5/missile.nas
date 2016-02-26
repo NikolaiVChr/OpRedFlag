@@ -740,9 +740,9 @@ var MISSILE = {
                     #print(sprintf("LOS-rate=%.2f rad/s - closing-rate=%.1f ft/s",line_of_sight_rate_rps,closing_rate_fps));
 
                     # calculate target acc as normal to LOS line:
-                    var t_heading        = me.TgtHdg_prop.getValue();
-                    var t_pitch          = me.TgtPitch_prop.getValue();
-                    var t_speed          = me.TgtSpeed_prop.getValue()*KT2FPS;#true airspeed
+                    var t_heading        = me.Tgt.get_heading();
+                    var t_pitch          = me.Tgt.get_Pitch();
+                    var t_speed          = me.Tgt.get_Speed()*KT2FPS;#true airspeed
                     var t_horz_speed     = t_speed - math.abs(math.sin(t_pitch*D2R)*t_speed);
                     var t_LOS_norm_head  = t_course + 90;
                     var t_LOS_norm_speed = math.cos((t_LOS_norm_head - t_heading)*D2R)*t_horz_speed;
