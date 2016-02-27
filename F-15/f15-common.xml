@@ -1143,10 +1143,10 @@
             </camera-group>
             <redout>
                 <parameters>
-                    <blackout-complete-g>10</blackout-complete-g>
-                    <blackout-onset-g>6.5</blackout-onset-g>
-                    <redout-onset-g type="double">-2.5</redout-onset-g>
-                    <redout-complete-g type="double">-3.5</redout-complete-g>
+                    <blackout-complete-g>11</blackout-complete-g>
+                    <blackout-onset-g>8.5</blackout-onset-g>
+                    <redout-onset-g type="double">-3.5</redout-onset-g>
+                    <redout-complete-g type="double">-4.5</redout-complete-g>
                 </parameters>
             </redout>
         </rendering>
