@@ -307,7 +307,7 @@ var AIM9 = {
 		#### Guidance.
 
 		if ( me.status == 2 and me.free == 0) {
-			if (me.life_time > 1)
+			if (me.life_time > 0.5)
             { 
                 me.update_track(dt);
             }
