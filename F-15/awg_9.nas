@@ -173,7 +173,7 @@ active_u = nil;
 			# existing as a displayable target in the radar targets nodes.
 			var type = c.getName();
 
-			if (!c.getNode("valid", 1).getValue()) {
+			if (c.getNode("valid") == nil or !c.getNode("valid").getValue()) {
 				continue;
 			}
 			var HaveRadarNode = c.getNode("radar");
