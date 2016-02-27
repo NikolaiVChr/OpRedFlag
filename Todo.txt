@@ -10,6 +10,7 @@ Fairly small tasks
 ==================
 Implement damage formula Raider1 found to damage code.
 Look at Mirage's use of me.free to make sure it can hit after it goes free.
+Arming time on f-15/14.
 
 Bigger tasks
 ============
