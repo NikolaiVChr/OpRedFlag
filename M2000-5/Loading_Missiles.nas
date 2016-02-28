@@ -15,7 +15,7 @@ var Loading_missile = func(name)
     var detectionfovdeg   = 0;
     var trackmaxdeg       = 0;
     var maxg              = 0;
-    var thrustlbs         = 0; 
+    var thrustlbs         = 0;
     var thrustdurationsec =  0;
     var weightlaunchlbs   = 0;
     var dragcoeff         = 0;
@@ -26,8 +26,6 @@ var Loading_missile = func(name)
     var fox               = "nothing";
     var rail              = "true";
     var cruisealt         = 0;
-    var minSpeed          = 0.8;
-    var angle             = 30;
     
     if(name == "Matra MICA")
     {
@@ -39,8 +37,8 @@ var Loading_missile = func(name)
         fovdeg = 25;                                 # seeker optical FOV
         detectionfovdeg = 180;                       # Search pattern diameter (rosette scan)
         trackmaxdeg = 110;                           # Seeker max total angular rotation
-        maxg = 30;                                   # In turn
-        thrustlbs = 517;                             # guess
+        maxg = 50;                                   # In turn
+        thrustlbs = 7903;                             # guess
         thrustdurationsec = 44;                      # Mk.36 Mod.7,8
         weightlaunchlbs = 216;
         weightwarheadlbs = 30;
@@ -63,7 +61,7 @@ var Loading_missile = func(name)
         detectionfovdeg = 180;                        # Search pattern diameter (rosette scan)
         trackmaxdeg = 110;                            # Seeker max total angular rotation
         maxg = 30;                                    # In turn less than the MICA, coz it don't have vectorial thurst
-        thrustlbs = 701;                              # guess
+        thrustlbs = 10716;                              # guess
         thrustdurationsec = 39;                       # Mk.36 Mod.7,8
         weightlaunchlbs = 291;
         weightwarheadlbs = 44;
@@ -75,7 +73,6 @@ var Loading_missile = func(name)
         fox = "Fox 3";
         rail = "false";
         cruisealt = 0;
-        minSpeed          = 0.9;
     }
     elsif(name == "Matra R550 Magic 2")
     {
@@ -86,8 +83,8 @@ var Loading_missile = func(name)
         fovdeg = 25;                                  # seeker optical FOV
         detectionfovdeg = 180;                        # Search pattern diameter (rosette scan)
         trackmaxdeg = 110;                            # Seeker max total angular rotation
-        maxg = 32;                                    # In turn
-        thrustlbs = 277;                              # guess
+        maxg = 21;                                    # In turn
+        thrustlbs = 3449.23;                              # guess
         thrustdurationsec = 12;                       # Mk.36 Mod.7,8
         weightlaunchlbs = 169;
         weightwarheadlbs = 27;
@@ -106,11 +103,11 @@ var Loading_missile = func(name)
         address = "/Aircraft/Mirage-2000/Missiles/aim-9/aim-9_smoke.xml";
         NoSmoke = "/Aircraft/Mirage-2000/Missiles/aim-9/aim-9.xml";
         maxdetectionrngnm = 9;                        # Not real Impact yet
-        fovdeg = 25;                                  # seeker optical FOV
+        fovdeg = 32;                                  # seeker optical FOV
         detectionfovdeg = 180;                        # Search pattern diameter (rosette scan)
         trackmaxdeg = 110;                            # Seeker max total angular rotation
-        maxg = 32;                                    # In turn
-        thrustlbs = 250;                              # guess
+        maxg = 21;                                    # In turn
+        thrustlbs = 3821.75;                              # guess
         thrustdurationsec =  15;                      # Mk.36 Mod.7,8
         weightlaunchlbs = 191;
         weightwarheadlbs = 20.8;
@@ -122,7 +119,6 @@ var Loading_missile = func(name)
         fox = "Fox 2";
         rail = "true";
         cruisealt = 0;
-        minSpeed          = 0.8;
     }
     elsif(name == "GBU16")
     {
@@ -199,7 +195,7 @@ var Loading_missile = func(name)
         detectionfovdeg = 180;                        # Search pattern diameter (rosette scan)
         trackmaxdeg = 110;                            # Seeker max total angular rotation
         maxg = 15;                                    # In turn
-        thrustlbs = 1500;                             # guess
+        thrustlbs = 22930;                             # guess
         thrustdurationsec = 1000;                     # Mk.36 Mod.7,8
         weightlaunchlbs = 1870;
         weightwarheadlbs = 992;
@@ -244,7 +240,7 @@ var Loading_missile = func(name)
         detectionfovdeg = 180;                        # Search pattern diameter (rosette scan)
         trackmaxdeg = 110;                            # Seeker max total angular rotation
         maxg = 30;                                    # In turn
-        thrustlbs = 2722;                             # guess
+        thrustlbs = 41611;                             # guess
         thrustdurationsec = 81;                       # Mk.36 Mod.7,8
         weightlaunchlbs = 905;
         weightwarheadlbs = 135;
@@ -267,7 +263,7 @@ var Loading_missile = func(name)
         detectionfovdeg = 180;                        # Search pattern diameter (rosette scan)
         trackmaxdeg = 110;                            # Seeker max total angular rotation
         maxg = 35;                                    # In turn
-        thrustlbs = 1200;                             # guess
+        thrustlbs = 18344;                             # guess
         thrustdurationsec = 95;                       # Mk.36 Mod.7,8
         weightlaunchlbs = 357;
         weightwarheadlbs = 55;
@@ -290,7 +286,7 @@ var Loading_missile = func(name)
         detectionfovdeg = 180;                        # Search pattern diameter (rosette scan)
         trackmaxdeg = 110;                            # Seeker max total angular rotation
         maxg = 15;                                    # In turn
-        thrustlbs = 320;                              # guess  the doc says 17 000 = 83 lbs of thrust...need to readapt all the values.
+        thrustlbs = 4891;                              # guess  the doc says 17 000 = 83 lbs of thrust...need to readapt all the values.
         thrustdurationsec = 20;                       # Mk.36 Mod.7,8
         weightlaunchlbs = 357;
         weightwarheadlbs = 55;
@@ -313,7 +309,7 @@ var Loading_missile = func(name)
         detectionfovdeg = 180;                        # Search pattern diameter (rosette scan)
         trackmaxdeg = 110;                            # Seeker max total angular rotation
         maxg = 25;                                    # In turn
-        thrustlbs = 752;                              # guess  the doc says 17 000 = 83 lbs of thrust...need to readapt all the values.
+        thrustlbs = 11495;                              # guess  the doc says 17 000 = 83 lbs of thrust...need to readapt all the values.
         thrustdurationsec = 35;                       # Mk.36 Mod.7,8
         weightlaunchlbs = 214;
         weightwarheadlbs = 16;
@@ -351,7 +347,5 @@ var Loading_missile = func(name)
     setprop("controls/armament/missile/fox", fox);
     setprop("controls/armament/missile/rail", rail);
     setprop("controls/armament/missile/cruise_alt", cruisealt);
-    setprop("controls/armament/missile/min-speed-for-guiding-mach", minSpeed);
-    setprop("controls/armament/missile/seeker-angular-speed-dps", angle);
     return 1;
 }
