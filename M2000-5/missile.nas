@@ -356,7 +356,7 @@ var MISSILE = {
         else
         {
             f_lbs = 0;
-            if(me.life_time > 1)
+            if(me.life_time > 0.5)
             {
                 f_lbs = me.force_lbs_1;
             }
@@ -371,7 +371,7 @@ var MISSILE = {
         }
 
         # this do work for the moment... need to know how to reload a 3D model...
-        if(f_lbs < 1 and me.life_time > 2)
+        if(f_lbs < 1 and me.life_time > 2)# need two seconds here, else dropped missiles will lose smoke permently
         {
             var Dapath = me.missile_NoSmoke;
             if(me.model.getNode("path", 1).getValue() != Dapath)
@@ -680,6 +680,9 @@ var MISSILE = {
 
             #print("DeltaElevation ", t_alt_delta_m);
             
+            var cruise_or_loft = 0;
+            var t_elev_deg = 0;
+
             # cruise mode control :
             if(me.cruisealt != 0)
             {
@@ -700,20 +703,23 @@ var MISSILE = {
                         if(me.cruisealt + Daground > me.alt)
                         {
                             # 200 is for a very short reaction to terrain
-                            var t_elev_deg = math.atan2(t_alt_delta_m, 200) * R2D;
+                            t_elev_deg = math.atan2(t_alt_delta_m, 200) * R2D;
+                            cruise_or_loft = 1;
                         }
                         else
                         {
                             # that means a dive angle of 22.5° (a bit less 
                             # coz me.alt is in feet) (I let this alt in feet on purpose (more this figure is low, more the future pitch is high)
-                            var t_elev_deg = math.atan2(t_alt_delta_m, me.alt) * R2D;
+                            t_elev_deg = math.atan2(t_alt_delta_m, me.alt) * R2D;
+                            cruise_or_loft = 1;
                         }
                     }
                     else
                     {
                         # we put 9 feets up the target to avoid ground at the
                         # last minute...
-                        var t_elev_deg = math.atan2(t_alt_delta_m + 3, t_dist_m) * R2D;
+                        t_elev_deg = math.atan2(t_alt_delta_m + 3, t_dist_m) * R2D;
+                        cruise_or_loft = 1;
                     }
                 }
                 else
@@ -724,7 +730,8 @@ var MISSILE = {
                         # first, get cruise altitude. at mach 5, 20km is done in
                         # 10 seconds...
                         var t_alt_delta_m = (me.cruisealt - me.alt) * FT2M;
-                        var t_elev_deg = math.atan2(t_alt_delta_m, t_alt_delta_m * 2) * R2D;
+                        t_elev_deg = math.atan2(t_alt_delta_m, t_alt_delta_m * 2) * R2D;
+                        cruise_or_loft = 1;
                         if(me.cruisealt - me.alt < 100)
                         {
                             me.diveToken = 1;
@@ -751,11 +758,16 @@ var MISSILE = {
                 modulo180 = (360 - modulo180);
             }
             
+            var e_gain = 1;
+            var h_gain = 1;
+
             # here is how to calculate the own missile detection limitation
             if((math.abs(me.curr_tgt_e) > me.max_seeker_dev)
                 or (math.abs(modulo180) > me.max_seeker_dev))
             {
                 #print("me.missile_fov:", me.missile_fov, "me.curr_tgt_e:", me.curr_tgt_e, "degree h me.curr_tgt_h:", me.curr_tgt_h, "t_course:", t_course, "me.hdg:", me.hdg, "modulo180:", modulo180);
+                e_gain = 0;
+                h_gain = 0;
                 me.free = 1;
             }
             #print("Target Elevation(ft): ", t_alt, " Missile Elevation(ft):", me.alt, " Delta(meters):", t_alt_delta_m);
@@ -768,8 +780,7 @@ var MISSILE = {
             # the trajectory first 2 seconds.
             # then, keep track of deviations at the end of these two initial
             # 2 seconds.
-            var e_gain = 1;
-            var h_gain = 1;
+            
             #if(me.rail == "true" or me.life_time > 2)
             #{
             #    if(me.life_time < 3)
@@ -800,7 +811,7 @@ var MISSILE = {
 
 
 
-            var dev_e = me.curr_tgt_e;#
+            var dev_e = cruise_or_loft ==1?t_elev_deg:me.curr_tgt_e;#
             var dev_h = me.curr_tgt_h;#
 
             #print(sprintf("curr: elev=%.1f", dev_e)~sprintf(" head=%.1f", dev_h));
@@ -877,7 +888,7 @@ var MISSILE = {
                     #print(sprintf("horz leading by %.1f deg, commanding %.1f deg", me.curr_tgt_h, dev_h));
 
                     # when cruising or lofting is controling pitch this if statement should be in effect
-                    #if (cruise_or_loft == 0 and me.last_cruise_or_loft == 0) {
+                    if (cruise_or_loft == 0 and me.last_cruise_or_loft == 0) {
                         var vert_closing_rate_fps = (me.dist_direct_last - dist_curr_direct)*M2FT/dt_;
                         var line_of_sight_rate_up_rps = D2R*(t_elev_deg-me.last_t_elev_deg)/dt_;#((me.curr_tgt_e-me.last_tgt_e)*D2R)/dt;
                         # calculate target acc as normal to LOS line: (up acc is positive)
@@ -898,13 +909,13 @@ var MISSILE = {
                         var commanded_upwards_vector_length_fps = acc_upwards_ftps2*dt;
                         dev_e = math.atan2(commanded_upwards_vector_length_fps, velocity_vector_length_fps)*R2D;
                         #print(sprintf("vert leading by %.1f deg", me.curr_tgt_e));
-                    #}
+                    }
             }
             me.dist_last = dist_curr;
             me.dist_direct_last = dist_curr_direct;
             me.last_t_course = t_course;
             me.last_t_elev_deg = t_elev_deg;
-            #me.last_cruise_or_loft = cruise_or_loft;
+            me.last_cruise_or_loft = cruise_or_loft;
             #########################
             #########################
 
