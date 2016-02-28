@@ -865,6 +865,7 @@
                             <seeker-angular-speed-dps>30</seeker-angular-speed-dps><!-- deg/sec guess-->
                             <loft-altitude>0</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
                             <min-speed-for-guiding-mach type="double">0.8</min-speed-for-guiding-mach>
+                            <arming-time-sec type="double">1.4</arming-time-sec>
                         </aim9>
                         <aim120>
                             <!--Based on values from Fabien's loading_missiles:
@@ -892,6 +893,7 @@
                             <seeker-angular-speed-dps>30</seeker-angular-speed-dps><!-- deg/sec guess-->
                             <loft-altitude>30000</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
                             <min-speed-for-guiding-mach type="double">0.9</min-speed-for-guiding-mach>
+                            <arming-time-sec type="double">2.0</arming-time-sec>
                         </aim120>
                         <aim7>
                             <!-- AIM-7 F/M http://www.hill.af.mil/library/factsheets/factsheet.asp?id=5787
@@ -954,6 +956,7 @@
                             <seeker-angular-speed-dps>30</seeker-angular-speed-dps><!-- deg/sec guess-->
                             <loft-altitude>30000</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
                             <min-speed-for-guiding-mach type="double">0.9</min-speed-for-guiding-mach>
+                            <arming-time-sec type="double">2.0</arming-time-sec>
                         </aim7>
                         <launch-light type="bool">false</launch-light>
                         <system-running type="bool">false</system-running>

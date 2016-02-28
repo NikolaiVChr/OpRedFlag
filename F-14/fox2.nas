@@ -72,6 +72,7 @@ var AIM9 = {
 		m.angular_speed     = getprop("sim/model/f-14b/systems/armament/aim9/seeker-angular-speed-dps");
         m.loft_alt          = getprop("sim/model/f-14b/systems/armament/aim9/loft-altitude");
         m.min_speed_for_guiding = getprop("sim/model/f-14b/systems/armament/aim9/min-speed-for-guiding-mach");
+        m.arm_time          = getprop("sim/model/f-14b/systems/armament/aim9/arming-time-sec");
 
 		# Find the next index for "models/model" and create property node.
 		# Find the next index for "ai/models/aim-9" and create property node.
@@ -680,7 +681,7 @@ var AIM9 = {
 
 		#print("cur_dir_dist_m = ",cur_dir_dist_m," me.direct_dist_m = ",me.direct_dist_m);
 		if ( me.direct_dist_m != nil ) {
-			if ( (cur_dir_dist_m > me.direct_dist_m and cur_dir_dist_m < 250) or me.life_time > me.selfdestruct_time or groundhit == 1) {
+			if ( (cur_dir_dist_m > me.direct_dist_m and cur_dir_dist_m < 250 and me.life_time > me.arm_time) or me.life_time > me.selfdestruct_time or groundhit == 1) {
 				# Distance to target increase, trigger explosion.
 				# Get missile relative position to the target at last frame.
 				var t_bearing_deg = me.last_t_coord.course_to(me.last_coord);

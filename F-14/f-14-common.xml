@@ -803,6 +803,7 @@
                             <seeker-angular-speed-dps>30</seeker-angular-speed-dps><!-- deg/sec guess-->
                             <loft-altitude>0</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
                             <min-speed-for-guiding-mach type="double">0.8</min-speed-for-guiding-mach>
+                            <arming-time-sec type="double">1.4</arming-time-sec>
                         </aim9>
                         <launch-light type="bool">false</launch-light>
                         <system-running type="bool">false</system-running>
