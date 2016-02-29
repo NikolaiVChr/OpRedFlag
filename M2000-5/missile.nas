@@ -436,14 +436,15 @@ var MISSILE = {
         var drag_acc = (cdm * 0.5 * rho * old_speed_fps * old_speed_fps * me.eda) / mass;
         
         # here is a limit for not "Go over" the theoric max speed of the missile
+        var speed_fps = 0;
         if(speed_m > me.maxSpeed)
         {
-            var speed_fps = old_speed_fps - drag_acc*dt;
+             speed_fps = old_speed_fps - drag_acc*dt;
         }
         else
         {
             #Correction made by Necolatis
-            var speed_fps = old_speed_fps - drag_acc*dt + acc*dt;
+            speed_fps = old_speed_fps - drag_acc*dt + acc*dt;
         }
         #print("acc: ", acc, " _drag_acc: ", drag_acc);
         
@@ -509,9 +510,6 @@ var MISSILE = {
         #pitch_deg = math.atan2(speed_down_fps, speed_horizontal_fps) * R2D;
         #me.pitch = pitch_deg;
         
-        var dist_h_m = speed_horizontal_fps * dt * FT2M;
-
-
         # get horizontal distance and set position and orientation.
         var dist_h_m = speed_horizontal_fps * dt * FT2M;
         me.coord.apply_course_distance(hdg_deg, dist_h_m);
@@ -681,7 +679,7 @@ var MISSILE = {
             #print("DeltaElevation ", t_alt_delta_m);
             
             var cruise_or_loft = 0;
-            var t_elev_deg = 0;
+            
 
             # cruise mode control :
             if(me.cruisealt != 0)
@@ -769,6 +767,7 @@ var MISSILE = {
                 e_gain = 0;
                 h_gain = 0;
                 me.free = 1;
+                print("Target is not in missile seeker view anymore");
             }
             #print("Target Elevation(ft): ", t_alt, " Missile Elevation(ft):", me.alt, " Delta(meters):", t_alt_delta_m);
             # The t_course is false. Prevision is false
@@ -811,7 +810,7 @@ var MISSILE = {
 
 
 
-            var dev_e = cruise_or_loft ==1?t_elev_deg:me.curr_tgt_e;#
+            var dev_e = me.curr_tgt_e;#
             var dev_h = me.curr_tgt_h;#
 
             #print(sprintf("curr: elev=%.1f", dev_e)~sprintf(" head=%.1f", dev_h));
@@ -839,6 +838,8 @@ var MISSILE = {
 
             me.last_deviation_e = dev_e;
             me.last_deviation_h = dev_h;
+
+            dev_e = cruise_or_loft ==1?(t_elev_deg - me.pitch):dev_e;
 
             ###########################
             # proportional navigation #
@@ -871,7 +872,7 @@ var MISSILE = {
                         me.last_t_norm_speed = t_LOS_norm_speed;
                     }
 
-                    var t_LOS_norm_acc   = (t_LOS_norm_speed - me.last_t_norm_speed)/dt;
+                    var t_LOS_norm_acc   = (t_LOS_norm_speed - me.last_t_norm_speed)/dt_;
 
                     me.last_t_norm_speed = t_LOS_norm_speed;
 
@@ -882,7 +883,7 @@ var MISSILE = {
 
                     # now translate that sideways acc to an angle:
                     var velocity_vector_length_fps = me.old_speed_horz_fps;
-                    var commanded_sideways_vector_length_fps = acc_sideways_ftps2*dt;
+                    var commanded_sideways_vector_length_fps = acc_sideways_ftps2*dt_;
                     dev_h = math.atan2(commanded_sideways_vector_length_fps, velocity_vector_length_fps)*R2D;
                     
                     #print(sprintf("horz leading by %.1f deg, commanding %.1f deg", me.curr_tgt_h, dev_h));
@@ -902,11 +903,11 @@ var MISSILE = {
                             me.last_t_elev_norm_speed = t_LOS_elev_norm_speed;
                         }
 
-                        var t_LOS_elev_norm_acc            = (t_LOS_elev_norm_speed - me.last_t_elev_norm_speed)/dt;
+                        var t_LOS_elev_norm_acc            = (t_LOS_elev_norm_speed - me.last_t_elev_norm_speed)/dt_;
                         me.last_t_elev_norm_speed          = t_LOS_elev_norm_speed;
 
                         var acc_upwards_ftps2 = proportionality_constant*line_of_sight_rate_up_rps*vert_closing_rate_fps+proportionality_constant*t_LOS_elev_norm_acc/2;
-                        var commanded_upwards_vector_length_fps = acc_upwards_ftps2*dt;
+                        var commanded_upwards_vector_length_fps = acc_upwards_ftps2*dt_;
                         dev_e = math.atan2(commanded_upwards_vector_length_fps, velocity_vector_length_fps)*R2D;
                         #print(sprintf("vert leading by %.1f deg", me.curr_tgt_e));
                     }
@@ -955,10 +956,6 @@ var MISSILE = {
             me.check_t_in_fov();
             # we are not launched yet: update_track() loops by itself at 10 Hz.
             #SwSoundVol.setValue(vol_track);
-        }
-        if(me.status == 2 and me.free == 0 and me.life_time > me.Life)
-        {
-            settimer(func(){ me.update_track(); }, 0.1);
         }
         return(1);
     },
