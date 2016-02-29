@@ -5,12 +5,14 @@ Defeat spam filter with hit/fire messages.
 Accuracy of M2000 missiles.
 Improve drastic the quality of acceleration to degree function in proportional navigation.
 Make cannon work on F-15
+Put mirror effect on mirage
+Fix radar error in mirage.
+Arming time on f-15/14/M.
+Put Mirage terrain masking on F-15.
 
 Fairly small tasks
 ==================
 Implement damage formula Raider1 found to damage code.
-Look at Mirage's use of me.free to make sure it can hit after it goes free.
-Arming time on f-15/14.
 
 Bigger tasks
 ============
