@@ -28,7 +28,67 @@ var incoming_listener = func {
     if (size(last_vector) > 1 and author != callsign) {
       # not myself
       #print("not me");
-      if (1 == 1) { #  getprop("sim/ja37/armament/damage") == 1) {
+      var m2000 = FALSE;
+      if (find(" at " ~ callsign ~ ". Release ", last_vector[1]) != -1) {
+        # a m2000 is firing at us
+        m2000 = TRUE;
+      }
+      if (last_vector[1] == " FOX2 at" or last_vector[1] == " aim7 at" or last_vector[1] == " aim9 at" or last_vector[1] == " aim120 at" or last_vector[1] == " RB-24J fired at" or last_vector[1] == " RB-74 fired at" or last_vector[1] == " RB-71 fired at" or last_vector[1] == " RB-99 fired at" or m2000 == TRUE) {
+        # air2air being fired
+        if (size(last_vector) > 2 or m2000 == TRUE) {
+          #print("Missile launch detected at"~last_vector[2]~" from "~author);
+          if (m2000 == TRUE or last_vector[2] == " "~callsign) {
+            # its being fired at me
+            #print("Incoming!");
+            var enemy = getCallsign(author);
+            if (enemy != nil) {
+              #print("enemy identified");
+              var bearingNode = enemy.getNode("radar/bearing-deg");
+              if (bearingNode != nil) {
+                #print("bearing to enemy found");
+                var bearing = bearingNode.getValue();
+                var heading = getprop("orientation/heading-deg");
+                var clock = bearing - heading;
+                while(clock < 0) {
+                  clock = clock + 360;
+                }
+                while(clock > 360) {
+                  clock = clock - 360;
+                }
+                #print("incoming from "~clock);
+                if (clock >= 345 or clock < 15) {
+                  playIncomingSound("12");
+                } elsif (clock >= 15 and clock < 45) {
+                  playIncomingSound("1");
+                } elsif (clock >= 45 and clock < 75) {
+                  playIncomingSound("2");
+                } elsif (clock >= 75 and clock < 105) {
+                  playIncomingSound("3");
+                } elsif (clock >= 105 and clock < 135) {
+                  playIncomingSound("4");
+                } elsif (clock >= 135 and clock < 165) {
+                  playIncomingSound("5");
+                } elsif (clock >= 165 and clock < 195) {
+                  playIncomingSound("6");
+                } elsif (clock >= 195 and clock < 225) {
+                  playIncomingSound("7");
+                } elsif (clock >= 225 and clock < 255) {
+                  playIncomingSound("8");
+                } elsif (clock >= 255 and clock < 285) {
+                  playIncomingSound("9");
+                } elsif (clock >= 285 and clock < 315) {
+                  playIncomingSound("10");
+                } elsif (clock >= 315 and clock < 345) {
+                  playIncomingSound("11");
+                } else {
+                  playIncomingSound("");
+                }
+                return;
+              }
+            }
+          }
+        }
+      } elsif (1 == 1) { # mirage: getprop("/controls/armament/mp-messaging")
         # latest version of failure manager and taking damage enabled
         #print("damage enabled");
         var last1 = split(" ", last_vector[1]);
@@ -107,5 +167,34 @@ var fail_systems = func (probability) {
     }
     return failed;
 };
+
+var playIncomingSound = func (clock) {
+  setprop("sound/incoming"~clock, 1);
+  settimer(func {stopIncomingSound(clock);},3);
+}
+
+var stopIncomingSound = func (clock) {
+  setprop("sound/incoming"~clock, 0);
+}
+
+var callsign_struct = {};
+var getCallsign = func (callsign) {
+  var node = callsign_struct[callsign];
+  return node;
+}
+
+var processCallsigns = func () {
+  callsign_struct = {};
+  var players = props.globals.getNode("ai/models").getChildren();
+  foreach (var player; players) {
+    if(player.getChild("valid") != nil and player.getChild("valid").getValue() == TRUE and player.getChild("callsign") != nil and player.getChild("callsign").getValue() != "" and player.getChild("callsign").getValue() != nil) {
+      var callsign = player.getChild("callsign").getValue();
+      callsign_struct[callsign] = player;
+    }
+  }
+  settimer(processCallsigns, 1.5);
+}
+
+processCallsigns();
 
 setlistener("/sim/multiplay/chat-history", incoming_listener, 0, 0);
