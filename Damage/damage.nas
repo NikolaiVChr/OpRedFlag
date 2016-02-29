@@ -1,5 +1,8 @@
 var clamp = func(v, min, max) { v < min ? min : v > max ? max : v }
 
+var TRUE  = 1;
+var FALSE = 0;
+
 var warhead_lbs = {
     "aim-120":              44.0,
     "AIM120":               44.0,
