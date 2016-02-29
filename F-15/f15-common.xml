@@ -1999,6 +1999,7 @@
             <radar2-range type="double">50</radar2-range>
             <radar-standby type="bool">0</radar-standby>
             <symbols-enabled type="bool">true</symbols-enabled>
+            <debug-mode type="bool">true</debug-mode>
         </radar>
         <ecm>
             <enabled type="bool">true</enabled>

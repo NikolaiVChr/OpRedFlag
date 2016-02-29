@@ -491,7 +491,7 @@ var isNotBehindTerrain = func(node) {
         z = node.getNode("position/global-z").getValue(); },
         nil, var err = []);
     if(x == nil or y == nil or z == nil) {
-        return 0;
+        return 1;
     }
     var SelectCoord = geo.Coord.new().set_xyz(x, y, z);
 
