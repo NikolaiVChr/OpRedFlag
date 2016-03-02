@@ -475,6 +475,23 @@ if(size(sorted_dist)>0)
     swp_dir_last = swp_dir;
 
     cnt += 0.05;
+
+    if (!containsV(tgts_list, active_u)) {
+        active_u = nil;
+        active_u_callsign = nil;
+    }
+}
+
+var containsV = func (vector, content) {
+    if (content == nil) {
+        return 0;
+    }
+    foreach(var vari; vector) {
+        if (vari.string == content.string) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 #
