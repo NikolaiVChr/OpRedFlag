@@ -1,14 +1,5 @@
 Done, needs testing
 ===================
-Make AI version of Viggen for Raider1.
-Defeat spam filter with hit/fire messages.
-Accuracy of M2000 missiles.
-Improve drastic the quality of acceleration to degree function in proportional navigation.
-Make cannon work on F-15
-Put mirror effect on mirage
-Fix radar error in mirage.
-Arming time on f-15/14/M.
-Put Mirage terrain masking on F-15.
 
 Fairly small tasks
 ==================
@@ -18,10 +9,38 @@ Bigger tasks
 ============
 Merge missile code with Shinobi's, so we only have 1 missile code to maintain.
 Make missiles bleed energy when doing high G turns.
-Framerate drop of F-15 missiles?
 
 
 
 
 
 
+Merge missile code:
+===================
+
+Goal: Same missile code for all 4 aircraft: JA37, F15, F14 and M2000
+
+Already done:
+-------------
+Restructure methods to seperate flying from searching/lock updates.
+
+Shinobi stuff that should be added:
+-------
+Rail or drop simulation (solve if should be released into wind or not)
+Cruise missiles (merge with my lofting/crusing)
+Max speed (convert to max speed above launch platform)
+Heat seeking (merge with my simulation of that)
+
+Problems to solve:
+------------------
+Getting target properties from radar/property tree
+Move armament stats to generic place in property tree
+For future addition to new aircrafts, make sure to retain code to put diamond on default FG HUD.
+
+Future:
+-------
+Chaff sim
+Better flare sim
+Missile streak visible over MP
+Missile/lock warning on TWR
+No MP chat msg.
