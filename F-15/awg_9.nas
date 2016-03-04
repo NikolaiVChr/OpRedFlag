@@ -42,7 +42,7 @@ var r_az_fld          = 0;
 var swp_fac           = nil;    # Scan azimuth deviation, normalized (-1 --> 1).
 var swp_deg           = nil;    # Scan azimuth deviation, in degree.
 var swp_deg_last      = 0;      # Used to get sweep direction.
-var swp_spd           = 1.7; 
+var swp_spd           = 0.5; 
 var swp_dir           = nil;    # Sweep direction, 0 to left, 1 to right.
 var swp_dir_last      = 0;
 var ddd_screen_width  = 0.0844; # 0.0844m : length of the max azimuth range on the DDD screen.
@@ -357,14 +357,14 @@ active_u = nil;
         {
             if (nearest_u != nil)
             {
-                active_u_callsign = nearest_u.Callsign.getValue();
+#                active_u_callsign = nearest_u.Callsign.getValue();
             }
             if (tmp_nearest_u != nil)
             {
-                if (tmp_nearest_u.Callsign != nil)
-                    active_u_callsign = tmp_nearest_u.Callsign.getValue();
-                else
-                    active_u_callsign = nil;
+#                if (tmp_nearest_u.Callsign != nil)
+#                    active_u_callsign = tmp_nearest_u.Callsign.getValue();
+#                else
+#                    active_u_callsign = nil;
 
             }
         }
@@ -478,7 +478,7 @@ if(size(sorted_dist)>0)
 
     if (!containsV(tgts_list, active_u)) {
         active_u = nil;
-        active_u_callsign = nil;
+        #active_u_callsign = nil;
     }
 }
 
