@@ -12,6 +12,33 @@
 			Nikolai V. Chr.
 		</description>
 
+		<nasal>
+		    <load><![CDATA[
+		    	var up = 1;
+		    	var loop = func () {
+				    foreach( var tanker; props.globals.getNode("/ai/models",1).getChildren("tanker") ) {
+				        var callsign = tanker.getNode("callsign").getValue();
+				        if( callsign == nil ) continue;
+				        if( string.match(callsign,"Evading*") ) {
+				        	var node = tanker.getNode("position/altitude-ft", 1 );
+				        	var alt = node.getValue();
+				        	if(alt > 10000 and up == 1) {
+			        			up = -1;
+			        		} elsif (alt < 7500 and up == -1) {
+			        			up = 1;
+			        		}
+			        		alt = alt + 10*up;
+				          	node.setDoubleValue(alt);
+				        }
+			      	}
+			      	settimer(loop, 0);
+			    }
+			    loop();
+		      	debug.dump('Moving targets scenario load script complete');
+		    ]]>
+		    </load>
+		</nasal>
+
 		<entry>
 			<name>Tanker-1</name>
 			<callsign>Evading-target</callsign>
