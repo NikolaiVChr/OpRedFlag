@@ -7,6 +7,7 @@ Implement damage formula Raider1 found to damage code.
 
 Bigger tasks
 ============
+Make anti-cheat code.
 Merge missile code with Shinobi's, so we only have 1 missile code to maintain.
 Make missiles bleed energy when doing high G turns.
 
