@@ -39,6 +39,7 @@ var pitch_factor = 19.8;
 var pitch_factor_2 = pitch_factor * 180.0 / 3.14159;
 var alt_range_factor = (9317-191) / 100000; # alt tape size and max value.
 var ias_range_factor = (694-191) / 1100;
+var last_clo = [];
 
 var F15HUD = {
 	new : func (svgname, canvas_item,tran_x,tran_y){
@@ -217,10 +218,44 @@ var F15HUD = {
 #
 #these labels aren't correct - but we don't have a full simulation of the targetting and missiles so 
 #have no real idea on the details of how this works.
+                var range = awg_9.active_u.get_range() *NM2M;
+                var clo = 0;
+                var time = getprop("sim/time/elapsed-sec");
+                if (range != nil and time != nil) {
+                    #print("valid");
+                    if (size(me.last_clo) > 0) {
+                        #print("last valid");
+                        if (me.last_clo[0].Callsign != nil and me.last_clo[0].Callsign != awg_9.active_u.Callsign) {
+                            # new target
+                            #print("new target");
+                            me.last_clo = [awg_9.active_u, range, time, 0];
+                        } elsif (me.last_clo[1] != range) {#awg_9.active_u != me.last_clo[0]
+                            # compute new closing rate
+                            var dt = time - me.last_clo[2];
+                            clo = ((me.last_clo[1] - range) / dt) * MPS2KT;
+                            #print("compute "~clo~" "~(me.last_clo[1] - range)~" "~dt);
+                            me.last_clo = [awg_9.active_u, range, time, clo];
+                        } else {
+                            # radar has not updated target, keep last closing rate
+                            #print("keep last");
+                            clo = me.last_clo[3];
+                        }
+                    } else {
+                        #print("first time");
+                        me.last_clo = [awg_9.active_u, range, time, 0];
+                    }
+                } else {
+                    # not init, reset last
+                    #print("nils");
+                    me.last_clo = [];
+                }
                 me.window4.setText(sprintf("RNG %3.1f", awg_9.active_u.get_range()));
-                me.window5.setText(sprintf("CLO %-3d", awg_9.active_u.get_closure_rate()));
+                me.window5.setText(sprintf("CLO %-4d", clo));
                 me.window6.setText(model);
                 me.window6.setVisible(1); # SRM UNCAGE / TARGET ASPECT
+            } else {
+                #print("no target");
+                me.last_clo = [];
             }
         }
         else
