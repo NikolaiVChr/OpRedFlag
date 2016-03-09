@@ -6,35 +6,9 @@
     <property value="1">fcs/ari-lateral-enabled</property>
 
     <channel name="Pitch">
-        <fcs_function name="fcs/elevator/stick-geared">
-            <function>
-                <table>
-                    <independentVar lookup="row">fcs/elevator-cmd-norm</independentVar>
-                    <tableData>
-                        -1.00  -1.00
-                        -0.86  -0.74
-                        -0.75  -0.56
-                        -0.62  -0.40
-                        -0.50  -0.28
-                        -0.38  -0.19
-                        -0.23  -0.11
-                        -0.10  -0.045
-                         0.00   0.00
-                         0.10   0.045
-                         0.23   0.11
-                         0.38   0.19
-                         0.50   0.28
-                         0.62   0.40
-                         0.75   0.56
-                         0.86   0.74
-                         1.00   1.00
-                    </tableData>
-                </table>
-            </function>
-        </fcs_function>
         
         <summer name="Pitch Trim Sum">
-            <input>fcs/elevator/stick-geared</input>
+            <input>fcs/elevator-cmd-norm</input>
             <input>fcs/pitch-trim-cmd-norm</input>
             <input>fcs/pitch-damper-rate</input>
             <input>systems/afcs/elevator-cmd-delta</input>
@@ -183,35 +157,8 @@
     <!-- aileron: +/- 5deg : +/- 33 deg/sec -->
     <channel name="Roll">
 
-        <fcs_function name="fcs/aileron/stick-geared">
-            <function>
-                <table>
-                    <independentVar lookup="row">fcs/aileron-cmd-norm</independentVar>
-                    <tableData>
-                        -1.00  -1.00
-                        -0.86  -0.74
-                        -0.75  -0.56
-                        -0.62  -0.40
-                        -0.50  -0.28
-                        -0.38  -0.19
-                        -0.23  -0.11
-                        -0.10  -0.045
-                         0.00   0.00
-                         0.10   0.045
-                         0.23   0.11
-                         0.38   0.19
-                         0.50   0.28
-                         0.62   0.40
-                         0.75   0.56
-                         0.86   0.74
-                         1.00   1.00
-                    </tableData>
-                </table>
-            </function>
-        </fcs_function>
-
         <summer name="fcs/roll-trim-sum-raw">
-            <input>fcs/aileron/stick-geared</input>
+            <input>fcs/aileron-cmd-norm</input>
             <input>fcs/roll-trim-cmd-norm</input>
             <input>fcs/roll-trim-sas-cmd-norm</input>
             <input>fcs/roll-rate-limiter</input>
