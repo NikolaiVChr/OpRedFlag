@@ -200,4 +200,75 @@ var processCallsigns = func () {
 
 processCallsigns();
 
+#f15c
+var sendMis = func () {
+  var mkeys = keys(aircraft.AIM9.active);
+  var str = "";
+  foreach(var m; mkeys) {
+    var mid = m;
+    m = aircraft.AIM9.active[m];
+    if (m.status == 2) {
+      var lat = m.latN.getValue();
+      var lon = m.lonN.getValue();
+      var alt = m.altN.getValue();
+      #print();
+      #print(mid);
+      #print(lat);
+      #print(lon);
+      #print(alt);
+      str = str~mid~";"~lat~";"~lon~";"~alt~":";
+    }
+  }
+  setprop("sim/multiplay/generic/string[13]", str);
+  settimer(sendMis,0.05);
+}
+
+#f14b
+var sendMis = func () {
+  var mkeys = keys(fox2.AIM9.active);
+  var str = "";
+  foreach(var m; mkeys) {
+    var mid = m;
+    m = fox2.AIM9.active[m];
+    if (m.status == 2) {
+      var lat = m.latN.getValue();
+      var lon = m.lonN.getValue();
+      var alt = m.altN.getValue();
+      #print();
+      #print(mid);
+      #print(lat);
+      #print(lon);
+      #print(alt);
+      str = str~mid~";"~lat~";"~lon~";"~alt~":";
+    }
+  }
+  setprop("sim/multiplay/generic/string[13]", str);
+  settimer(sendMis,0.05);
+}
+
+#m2000-5
+var sendMis = func () {
+  var mkeys = keys(missile.MISSILE.active);
+  var str = "";
+  foreach(var m; mkeys) {
+    var mid = m;
+    m = missile.MISSILE.active[m];
+    if (m.status == 2) {
+      var lat = m.latN.getValue();
+      var lon = m.lonN.getValue();
+      var alt = m.altN.getValue();
+      #print();
+      #print(mid);
+      #print(lat);
+      #print(lon);
+      #print(alt);
+      str = str~mid~";"~lat~";"~lon~";"~alt~":";
+    }
+  }
+  setprop("sim/multiplay/generic/string[13]", str);
+  settimer(sendMis,0.05);
+}
+
+sendMis();
+
 setlistener("/sim/multiplay/chat-history", incoming_listener, 0, 0);

@@ -1,5 +1,6 @@
 Done, needs testing
 ===================
+Closing rate on f15 hud.
 
 Fairly small tasks
 ==================

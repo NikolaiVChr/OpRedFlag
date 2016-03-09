@@ -1134,6 +1134,7 @@
                 <!-- mp-network -->
                 <string n="1" type="string">xxx</string>
                 <string n="2" type="string" alias="/sim/model/f15/variant"/>
+                <string n="13" type="string"></string>
                 <!-- instruments -->
             </generic>
             <!-- set default aircaft model to us; I find it hard to see the glider. -->
