@@ -137,7 +137,7 @@ var az_scan = func() {
 # be ok; the values (distance etc) will be read from the target list so these will be accurate
 # which isn't quite how radar works but it will be good enough for us.
 
-    if (swp_dir != swp_dir_last)
+    if (1==1 or swp_dir != swp_dir_last)
     {
 #print("Sweep ",active_u, active_u_callsign);
         # Antena scan direction change (at max: more or less every 2 seconds). Reads the whole MP_list.
