@@ -39,7 +39,7 @@ var pitch_factor = 19.8;
 var pitch_factor_2 = pitch_factor * 180.0 / 3.14159;
 var alt_range_factor = (9317-191) / 100000; # alt tape size and max value.
 var ias_range_factor = (694-191) / 1100;
-var last_clo = [];
+
 
 var F15HUD = {
 	new : func (svgname, canvas_item,tran_x,tran_y){
@@ -114,6 +114,8 @@ var F15HUD = {
             else
                 print("HUD: could not locate ",name);
         }
+
+        obj.last_clo = [];
 
 		return obj;
 	},
