@@ -1,21 +1,19 @@
 Done, needs testing
 ===================
 
+
 Fairly small tasks
 ==================
 Implement damage formula Raider1 found to damage code.
 Notching should only be possible below certain speeds.
-Make code to confirm that damage is used.
-Priority: Missile in f15 should update the target fast.
+Port anti-cheat code from Viggen.
+Port rail/drop code from Viggen.
+
 
 Bigger tasks
 ============
-Make anti-cheat code.
 Merge missile code with Shinobi's, so we only have 1 missile code to maintain.
 Make missiles bleed energy when doing high G turns.
-Make sepearte function for converting structure coord into GPS coord.
-
-
 
 
 
