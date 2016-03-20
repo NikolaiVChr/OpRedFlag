@@ -6,13 +6,14 @@ Fairly small tasks
 Implement damage formula Raider1 found to damage code.
 Notching should only be possible below certain speeds.
 Make code to confirm that damage is used.
+Priority: Missile in f15 should update the target fast.
 
 Bigger tasks
 ============
 Make anti-cheat code.
 Merge missile code with Shinobi's, so we only have 1 missile code to maintain.
 Make missiles bleed energy when doing high G turns.
-
+Make sepearte function for converting structure coord into GPS coord.
 
 
 
@@ -27,12 +28,12 @@ Already done:
 -------------
 Restructure methods to seperate flying from searching/lock updates.
 Missile streak visible over MP (prototype)
+Rail or drop (7ft) simulation (solve if should be released into wind or not)
 
 Shinobi stuff that should be added:
 -------
-Rail or drop simulation (solve if should be released into wind or not)
 Cruise missiles (merge with my lofting/crusing)
-Max speed (convert to max speed above launch platform)
+Max speed (convert to max speed above launch platform for some missiles)
 Heat seeking (merge with my simulation of that)
 
 Problems to solve:

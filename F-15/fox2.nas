@@ -824,7 +824,7 @@ print(phrase);
 		if ( me.curr_tgt_e < e_d or me.curr_tgt_e > e_u or me.curr_tgt_h < h_l or me.curr_tgt_h > h_r ) {		
 			# Target out of FOV while still not launched, return to search loop.
 			me.status = 0;
-			settimer(func me.search(), 2);
+			settimer(func me.search(), 0.1);
 			me.Tgt = nil;
 			SwSoundVol.setValue(vol_search);
 			me.reset_seeker();
@@ -864,7 +864,7 @@ print(phrase);
 				me.TgtHdg_prop       = props.globals.getNode(t_ori_str).getChild("true-heading-deg");
 				me.TgtPitch_prop     = props.globals.getNode(t_ori_str).getChild("pitch-deg");
 				me.TgtSpeed_prop     = props.globals.getNode(t_vel_str).getChild("true-airspeed-kt");
-				settimer(func me.update_track(nil), 2);
+				settimer(func me.update_track(nil), 0.1);
 				return;
 			}
 		}
