@@ -865,7 +865,7 @@ var Radar = {
 ################################################################
 #####################   Target class  ##########################
 ################################################################
-
+setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "o"~"r"~"f");
 var Target = {
     new: func(c,theTree = nil){
         var obj             = { parents : [Target,geo.Coord.new()]};
