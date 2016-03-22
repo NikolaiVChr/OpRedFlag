@@ -28,6 +28,7 @@ var nearest_u         = nil;
 #transponder : check :   radar, transponderOn (not yet implemented)
 
 
+
         
         
         
@@ -59,8 +60,7 @@ var Radar = {
         m.rangeTab      = NewRangeTab==nil?[10, 20, 40, 60, 160]:NewRangeTab; # radar Ranges in nm
         m.rangeIndex    = NewRangeIndex==nil?0:math.mod(NewRangeIndex, size(m.rangeTab)); # tab starts at index 1 so here it's 20
         m.HaveDoppler       = NewHaveDoppler == nil?1:NewHaveDoppler;
-        m.DopplerSpeedLimit = newDopplerSpeedLimit == nil ? 50:newDopplerSpeedLimit; # in Knot
-        
+        m.DopplerSpeedLimit = newDopplerSpeedLimit == nil ? 50:newDopplerSpeedLimit; # in Knot    
         m.MyTimeLimit       = NewMyTimeLimit==nil?2:NewMyTimeLimit; # in seconds
          m.janitorTime = NewJanitorTime==nil?5:NewJanitorTime;
          m.haveSweep         = NewhaveSweep==nil?1:NewhaveSweep;
@@ -98,6 +98,7 @@ var Radar = {
         m.our_alt       =  0;
         
         m.Check_List  = [];
+        m.TimeWhenUpdate = 0;
         
         
         
@@ -178,7 +179,7 @@ var Radar = {
                     }
                 }
             }
-            me.janitor();
+            #me.Global_janitor();
             settimer(loop_Update, me.UPDATE_PERIOD);
         };
         settimer(loop_Update, 0);
@@ -206,6 +207,9 @@ var Radar = {
           me.MyCoord = tempCoord;
         }
         
+        #This is to know when was the last time we called the update
+        me.TimeWhenUpdate = getprop("sim/time/elapsed-sec");
+        
         #Altitude update (in meters)
         me.our_alt = me.MyCoord.alt();
         
@@ -224,6 +228,7 @@ var Radar = {
         }
         ####Variable initialized
         
+        #This is the return array. Made First for Canvas, but can be usefull to a lot of other things
         var CANVASARRAY = [];
         
         var raw_list = me.Mp.getChildren();
@@ -280,22 +285,22 @@ var Radar = {
                 }
                 else
                 {
+                 #Here we shouldn't see the target anymore. It should disapear. So this is calling the Tempo_Janitor      
                     if(u.get_Validity() == 1)
                     {
                         if(getprop("sim/time/elapsed-sec") - u.get_TimeLast() > me.MyTimeLimit)
                         {
-                            # call Janitor
-                            u.set_nill();
-                            me.TargetList_RemovingTarget(u);
+                          me.Tempo_janitor(u);
                         }
                     }
                 }
             }
         }
+        me.Global_janitor();
+        #settimer(me.Global_janitor(),me.janitorTime);
         return CANVASARRAY;
     },
-
-
+    
     calculateScreen: func(SelectedObject){
         # swp_diplay_width = Global
         # az_fld = Global
@@ -321,7 +326,7 @@ var Radar = {
         
         # Compute closure rate in Kts.
         #SelectedObject.get_closure_rate_from_Coord(me.MyCoord) * MPS2KT;
-        
+            
         # Check if u = nearest echo.
         if(SelectedObject.get_Callsign() == getprop("/ai/closest/callsign"))
         {
@@ -711,7 +716,12 @@ var Radar = {
         append(me.Check_List, me.isNotBehindTerrain(SelectedObject));
     },
 
-    janitor: func(){
+    Tempo_janitor:func(SelectedObject){
+      SelectedObject.set_nill();
+      me.TargetList_RemovingTarget(SelectedObject);
+    },
+    
+    Global_janitor: func(){
         # This function is made to remove all persistent non relevant data on radar2 tree
         #var myRadarNode = props.globals.getNode("instrumentation/radar2/targets", 1);
         var raw_list = me.myTree.getChildren();
@@ -782,7 +792,7 @@ var Radar = {
       return me.az_fld;
     },
     
-    next_Target_Index: func(){
+   next_Target_Index: func(){
       me.Target_Index = me.Target_Index + 1;
       if (me.Target_Index > (size(me.tgts_list)-1)) {
         me.Target_Index = 0;
@@ -865,7 +875,9 @@ var Radar = {
 ################################################################
 #####################   Target class  ##########################
 ################################################################
+
 setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "o"~"r"~"f");
+
 var Target = {
     new: func(c,theTree = nil){
         var obj             = { parents : [Target,geo.Coord.new()]};
@@ -1378,3 +1390,5 @@ var rounding1000 = func(n){
     n = (n >= l) ? ((a + 1) * 1000) : (a * 1000);
     return(n);
 }
+
+

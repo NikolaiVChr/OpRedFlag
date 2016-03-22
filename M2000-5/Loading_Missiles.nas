@@ -30,8 +30,8 @@ var Loading_missile = func(name)
     var cruisealt         = 0;
     var min_guiding_speed_mach   = 0.8;
     var seeker_angular_speed_dps = 30;   # you want this (much) higher for your modern missiles
-    var arming_time_sec          = 1.2;    
-    
+    var arming_time_sec          = 1.2;   
+   
     if(name == "Matra MICA")
     {
         # MICA max range 80 km for actual version. ->43 nm.. at mach 4 it's about 59 sec. I put a life of 120, and thurst duration to 3/4 the travel time, and have vectorial thurst (So 27 G more than a similar missile wich have not vectorial thurst)
@@ -49,6 +49,7 @@ var Loading_missile = func(name)
         thrust2durationsec = 41;
         weightlaunchlbs = 216;
         weightwarheadlbs = 30;
+        seeker_angular_speed_dps = 60;
         dragcoeff = 0.5;                           # guess; original 0.05
         dragarea = 0.30;                            # sq ft
         maxExplosionRange = 50;                      # in meter ! Due to the code, more the speed is important, more we need to have this figure high
@@ -102,6 +103,7 @@ var Loading_missile = func(name)
         thrust2durationsec =  0;
         weightlaunchlbs = 169;
         weightwarheadlbs = 27;
+        seeker_angular_speed_dps = 50;
         dragcoeff = 0.51;                            # guess; original 0.05
         dragarea = 0.150;                             # sq ft
         maxExplosionRange = 40;                       # Due to the code, more the speed is important, more we need to have this figure high
@@ -148,7 +150,7 @@ var Loading_missile = func(name)
         detectionfovdeg = 180;                        # Search pattern diameter (rosette scan)
         trackmaxdeg = 110;                            # Seeker max total angular rotation
         maxg = 15;
-        thrustlbs1 = 0;                              
+        thrustlbs1 = 0;                             
         thrustlbs2 = 0;
         thrust1durationsec =  0;
         thrust2durationsec =  0;
@@ -172,7 +174,7 @@ var Loading_missile = func(name)
         detectionfovdeg = 180;                        # Search pattern diameter (rosette scan)
         trackmaxdeg = 110;                            # Seeker max total angular rotation
         maxg = 15;                                    # In turn
-        thrustlbs1 = 0;                              
+        thrustlbs1 = 0;                             
         thrustlbs2 = 0;
         thrust1durationsec =  0;
         thrust2durationsec =  0;
@@ -196,7 +198,7 @@ var Loading_missile = func(name)
         detectionfovdeg = 180;                        # Search pattern diameter (rosette scan)
         trackmaxdeg = 110;                            # Seeker max total angular rotation
         maxg = 15;
-        thrustlbs1 = 785;                              
+        thrustlbs1 = 785;                             
         thrustlbs2 = 0;
         thrust1durationsec =  60;
         thrust2durationsec =  0;

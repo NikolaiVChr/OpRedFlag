@@ -5,7 +5,7 @@
        02/08/2015 Updated by Hardball : added comments
 -->
 <PropertyList>
-
+  
   <path>m2000-5.ac</path>
 
   <sound>
@@ -105,8 +105,7 @@
       if (skip == 0) {
           loop();
       }
-
-
+      
       # WARNING : The on-load Nasal is not executed when this file is loaded as the
       # user aircraft.
       #
@@ -428,7 +427,7 @@
   <animation>
     <type>translate</type>
     <object-name>Interior</object-name>
-    <property>/controls/cabin/shaking</property>
+    <property>controls/cabin/shaking</property>
     <axis>
       <x1-m>  0</x1-m>
       <y1-m>  0</y1-m>
