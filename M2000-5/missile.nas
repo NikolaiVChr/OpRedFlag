@@ -715,6 +715,7 @@ var MISSILE = {
             # status = launched : compute target position relative to seeker head.
             
             # Get target position.
+            me.t_coord.set_latlon(me.Tgt.get_Latitude(), me.Tgt.get_Longitude(), me.Tgt.get_altitude() * FT2M);
             var t_alt =  me.Tgt.get_altitude();
             
             # problem here : We have to calculate de alt difference before
