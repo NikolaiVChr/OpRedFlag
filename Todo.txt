@@ -22,6 +22,20 @@ Make missiles bleed energy when doing high G turns.
 
 
 
+How-to keep updated with Richards ORF branch:
+---------------------------------------------
+1 - Fetch his branch
+2 - Copy those files into my ORF repo one by one, and check diff
+3 - Modify those files in the aircraft/f-15
+4 - Commit the unmodified files to my ORF repo
+5 - Copy the modified files into my ORF repo and commit them.
+6 - Make further changes (Loft, Cruise, G-Drop, Rail & drop)
+7 - Commit those files.
+8 - Copy and commit the same files to local ORF branch.
+9 - Make pull request if needed.
+
+
+===================
 Merge missile code:
 ===================
 
