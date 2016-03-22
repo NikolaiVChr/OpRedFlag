@@ -331,7 +331,7 @@ print("Model ",missile_model);
 		var drag_acc = (cdm * 0.5 * rho * old_speed_fps * old_speed_fps * me.eda / mass);
 		var speed_fps = old_speed_fps - drag_acc*dt + acc*dt;
 
-				#### Guidance.
+		#### Guidance.
 
         if ( me.status == 2 and me.free == 0)
         {
@@ -346,7 +346,7 @@ print("Model ",missile_model);
 				me.track_signal_h = 0;
 
 				print("Not guiding (too low speed)");
-			}
+            }
             #print(me.life_time);
             if (init_launch == 0 )
             {
@@ -438,7 +438,7 @@ print("Model ",missile_model);
                         #Disable for the moment
                     }
                 }
-            }            
+            }
         }
 		# record the velocities for the next loop.
 		me.s_north = speed_north_fps;
@@ -746,7 +746,7 @@ print("Model ",missile_model);
 		          ident = me.Tgt.Callsign.getValue();
 		        }
 
-		        var min_distance = me.direct_dist_m;
+				var min_distance = me.direct_dist_m;
 				var explosion_coord = me.last_coord;
 				for (var i = 0.05; i < 1; i += 0.05) {
 					var t_coord = me.interpolate(me.last_t_coord, me.t_coord, i);
@@ -768,7 +768,7 @@ print("Model ",missile_model);
 						}
 					}
 				}
-		        
+
 				var phrase = sprintf( me.variant~" exploded: %01.1f", min_distance) ~ " meters from: " ~ ident;
 
 				#var phrase = sprintf( "%01.0f", me.direct_dist_m) ~ "meters";
@@ -824,7 +824,7 @@ print(phrase);
 		if ( me.curr_tgt_e < e_d or me.curr_tgt_e > e_u or me.curr_tgt_h < h_l or me.curr_tgt_h > h_r ) {		
 			# Target out of FOV while still not launched, return to search loop.
 			me.status = 0;
-			settimer(func me.search(), 0.1);
+			settimer(func me.search(), 2);
 			me.Tgt = nil;
 			SwSoundVol.setValue(vol_search);
 			me.reset_seeker();
@@ -864,7 +864,7 @@ print(phrase);
 				me.TgtHdg_prop       = props.globals.getNode(t_ori_str).getChild("true-heading-deg");
 				me.TgtPitch_prop     = props.globals.getNode(t_ori_str).getChild("pitch-deg");
 				me.TgtSpeed_prop     = props.globals.getNode(t_vel_str).getChild("true-airspeed-kt");
-				settimer(func me.update_track(nil), 0.1);
+				settimer(func me.update_track(nil), 2);
 				return;
 			}
 		}
@@ -975,7 +975,7 @@ var impact_report = func(pos, mass_slug, string) {
 
 var steering_speed_G = func(steering_e_deg, steering_h_deg, s_fps, dt) {
 	# Get G number from steering (e, h) in deg, speed in ft/s.
-	var steer_deg = math.sqrt((steering_e_deg*steering_e_deg) + (steering_h_deg*steering_h_deg));
+        var steer_deg = math.sqrt((steering_e_deg*steering_e_deg)+(steering_h_deg*steering_h_deg));
 
 	# next speed vector
 	var vector_next_x = math.cos(steer_deg*D2R)*s_fps;
@@ -1010,10 +1010,10 @@ var max_G_Rotation = func(steering_e_deg, steering_h_deg, s_fps, dt, gMax) {
 		if (new_g < gMax) {
 			lastgoodguess = guess;
 			guess = guess + coef;
-		} else {
+        }else{
 			guess = guess - coef;
-		}
-	}
+        }
+}
 	return lastgoodguess;
 }
 

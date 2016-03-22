@@ -9,6 +9,13 @@
 <PropertyList>
 
     <path>f15c.ac</path>
+    <multiplay>
+        <refuel>
+            <offset-x-m type="double">-0.3457</offset-x-m>
+            <offset-y-m type="double">-1.6912</offset-y-m>
+            <offset-z-m type="double">0.7946</offset-z-m>
+        </refuel>
+    </multiplay>
 
     <nasal>
         <load>
@@ -19,13 +26,19 @@
 
             var skip = 0;
             var str = self.getNode("sim/multiplay/generic/string[13]");
-            if (str == nil or str.getValue() == nil) {
+            if (str == nil) {
               skip = 1;
+              #print("skip");
             }
 
             var objs = {};
 
             var loop = func () {
+              if (str.getValue() == nil) {
+                settimer(loop, 0.05);
+                return;
+              }
+
               var mp_str = split(":", str.getValue());
 
               foreach(var mis; mp_str) {
@@ -1668,8 +1681,8 @@
         </offsets>
         <overlay>
             <params>
-                <augmentation-alight>/sim/multiplay/generic/int[8]</augmentation-alight>
-                <augmentation-ignition>/sim/multiplay/generic/float[8]</augmentation-ignition>
+                <augmentation-alight>sim/multiplay/generic/float[16]</augmentation-alight>
+                <augmentation-ignition>sim/multiplay/generic/float[8]</augmentation-ignition>
             </params>
         </overlay>
     </model>
@@ -1685,8 +1698,8 @@
         </offsets>
         <overlay>
             <params>
-                <augmentation-alight>/sim/multiplay/generic/int[9]</augmentation-alight>
-                <augmentation-ignition>/sim/multiplay/generic/float[9]</augmentation-ignition>
+                <augmentation-alight>sim/multiplay/generic/float[17]</augmentation-alight>
+                <augmentation-ignition>sim/multiplay/generic/float[9]</augmentation-ignition>
             </params>
         </overlay>
     </model>

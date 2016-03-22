@@ -1481,7 +1481,7 @@
             <condition>
                 <property>sound/incoming</property>
                 <property>sim/current-view/internal</property>
-                
+
             </condition>
             <volume>
                 <factor>4</factor>
