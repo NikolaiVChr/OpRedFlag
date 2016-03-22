@@ -266,7 +266,19 @@ var sendMis = func () {
     }
   }
   setprop("sim/multiplay/generic/string[13]", str);
+  logTime();
   settimer(sendMis,0.05);
+}
+
+var logTime = func{
+  #log time and date for outputing ucsv files for converting into KML files for google earth.
+  if (getprop("logging/log[0]/enabled") == TRUE and getprop("sim/time/utc/year") != nil) {
+    var date = getprop("sim/time/utc/year")~"/"~getprop("sim/time/utc/month")~"/"~getprop("sim/time/utc/day");
+    var time = getprop("sim/time/utc/hour")~":"~getprop("sim/time/utc/minute")~":"~getprop("sim/time/utc/second");
+
+    setprop("logging/date-log", date);
+    setprop("logging/time-log", time);
+  }
 }
 
 sendMis();

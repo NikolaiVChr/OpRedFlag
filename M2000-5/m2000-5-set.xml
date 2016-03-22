@@ -24,4 +24,40 @@
 
   </sim>
 
+  <logging>
+      <log>
+       <filename>C:/Users/Nikolai/Documents/m2000_flightlog.csv</filename>
+       <enabled>false</enabled>
+       <interval-ms>500</interval-ms>
+       <delimiter>,</delimiter>
+       <entry>
+        <enabled>true</enabled>
+        <title>Latitude</title>
+        <property>/position/latitude-deg</property>
+       </entry>
+       <entry>
+        <enabled>true</enabled>
+        <title>Longitude</title>
+        <property>/position/longitude-deg</property>
+       </entry>
+       <entry>
+        <enabled>true</enabled>
+        <title>alt ft</title>
+        <property>/position/altitude-ft</property>
+       </entry>
+       <entry>
+        <enabled>true</enabled>
+        <title>date</title>
+        <property>logging/date-log</property>
+       </entry>
+       <entry>
+        <enabled>true</enabled>
+        <title>time</title>
+        <property>logging/time-log</property>
+       </entry>
+      </log>
+      <time-log type="string">0:0:0</time-log>
+      <date-log type="string">0/0/0</date-log>
+     </logging>
+
 </PropertyList>
