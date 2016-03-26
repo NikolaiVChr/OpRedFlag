@@ -70,7 +70,10 @@ var MISSILE = {
         m.total_speed_ft = 1;
         m.vApproch       = 1;
         m.tpsApproch     = 0;
-        m.nextGroundElevation = 0; # next Ground Elevation in 2 dt
+
+        # cruise missiles
+        m.nextGroundElevation = 0; # next Ground Elevation
+        m.nextGroundElevationMem = [-10000, -1];
         
         # missile specs:
         m.missile_model     = getprop("controls/armament/missile/address");
@@ -101,6 +104,8 @@ var MISSILE = {
         m.arm_time          = getprop("controls/armament/missile/arming-time-sec");
 
         m.last_coord        = nil;
+
+        m.class = m.fox;
         
         # Find the next index for "models/model" and create property node.
         # Find the next index for "ai/models/missile" and create property node.
@@ -293,6 +298,8 @@ var MISSILE = {
 
         return c;
     },
+
+    clamp: func(v, min, max) { v < min ? min : v > max ? max : v },
 
     # this function is to convert for the missile from aircraft coordinate to absolute coordinate
     release: func(){
@@ -512,7 +519,45 @@ var MISSILE = {
         }
         #print("acc: ", acc, " _drag_acc: ", drag_acc);
         
-        
+        # this is for ground detection fr A/G cruise missile
+        if(me.cruisealt != 0 and me.cruisealt < 10000)
+        {
+            # detect terrain for use in terrain following
+            me.nextGroundElevationMem[1] -= 1;
+            var geoPlus2 = nextGeoloc(me.coord.lat(), me.coord.lon(), me.hdg, old_speed_fps, dt*5);
+            var geoPlus3 = nextGeoloc(me.coord.lat(), me.coord.lon(), me.hdg, old_speed_fps, dt*10);
+            var geoPlus4 = nextGeoloc(me.coord.lat(), me.coord.lon(), me.hdg, old_speed_fps, dt*20);
+            #var geoPlus5 = nextGeoloc(me.coord.lat(), me.coord.lon(), me.hdg, old_speed_fps, dt*30);
+            var e1 = geo.elevation(me.coord.lat(), me.coord.lon());# This is done, to make sure is does not decline before it has passed obstacle.
+            var e2 = geo.elevation(geoPlus2.lat(), geoPlus2.lon());# This is the main one.
+            var e3 = geo.elevation(geoPlus3.lat(), geoPlus3.lon());# This is an extra, just in case there is an high cliff it needs longer time to climb.
+            var e4 = geo.elevation(geoPlus4.lat(), geoPlus4.lon());
+            #var e5 = geo.elevation(geoPlus5.lat(), geoPlus5.lon());
+            if (e1 != nil) {
+                me.nextGroundElevation = e1;
+            } else {
+                print("nil terrain, blame terrasync! Cruise-missile keeping altitude.");
+            }
+            if (e2 != nil and e2 > me.nextGroundElevation) {
+                me.nextGroundElevation = e2;
+                if (e2 > me.nextGroundElevationMem[0] or me.nextGroundElevationMem[1] < 0) {
+                    me.nextGroundElevationMem[0] = e2;
+                    me.nextGroundElevationMem[1] = 5;
+                }
+            }
+            if (me.nextGroundElevationMem[0] > me.nextGroundElevation) {
+                me.nextGroundElevation = me.nextGroundElevationMem[0];
+            }
+            if (e3 != nil and e3 > me.nextGroundElevation) {
+                me.nextGroundElevation = e3;
+            }
+            if (e4 != nil and e4 > me.nextGroundElevation) {
+                me.nextGroundElevation = e4;
+            }
+            #if (e5 != nil and e5 > me.nextGroundElevation) {
+            #   me.nextGroundElevation = e5;
+            #}
+        }
         
         # guidance
         if(me.status == 2 and me.free == 0 and me.life_time > me.drop_time)
@@ -597,12 +642,7 @@ var MISSILE = {
         me.trueAirspeedKt.setValue(me.speed_m*661); #Coz the speed is in mach
         me.verticalSpeedFps.setValue(speed_down_fps);
         
-        # this is for ground detection fr A/G cruise missile
-        if(alt_ft < 1000)
-        {
-            var geoPlus2 = nextGeoloc(me.coord.lat(), me.coord.lon(), me.hdg, total_s_ft * FT2M, 2);
-            me.nextGroundElevation = geo.elevation(geoPlus2.lat(), geoPlus2.lon());
-        }
+        
         
         # Proximity detection
         
@@ -758,68 +798,78 @@ var MISSILE = {
 
             #print("DeltaElevation ", t_alt_delta_m);
             
+            ######################################
+            ### cruise, loft, cruise-missile   ###
+            ######################################
+
+            var loft_angle = 15;# notice Shinobi uses 26.5651 degs, but Raider1 found a source saying 10-20 degs.
+            var loft_minimum = 10;# miles
+            var cruise_minimum = 7.5;# miles
             var cruise_or_loft = 0;
             
+            if(me.cruisealt != 0 and me.cruisealt < 10000) {
+                # this is for Air to ground/sea cruise missile (SCALP, Taurus, Tomahawk...)
+                var Daground = 0;# zero for sealevel in case target is ship. Don't shoot A/S missiles over terrain. :)
+                if(me.class == "A/G") {
+                    Daground = me.nextGroundElevation * M2FT;
+                }
+                var loft_alt = me.cruisealt;
+                if (t_dist_m < me.old_speed_fps * 4 * FT2M and t_dist_m > me.old_speed_fps * 2.5 * FT2M) {
+                    # the missile lofts a bit at the end to avoid APN to slam it into ground before target is reached.
+                    # end here is between 2.5-4 seconds
+                    loft_alt = me.cruisealt*2;
+                }
+                if (t_dist_m > me.old_speed_fps * 2.5 * FT2M) {# need to give the missile time to do final navigation
+                    # it's 1 or 2 seconds for this kinds of missiles...
+                    var t_alt_delta_ft = (loft_alt + Daground - me.alt);
+                    #print("var t_alt_delta_m : "~t_alt_delta_m);
+                    if(loft_alt + Daground > me.alt) {
+                        # 200 is for a very short reaction to terrain
+                        #print("Moving up");
+                        dev_e = -me.pitch + math.atan2(t_alt_delta_ft, me.old_speed_fps * dt * 5) * R2D;
+                    } else {
+                        # that means a dive angle of 22.5° (a bit less 
+                        # coz me.alt is in feet) (I let this alt in feet on purpose (more this figure is low, more the future pitch is high)
+                        #print("Moving down");
+                        var slope = me.clamp(t_alt_delta_ft / 300, -5, 0);# the lower the desired alt is, the steeper the slope.
+                        dev_e = -me.pitch + me.clamp(math.atan2(t_alt_delta_ft, me.old_speed_fps * dt * 5) * R2D, slope, 0);
+                    }
+                    cruise_or_loft = 1;
+                } elsif (t_dist_m > 500) {
+                    # we put 9 feets up the target to avoid ground at the
+                    # last minute...
+                    #print("less than 1000 m to target");
+                    #dev_e = -me.pitch + math.atan2(t_alt_delta_m + 100, t_dist_m) * R2D;
+                    #cruise_or_loft = 1;
+                } else {
+                    #print("less than 500 m to target");
+                }
+                if (cruise_or_loft == 1) {
+                    #print(" pitch "~me.pitch~" + dev_e "~dev_e);
+                }
+            } elsif (me.cruisealt != 0 and t_dist_m * M2NM > loft_minimum
+                 and t_elev_deg < loft_angle and t_elev_deg > -7.5
+                 and me.dive_token == FALSE) {
+                # stage 1 lofting: due to target is more than 10 miles out and we havent reached 
+                # our desired cruising alt, and the elevation to target is less than lofting angle.
+                # The -10 limit, is so the seeker don't lose track of target when lofting.
+                if (me.coord.alt() * M2FT < me.cruisealt) {
+                    dev_e = -me.pitch + loft_angle;
+                    #print(sprintf("Lofting %.1f degs, dev is %.1f", loft_angle, dev_e));
+                } else {
+                    me.dive_token = TRUE;
+                }
+                cruise_or_loft = 1;
+            } elsif (t_elev_deg < 0 and me.life_time < me.stage_1_duration+me.stage_2_duration+me.drop_time
+                     and t_dist_m * M2NM > cruise_minimum) {
+                # stage 1/2 cruising: keeping altitude since target is below and more than 5 miles out
 
-            # cruise mode control :
-            if(me.cruisealt != 0)
-            {
-                # this is for Air to ground cruise missile (SCALP, Taurus,
-                # Tomahawk...)
-                if(me.cruisealt < 10000)
-                {
-                    var Daground = 0;
-                    if(me.fox == "A/G")
-                    {
-                        Daground = me.nextGroundElevation; #in meters
-                    }
-                    if(t_dist_m > 500)
-                    {
-                        # it's 1 or 2 seconds for this kinds of missiles...
-                        var t_alt_delta_m = (me.cruisealt + Daground - me.alt) * FT2M;
-                        #print("var t_alt_delta_m : "~t_alt_delta_m);
-                        if(me.cruisealt + Daground > me.alt)
-                        {
-                            # 200 is for a very short reaction to terrain
-                            t_elev_deg = math.atan2(t_alt_delta_m, 200) * R2D;
-                            cruise_or_loft = 1;
-                        }
-                        else
-                        {
-                            # that means a dive angle of 22.5° (a bit less 
-                            # coz me.alt is in feet) (I let this alt in feet on purpose (more this figure is low, more the future pitch is high)
-                            t_elev_deg = math.atan2(t_alt_delta_m, me.alt) * R2D;
-                            cruise_or_loft = 1;
-                        }
-                    }
-                    else
-                    {
-                        # we put 9 feets up the target to avoid ground at the
-                        # last minute...
-                        t_elev_deg = math.atan2(t_alt_delta_m + 3, t_dist_m) * R2D;
-                        cruise_or_loft = 1;
-                    }
-                }
-                else
-                {
-                    # other kind of cruise missile like AIM54, perhaps METEOR ?
-                    if(me.diveToken == 0)
-                    {
-                        # first, get cruise altitude. at mach 5, 20km is done in
-                        # 10 seconds...
-                        var t_alt_delta_m = (me.cruisealt - me.alt) * FT2M;
-                        t_elev_deg = math.atan2(t_alt_delta_m, t_alt_delta_m * 2) * R2D;
-                        cruise_or_loft = 1;
-                        if(me.cruisealt - me.alt < 100)
-                        {
-                            me.diveToken = 1;
-                        }
-                        #print("Direct distance", me.coord.direct_distance_to(me.t_coord), " t_dist_m", t_dist_m);
-                    }
-                }
+                var attitude = math.asin((g_fps * dt)/me.old_speed_fps)*R2D;
+
+                dev_e = -me.pitch + attitude;
+                #print("Cruising");
+                cruise_or_loft = 1;
             }
-            # dont know how to solve this Shinobi, so we have to talk about it:
-            #me.curr_tgt_e = t_elev_deg - me.pitch;
             
             #print(me.curr_tgt_e);
             
@@ -1350,13 +1400,13 @@ var max_G_Rotation = func(steering_e_deg, steering_h_deg, s_fps, mass, dt, gMax)
 SW_reticle_Blinker = aircraft.light.new("sim/model/f-14b/lighting/hud-sw-reticle-switch", [0.1, 0.1]);
 #setprop("sim/model/f-14b/lighting/hud-sw-reticle-switch/enabled", 1);
 
-var nextGeoloc = func(long, lat, heading, speed, dt, alt=100){
-    # lng & lat & heading, in degree, speed in nm
+var nextGeoloc = func(lon, lat, heading, speed, dt, alt=100){
+    # lng & lat & heading, in degree, speed in fps
     # this function should send back the futures lng lat
-    var distance = speed * dt ; # should be a distance in meters
+    var distance = speed * dt * FT2M; # should be a distance in meters
     #print("distance ", distance);
     # much simpler than trigo
-    var NextGeo = geo.Coord.new().set_latlon(long, lat, alt);
+    var NextGeo = geo.Coord.new().set_latlon(lon, lat, alt);
     NextGeo.apply_course_distance(heading, distance);
     return NextGeo;
 }
