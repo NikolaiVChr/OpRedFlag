@@ -493,7 +493,7 @@ var MISSILE = {
         }
 
         me.speed_m = old_speed_fps / sound_fps;
-
+        #print(me.speed_m);
         var Cd = me.drag(me.speed_m);
         
         # Add drag to the total speed using Standard Atmosphere (15C sealevel temperature);
@@ -789,12 +789,60 @@ var MISSILE = {
             me.curr_tgt_e = t_elev_deg - me.pitch;
             me.curr_tgt_h = t_course - me.hdg;
 
-            if(me.curr_tgt_h < -180) {
-                me.curr_tgt_h += 360;
+
+            var e_gain = 1;
+            var h_gain = 1;
+
+            var modulo180 = math.mod(me.curr_tgt_h, 360);
+            if(modulo180 > 180)
+            {
+                modulo180 = -(360 - modulo180);
             }
-            if(me.curr_tgt_h > 180) {
-                me.curr_tgt_h -= 360;
+            if(modulo180 < -180)
+            {
+                modulo180 = (360 + modulo180);
             }
+            me.curr_tgt_h = modulo180;
+
+            # here is how to calculate the own missile detection limitation
+            if((math.abs(me.curr_tgt_e) > me.max_seeker_dev)
+                or (math.abs(modulo180) > me.max_seeker_dev))
+            {
+                #print("me.missile_fov:", me.missile_fov, "me.curr_tgt_e:", me.curr_tgt_e, "degree h me.curr_tgt_h:", me.curr_tgt_h, "t_course:", t_course, "me.hdg:", me.hdg, "modulo180:", modulo180);
+                e_gain = 0;
+                h_gain = 0;
+                me.free = 1;
+                print("Target is not in missile seeker view anymore");
+            }            
+
+            var dev_e = me.curr_tgt_e;#
+            var dev_h = me.curr_tgt_h;#
+
+            if (me.last_deviation_e != nil) {
+                # its not our first seeker head move
+                # calculate if the seeker can keep up with the angular change of the target
+
+                # missile own movement is subtracted from this change due to seeker being on gyroscope
+                
+                var dve_dist = dev_e - me.last_deviation_e + me.last_track_e;
+                var dvh_dist = dev_h - me.last_deviation_h + me.last_track_h;
+                var deviation_per_sec = math.sqrt(dve_dist*dve_dist+dvh_dist*dvh_dist)/dt_;
+
+                if (deviation_per_sec > me.angular_speed) {
+                    #print(sprintf("last-elev=%.1f", me.last_deviation_e)~sprintf(" last-elev-adj=%.1f", me.last_track_e));
+                    #print(sprintf("last-head=%.1f", me.last_deviation_h)~sprintf(" last-head-adj=%.1f", me.last_track_h));
+                    # lost lock due to angular speed limit
+                    print(sprintf("%.1f deg/s too big angular change for seeker head.", deviation_per_sec));
+                    #print(dt);
+                    me.free = 1;
+                    e_gain = 0;
+                    h_gain = 0;
+                }
+            }
+
+            me.last_deviation_e = dev_e;
+            me.last_deviation_h = dev_h;
+
 
             #print("DeltaElevation ", t_alt_delta_m);
             
@@ -826,13 +874,13 @@ var MISSILE = {
                     if(loft_alt + Daground > me.alt) {
                         # 200 is for a very short reaction to terrain
                         #print("Moving up");
-                        dev_e = -me.pitch + math.atan2(t_alt_delta_ft, me.old_speed_fps * dt * 5) * R2D;
+                        dev_e = -me.pitch + math.atan2(t_alt_delta_ft, me.old_speed_fps * dt_ * 5) * R2D;
                     } else {
                         # that means a dive angle of 22.5° (a bit less 
                         # coz me.alt is in feet) (I let this alt in feet on purpose (more this figure is low, more the future pitch is high)
                         #print("Moving down");
                         var slope = me.clamp(t_alt_delta_ft / 300, -5, 0);# the lower the desired alt is, the steeper the slope.
-                        dev_e = -me.pitch + me.clamp(math.atan2(t_alt_delta_ft, me.old_speed_fps * dt * 5) * R2D, slope, 0);
+                        dev_e = -me.pitch + me.clamp(math.atan2(t_alt_delta_ft, me.old_speed_fps * dt_ * 5) * R2D, slope, 0);
                     }
                     cruise_or_loft = 1;
                 } elsif (t_dist_m > 500) {
@@ -849,7 +897,7 @@ var MISSILE = {
                 }
             } elsif (me.cruisealt != 0 and t_dist_m * M2NM > loft_minimum
                  and t_elev_deg < loft_angle and t_elev_deg > -7.5
-                 and me.dive_token == FALSE) {
+                 and me.diveToken == FALSE) {
                 # stage 1 lofting: due to target is more than 10 miles out and we havent reached 
                 # our desired cruising alt, and the elevation to target is less than lofting angle.
                 # The -10 limit, is so the seeker don't lose track of target when lofting.
@@ -857,14 +905,19 @@ var MISSILE = {
                     dev_e = -me.pitch + loft_angle;
                     #print(sprintf("Lofting %.1f degs, dev is %.1f", loft_angle, dev_e));
                 } else {
-                    me.dive_token = TRUE;
+                    me.diveToken = TRUE;
                 }
                 cruise_or_loft = 1;
             } elsif (t_elev_deg < 0 and me.life_time < me.stage_1_duration+me.stage_2_duration+me.drop_time
                      and t_dist_m * M2NM > cruise_minimum) {
                 # stage 1/2 cruising: keeping altitude since target is below and more than 5 miles out
 
-                var attitude = math.asin((g_fps * dt)/me.old_speed_fps)*R2D;
+                var ratio = (g_fps * dt_)/me.old_speed_fps;
+                var attitude = 0;
+
+                if (ratio < 1 and ratio > -1) {
+                    attitude = math.asin(ratio)*R2D;
+                }
 
                 dev_e = -me.pitch + attitude;
                 #print("Cruising");
@@ -876,29 +929,10 @@ var MISSILE = {
             #var t_course = me.coord.course_to(me.t_coord);
             #me.curr_tgt_h = t_course - me.hdg;
             
-            var modulo180 = math.mod(me.curr_tgt_h, 360);
-            if(modulo180 > 180)
-            {
-                modulo180 = -(360 - modulo180);
-            }
-            if(modulo180 < -180)
-            {
-                modulo180 = (360 + modulo180);
-            }
             
-            var e_gain = 1;
-            var h_gain = 1;
+            
 
-            # here is how to calculate the own missile detection limitation
-            if((math.abs(me.curr_tgt_e) > me.max_seeker_dev)
-                or (math.abs(modulo180) > me.max_seeker_dev))
-            {
-                #print("me.missile_fov:", me.missile_fov, "me.curr_tgt_e:", me.curr_tgt_e, "degree h me.curr_tgt_h:", me.curr_tgt_h, "t_course:", t_course, "me.hdg:", me.hdg, "modulo180:", modulo180);
-                e_gain = 0;
-                h_gain = 0;
-                me.free = 1;
-                print("Target is not in missile seeker view anymore");
-            }
+            
             #print("Target Elevation(ft): ", t_alt, " Missile Elevation(ft):", me.alt, " Delta(meters):", t_alt_delta_m);
             # The t_course is false. Prevision is false
             #print("The Target is at: ", t_course, " MyCourse: ", me.hdg, " Delta(degrees): ", me.curr_tgt_h );
@@ -923,54 +957,10 @@ var MISSILE = {
             #    {
             #        h_gain = 1 + (0.1 * dt);
             #    }
-            me.init_tgt_e = 0; #last_tgt_e;
-            me.init_tgt_h = 0; #last_tgt_h;
             #}
             
-            if(me.update_track_time - me.StartTime < 3)
-            {
-                #e_gain = (me.update_track_time-me.StartTime - 1) / 2;
-                #h_gain = (me.update_track_time-me.StartTime - 1) / 2;
-            }
-            if(me.update_track_time - me.StartTime < 1)
-            {
-                #e_gain = 0;
-                #h_gain = 0;
-            }
-
-
-
-            var dev_e = me.curr_tgt_e;#
-            var dev_h = me.curr_tgt_h;#
-
             #print(sprintf("curr: elev=%.1f", dev_e)~sprintf(" head=%.1f", dev_h));
-            if (me.last_deviation_e != nil) {
-                # its not our first seeker head move
-                # calculate if the seeker can keep up with the angular change of the target
-
-                # missile own movement is subtracted from this change due to seeker being on gyroscope
-                
-                var dve_dist = dev_e - me.last_deviation_e + me.last_track_e;
-                var dvh_dist = dev_h - me.last_deviation_h + me.last_track_h;
-                var deviation_per_sec = math.sqrt(dve_dist*dve_dist+dvh_dist*dvh_dist)/dt_;
-
-                if (deviation_per_sec > me.angular_speed) {
-                    #print(sprintf("last-elev=%.1f", me.last_deviation_e)~sprintf(" last-elev-adj=%.1f", me.last_track_e));
-                    #print(sprintf("last-head=%.1f", me.last_deviation_h)~sprintf(" last-head-adj=%.1f", me.last_track_h));
-                    # lost lock due to angular speed limit
-                    print(sprintf("%.1f deg/s too big angular change for seeker head.", deviation_per_sec));
-                    #print(dt);
-                    me.free = 1;
-                    e_gain = 0;
-                    h_gain = 0;
-                }
-            }
-
-            me.last_deviation_e = dev_e;
-            me.last_deviation_h = dev_h;
-
-            dev_e = cruise_or_loft ==1?(t_elev_deg - me.pitch):dev_e;
-
+            
             ###########################
             # proportional navigation #
             ###########################
