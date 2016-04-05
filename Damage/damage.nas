@@ -111,7 +111,7 @@ var incoming_listener = func {
               }
             }
             var number = split(" ", last_vector[2]);
-            var distance = num(number[1]);
+            var distance = clamp(num(number[1])-3, 0, 1000000);
             #print(type~"|");
             if(distance != nil) {
               var maxDist = 0;
@@ -134,6 +134,7 @@ var incoming_listener = func {
               var failed = fail_systems(probability);
               var percent = 100 * probability;
               print("Took "~percent~"% damage from "~type~" missile at "~distance~" meters distance! "~failed~" systems was hit.");
+              nearby_explosion();
             }
           } 
         } elsif (last_vector[1] == " M70 rocket hit" or last_vector[1] == " KCA cannon shell hit" or last_vector[1] == " Gun Splash On " or last_vector[1] == " M61A1 shell hit") {
@@ -149,6 +150,7 @@ var incoming_listener = func {
             }
             var failed = fail_systems(probability);
             print("Took "~probability*100~"% damage from cannon! "~failed~" systems was hit.");
+            nearby_explosion();
           }
         }
       }
@@ -189,6 +191,20 @@ var callsign_struct = {};
 var getCallsign = func (callsign) {
   var node = callsign_struct[callsign];
   return node;
+}
+
+var nearby_explosion = func {
+  setprop("damage/sounds/nearby-explode-on", 0);
+  settimer(nearby_explosion_a, 0);
+}
+
+var nearby_explosion_a = func {
+  setprop("damage/sounds/nearby-explode-on", 1);
+  settimer(nearby_explosion_b, 0.5);
+}
+
+var nearby_explosion_b = func {
+  setprop("damage/sounds/nearby-explode-on", 0);
 }
 
 var processCallsigns = func () {
@@ -289,3 +305,5 @@ var logTime = func{
 sendMis();
 
 setlistener("/sim/multiplay/chat-history", incoming_listener, 0, 0);
+
+setprop("/sim/failure-manager/display-on-screen", FALSE);
