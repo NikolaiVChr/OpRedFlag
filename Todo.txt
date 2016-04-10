@@ -9,13 +9,18 @@ Make missile hits more deadly.
 Check f15 cannon hits work. (works)
 Cheat msg if open up failure dialog.
 No failure msgs, but sound.
+Use units instead of gear in F15 anti-cheat code.
 
 Fairly small tasks
 ==================
 Implement damage formula Raider1 found to damage code.
-Port anti-cheat code from Viggen.
+Port anti-cheat code from Viggen/F15 to F14 and Mirage.
 AIM-120 on rails will be rail launched, else dropped.
-Use units instead of gear in F15 anti-cheat code.
+New drag on other planes.
+Cruise-missiles on F15/14.
+Damage report distance in console is off.
+Add seaeagle to damage.
+Remake 3.4 versions of F15/14.
 
 Bigger tasks
 ============
