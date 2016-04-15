@@ -10,6 +10,7 @@ Check f15 cannon hits work. (works)
 Cheat msg if open up failure dialog.
 No failure msgs, but sound.
 Use units instead of gear in F15 anti-cheat code.
+Add sea eagle and GBU16. Andd add grav bomb code to mirage.
 
 Fairly small tasks
 ==================
