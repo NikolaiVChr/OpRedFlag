@@ -2322,17 +2322,6 @@
 
 <!-- ====== drop pod ====== -->
 
-<animation>
-  <object-name>dropTank</object-name>
-  <object-name>dropTankNoshader</object-name>
-  <type>select</type>
-  <condition>
-   <equals>
-    <property>sim/multiplay/generic/int[16]</property><!-- consumables/fuel/tank[8]/jettisoned -->
-    <value>0</value>
-   </equals>
-  </condition>
- </animation>
 
 <!-- ====== rb 24j/74 ====== -->
  
