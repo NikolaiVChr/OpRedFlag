@@ -1,16 +1,6 @@
 Done, needs testing
 ===================
-F15: Selecting new target and firing just after, would sometimes make it fire at wrong target, due to delays in search/lock code.
-Fix G drop in missiles. (Simple solution still eludes me)
-Lofting beyond boost stage.
-Port rail/drop code from Viggen to F15/14.
-Use Richards ORF branch.
-Make missile hits more deadly.
-Check f15 cannon hits work. (works)
-Cheat msg if open up failure dialog.
-No failure msgs, but sound.
-Use units instead of gear in F15 anti-cheat code.
-Add sea eagle and GBU16. Andd add grav bomb code to mirage.
+
 
 Fairly small tasks
 ==================
@@ -20,8 +10,7 @@ AIM-120 on rails will be rail launched, else dropped.
 New drag on other planes.
 Cruise-missiles on F15/14.
 Damage report distance in console is off.
-Add seaeagle to damage.
-Remake 3.4 versions of F15/14.
+
 
 Bigger tasks
 ============
