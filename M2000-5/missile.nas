@@ -559,8 +559,13 @@ var MISSILE = {
             #}
         }
         
+        var grav_bomb = FALSE;
+        if (me.force_lbs_1 == 0 and me.force_lbs_2 == 0) {
+            grav_bomb == TRUE;
+        }
+
         # guidance
-        if(me.status == 2 and me.free == 0 and me.life_time > me.drop_time)
+        if(me.status == 2 and me.free == 0 and me.life_time > me.drop_time and grav_bomb == FALSE)
         {
             if(me.rail == FALSE or me.rail_passed == TRUE)
             {
@@ -611,13 +616,19 @@ var MISSILE = {
         var speed_north_fps = math.cos(hdg_deg * D2R) * speed_horizontal_fps;
         var speed_east_fps = math.sin(hdg_deg * D2R) * speed_horizontal_fps;
         
+        if (grav_bomb == TRUE) {
+            # true gravity acc
+            speed_down_fps += g_fps * dt;
+            pitch_deg = math.atan2( speed_down_fps, speed_horizontal_fps ) * R2D;
+        }
+
         if (me.rail == TRUE and me.rail_passed == FALSE) {
             # missile still on rail, lets calculate its speed relative to the wind coming in from the aircraft nose.
             me.rail_speed_into_wind = me.rail_speed_into_wind + (speed_fps - old_speed_fps);
         }
 
         # calculate altitude and elevation velocity vector (no incidence here).
-        var alt_ft = me.altN.getValue() - ((speed_down_fps + g_fps*dt) * dt);
+        var alt_ft = me.altN.getValue() - ((speed_down_fps + g_fps*dt * !grav_bomb) * dt);
         
         # get horizontal distance and set position and orientation.
         var dist_h_m = speed_horizontal_fps * dt * FT2M;
@@ -896,7 +907,7 @@ var MISSILE = {
                     #print(" pitch "~me.pitch~" + dev_e "~dev_e);
                 }
             } elsif (me.cruisealt != 0 and t_dist_m * M2NM > loft_minimum
-                 and t_elev_deg < loft_angle and t_elev_deg > -7.5
+                 and t_elev_deg < loft_angle #and t_elev_deg > -7.5
                  and me.diveToken == FALSE) {
                 # stage 1 lofting: due to target is more than 10 miles out and we havent reached 
                 # our desired cruising alt, and the elevation to target is less than lofting angle.
@@ -1027,6 +1038,7 @@ var MISSILE = {
                         me.last_t_elev_norm_speed          = t_LOS_elev_norm_speed;
 
                         var acc_upwards_ftps2 = proportionality_constant*line_of_sight_rate_up_rps*vert_closing_rate_fps+proportionality_constant*t_LOS_elev_norm_acc/2;
+                        velocity_vector_length_fps = me.old_speed_fps;
                         var commanded_upwards_vector_length_fps = acc_upwards_ftps2*dt_;
                         dev_e = math.atan2(commanded_upwards_vector_length_fps, velocity_vector_length_fps)*R2D;
                         #print(sprintf("vert leading by %.1f deg", me.curr_tgt_e));
