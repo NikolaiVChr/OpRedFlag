@@ -2772,16 +2772,6 @@
 
 <!-- livery selection -->
 
-<nasal>
-  <load>
-   var livery_update = aircraft.livery_update.new(
-        "Aircraft/JA37/Models/Liveries", 10);
-  </load>
-  <unload>
-   livery_update.stop();
-  </unload>
- </nasal>
-
  <animation>
   <type>material</type>
   <object-name>canopy</object-name>
