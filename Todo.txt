@@ -4,6 +4,7 @@ New drag on other planes. (for now not mirage, as it be a pain to restat all tho
 Port anti-cheat code from Viggen/F15 to F14
 Damage report distance in console is off.
 Port anti-cheat code from Viggen/F15/F14 to Mirage.
+Pinto terrain mask optimization into Mirage/F15/F15
 
 Fairly small tasks
 ==================

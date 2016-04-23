@@ -422,6 +422,8 @@ var Radar = {
                         
                         if(AprimeTerrainAlt > Aprime.alt())
                         {
+                            # {Pinto} This will prevent the rest of the loop to run if a masking high point is found:
+                            i = maxLoops+1;
                             isVisible = 0;
                         }
                     }
@@ -876,7 +878,7 @@ var Radar = {
 #####################   Target class  ##########################
 ################################################################
 
-setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "o"~"r"~"f");
+setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "op"~"r"~"f");
 
 var Target = {
     new: func(c,theTree = nil){
