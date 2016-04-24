@@ -565,6 +565,9 @@ var MISSILE = {
             grav_bomb == TRUE;
         }
 
+        # Get target position.
+        me.t_coord.set_latlon(me.Tgt.get_Latitude(), me.Tgt.get_Longitude(), me.Tgt.get_altitude() * FT2M);
+
         # guidance
         if(me.status == 2 and me.free == 0 and me.life_time > me.drop_time and grav_bomb == FALSE)
         {
@@ -700,6 +703,9 @@ var MISSILE = {
                 }
             }
         }
+
+        me.last_t_coord = geo.Coord.new(me.t_coord);
+
         # record the velocities for the next loop.
         me.s_north = speed_north_fps;
         me.s_east = speed_east_fps;
@@ -767,9 +773,7 @@ var MISSILE = {
         } elsif (dt_ != nil) {
             # status = launched : compute target position relative to seeker head.
             
-            # Get target position.
-            me.t_coord.set_latlon(me.Tgt.get_Latitude(), me.Tgt.get_Longitude(), me.Tgt.get_altitude() * FT2M);
-            var t_alt =  me.Tgt.get_altitude();
+            var t_alt = me.t_coord.alt()*M2FT;
             
             # problem here : We have to calculate de alt difference before
             # calculate the other coord.
@@ -938,6 +942,10 @@ var MISSILE = {
                 dev_e = -me.pitch + attitude;
                 #print("Cruising");
                 cruise_or_loft = 1;
+            } elsif (me.last_cruise_or_loft == TRUE and math.abs(me.curr_tgt_e) > 2.5) {
+                # after cruising, point the missile in the general direction of the target, before APN starts guiding.
+                dev_e = me.curr_tgt_e;
+                cruise_or_loft = TRUE;
             }
             
             #print(me.curr_tgt_e);
@@ -977,9 +985,9 @@ var MISSILE = {
             
             #print(sprintf("curr: elev=%.1f", dev_e)~sprintf(" head=%.1f", dev_h));
             
-            ###########################
-            # proportional navigation #
-            ###########################
+            ###########################################
+            ### augmented proportional navigation   ###
+            ###########################################
             if (h_gain != 0 and me.last_dt != 0 and me.dist_last != nil) {
                     var horz_closing_rate_fps = (me.dist_last - dist_curr)*M2FT/me.last_dt;
                     var proportionality_constant = 3;
@@ -1023,7 +1031,7 @@ var MISSILE = {
                     #print(sprintf("horz leading by %.1f deg, commanding %.1f deg", me.curr_tgt_h, dev_h));
 
                     # when cruising or lofting is controling pitch this if statement should be in effect
-                    if (cruise_or_loft == 0 and me.last_cruise_or_loft == 0) {
+                    if (cruise_or_loft == 0) {
                         var vert_closing_rate_fps = (me.dist_direct_last - dist_curr_direct)*M2FT/me.last_dt;
                         var line_of_sight_rate_up_rps = D2R*(t_elev_deg-me.last_t_elev_deg)/dt_;#((me.curr_tgt_e-me.last_tgt_e)*D2R)/dt;
                         # calculate target acc as normal to LOS line: (up acc is positive)
@@ -1098,8 +1106,6 @@ var MISSILE = {
     
     poximity_detection: func()
     {
-        
-        me.t_coord.set_latlon(me.Tgt.get_Latitude(), me.Tgt.get_Longitude(), me.Tgt.get_altitude() * FT2M);
         var cur_dir_dist_m = me.coord.direct_distance_to(me.t_coord);
         var BC = cur_dir_dist_m;
         var AC = me.direct_dist_m;
@@ -1192,7 +1198,7 @@ var MISSILE = {
                 }
             }
         }
-        me.last_t_coord = geo.Coord.new(me.t_coord);
+        
         me.direct_dist_m = cur_dir_dist_m;
         return(1);
     },
