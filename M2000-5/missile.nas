@@ -185,6 +185,8 @@ var MISSILE = {
         m.last_t_elev_norm_speed = nil;
         m.last_dt = 0;
 
+        m.g = 0;
+
         #rail
         m.drop_time = 0;
         m.rail_dist_m = 2.667;#16S210 AIM-9 Missile Launcher
@@ -403,6 +405,51 @@ var MISSILE = {
          return Cd;
     },
 
+    energyBleed: func (gForce, altitude, dt) {
+        # Bleed of energy from pulling Gs.
+        # This is very inaccurate, but better than nothing.
+        #
+        # First we get the speedloss including loss due to normal drag:
+        var b300 = me.bleed32800at0g(dt);
+        var b325 = me.bleed32800at25g(dt)-b300;
+        #
+        # We then subtract the normal drag.
+        var b000 = me.bleed0at0g(dt);
+        var b025 = me.bleed0at25g(dt)-b000;
+        b300 = 0;
+        b000 = 0;
+        #
+        # We now find what the speedloss will be at sealevel and 32800 ft.
+        var speedLoss32800 = b300 + ((gForce-0)/(25-0))*(b325 - b300);
+        var speedLoss0 = b000 + ((gForce-0)/(25-0))*(b025 - b000);
+        #
+        # We then inter/extra-polate that to the currect density-altitude.
+        var speedLoss = speedLoss0 + ((altitude-0)/(32800-0))*(speedLoss32800-speedLoss0);
+        #
+        # For good measure the result is clamped to below zero.
+        return clamp(speedLoss, -100000, 0);
+    },
+
+    bleed32800at0g: func (dt) {
+        var loss_fps = 0 + ((dt - 0)/(15 - 0))*(-330 - 0);
+        return loss_fps*M2FT;
+    },
+
+    bleed32800at25g: func (dt) {
+        var loss_fps = 0 + ((dt - 0)/(3.5 - 0))*(-240 - 0);
+        return loss_fps*M2FT;
+    },
+
+    bleed0at0g: func (dt) {
+        var loss_fps = 0 + ((dt - 0)/(22 - 0))*(-950 - 0);
+        return loss_fps*M2FT;
+    },
+
+    bleed0at25g: func (dt) {
+        var loss_fps = 0 + ((dt - 0)/(7 - 0))*(-750 - 0);
+        return loss_fps*M2FT;
+    },    
+
     update: func(){
         # calculate life time of the missile
         var dt = getprop("sim/time/delta-sec");
@@ -519,6 +566,10 @@ var MISSILE = {
             speed_fps = old_speed_fps - drag_acc*dt + acc*dt;
         }
         #print("acc: ", acc, " _drag_acc: ", drag_acc);
+
+        if (me.last_dt != 0) {
+            speed_fps = speed_fps + me.energyBleed(me.g, me.altN.getValue(), me.last_dt);
+        }
         
         # this is for ground detection fr A/G cruise missile
         if(me.cruisealt != 0 and me.cruisealt < 10000)
@@ -677,15 +728,19 @@ var MISSILE = {
                 # if not exploded, check if the missile can keep the lock
                 if(me.free == 0)
                 {
-                    var g = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), mass, dt);
-                    if(g > me.max_g_current)
+                    me.g = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), mass, dt);
+                    if(me.g > me.max_g_current)
                     {
                         # target unreachable, fly free.
                         me.free = 1;
                         print("Too much G");
                         # Disable for the moment
                     }
+                } else {
+                    me.g = 0;
                 }
+            } else {
+                me.g = 0;
             }
             
             # ground interaction²
@@ -702,6 +757,8 @@ var MISSILE = {
                     return;
                 }
             }
+        } else {
+            me.g = 0;
         }
 
         me.last_t_coord = geo.Coord.new(me.t_coord);
