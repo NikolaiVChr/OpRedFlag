@@ -236,7 +236,7 @@ var Loading_missile = func(name)
         fox = "A/G";
         rail = "false";
         cruisealt = 100;
-        min_guiding_speed_mach = 0.5;
+        min_guiding_speed_mach = 0.25;
         seeker_angular_speed_dps = 45;
     }
     elsif(name == "Sea Eagle")
@@ -262,6 +262,8 @@ var Loading_missile = func(name)
         fox = "A/M";
         rail = "false";
         cruisealt = 40;
+        min_guiding_speed_mach = 0.25;
+        seeker_angular_speed_dps = 45;
     }
     elsif(name == "AIM-54")
     {
