@@ -5,19 +5,22 @@ Port anti-cheat code from Viggen/F15 to F14
 Damage report distance in console is off.
 Port anti-cheat code from Viggen/F15/F14 to Mirage.
 Pinto terrain mask optimization into Mirage/F15/F15
+Gravity bombs and Cruise-missiles on F15/14.
+When F15 fires aim-120 on ground, it will report a redicoulous long distance.
+Termination messages.
+Review hide behind terrain in F15/F14 for anomalies.
+Make missiles bleed energy when doing high G turns.
 
 Fairly small tasks
 ==================
 Implement damage formula Raider1 found to damage code.
 AIM-120 on rails will be rail launched, else dropped.
-Gravity bombs and Cruise-missiles on F15/14.
-When F15 fires aim-120 on ground, it will report a redicoulous long distance.
+Mirage scalp and sea-eagle should have lower min speed for guiding.
+Implement better time keeping in F15/F14/mirage for missiles.
 
 Bigger tasks
 ============
 Merge missile code with Shinobi's, so we only have 1 missile code to maintain.
-Make missiles bleed energy when doing high G turns.
-
 
 
 How-to keep updated with Richards ORF branch:

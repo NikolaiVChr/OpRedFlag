@@ -495,7 +495,11 @@ var MISSILE = {
         {
             print("Missile selfdestructed.");
             me.free = 1;
-            return me.del();
+            me.sendMessage(me.NameOfMissile~" missed "~me.Tgt.get_Callsign()~", reason: Selfdestructed.");
+            me.animate_explosion();
+            me.Tgt = nil;
+            settimer(func(){ me.del(); }, 4);
+            return;
         }
         # get total speed.
         var d_east_ft  = me.s_east * dt;
@@ -752,8 +756,10 @@ var MISSILE = {
                 {
                     print("Missile hit ground");
                     me.free = 1;
-                    settimer(func(){ me.poximity_detection(); }, 0.1);
-                    settimer(func(){ me.del(); }, 1);
+                    me.sendMessage(me.NameOfMissile~" missed "~me.Tgt.get_Callsign()~", reason: Hit terrain.");
+                    me.animate_explosion();
+                    me.Tgt = nil;
+                    settimer(func(){ me.del(); }, 4);
                     return;
                 }
             }
@@ -1063,7 +1069,7 @@ var MISSILE = {
                     var t_heading        = me.Tgt.get_heading();
                     var t_pitch          = me.Tgt.get_Pitch();
                     var t_speed          = me.Tgt.get_Speed()*KT2FPS;#true airspeed
-                    var t_horz_speed     = t_speed - math.abs(math.sin(t_pitch*D2R)*t_speed);
+                    var t_horz_speed     = math.abs(math.cos(t_pitch*D2R)*t_speed);
                     var t_LOS_norm_head  = t_course + 90;
                     var t_LOS_norm_speed = math.cos((t_LOS_norm_head - t_heading)*D2R)*t_horz_speed;
 
@@ -1233,14 +1239,9 @@ var MISSILE = {
                     impact_report(me.t_coord, wh_mass, "missile",me.vApproch); # pos, alt, mass_slug, (speed_mps)
                     #var phrase = me.Tgt.get_Callsign() ~ " has been hit by " ~ me.NameOfMissile ~ ". Distance of impact " ~ sprintf( "%01.0f", me.direct_dist_m) ~ " meters";
                     var phrase = sprintf( me.NameOfMissile~" exploded: %01.1f", me.direct_dist_m) ~ " meters from: " ~ me.Tgt.get_Callsign();
-                    if(MPMessaging.getValue()  == 1)
-                    {
-                        setprop("/sim/multiplay/chat", defeatSpamFilter(phrase));
-                    }
-                    else
-                    {
-                        setprop("/sim/messages/atc", phrase);
-                    }
+                    
+                    me.sendMessage(phrase);
+
                     me.animate_explosion();
                     me.Tgt = nil;
                     return(0);
@@ -1259,6 +1260,14 @@ var MISSILE = {
         me.direct_dist_m = cur_dir_dist_m;
         return(1);
     },
+
+    sendMessage: func (str) {
+        if (MPMessaging.getValue()  == 1) {
+            setprop("/sim/multiplay/chat", defeatSpamFilter(str));
+        } else {
+            setprop("/sim/messages/atc", str);
+        }
+    },    
     
     check_t_in_fov: func(){
         # used only when not launched.
