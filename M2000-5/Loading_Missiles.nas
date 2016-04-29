@@ -30,7 +30,8 @@ var Loading_missile = func(name)
     var cruisealt         = 0;
     var min_guiding_speed_mach   = 0.8;
     var seeker_angular_speed_dps = 30;   # you want this (much) higher for your modern missiles
-    var arming_time_sec          = 1.2;   
+    var arming_time_sec          = 1.2;  
+    var guidance          = "radar";
    
     if(name == "Matra MICA")
     {
@@ -112,6 +113,7 @@ var Loading_missile = func(name)
         fox = "Fox 2";
         rail = "true";
         cruisealt = 0;
+        guidance = "heat";
     }
     elsif(name == "aim-9")
     {
@@ -126,7 +128,7 @@ var Loading_missile = func(name)
         weightwarheadlbs = 20.8;
         maxExplosionRange = 40;                       # Due to the code, more the speed is important, more we need to have this figure high
         maxspeed = 2.5;                               # In Mach
-        life = 44;
+        life = 50;
         fox = "Fox 2";
         rail = "true";
         cruisealt = 0;
@@ -134,12 +136,13 @@ var Loading_missile = func(name)
         min_guiding_speed_mach = 0.8;
         arming_time_sec = 1.4;
         seeker_angular_speed_dps = 30;
-        thrustlbs1 = 3821.75;
+        thrustlbs1 = 2660;
         thrustlbs2 = 0;
-        thrust1durationsec = 4;
-        thrust2durationsec = 1;
+        thrust1durationsec = 5.23;
+        thrust2durationsec = 0;
         dragcoeff = 0.50;
         dragarea = 0.143;
+        guidance = "heat";
     }
     elsif(name == "GBU16")
     {
@@ -339,6 +342,7 @@ var Loading_missile = func(name)
         fox = "Fox 1";
         rail = "false";
         cruisealt = 0;
+        guidance = "heat";
     }
     elsif(name == "R74")
     {
@@ -395,5 +399,6 @@ var Loading_missile = func(name)
     setprop("controls/armament/missile/min-guiding-speed-mach", min_guiding_speed_mach);
     setprop("controls/armament/missile/seeker-angular-speed-dps", seeker_angular_speed_dps);
     setprop("controls/armament/missile/arming-time-sec", arming_time_sec);
+    setprop("controls/armament/missile/guidance", guidance);
     return 1;
 }

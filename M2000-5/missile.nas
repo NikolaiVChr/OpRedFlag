@@ -102,6 +102,7 @@ var MISSILE = {
         m.min_speed_for_guiding = getprop("controls/armament/missile/min-guiding-speed-mach");
         m.angular_speed         = getprop("controls/armament/missile/seeker-angular-speed-dps");
         m.arm_time          = getprop("controls/armament/missile/arming-time-sec");
+        m.guidance          = getprop("controls/armament/missile/guidance");
 
         m.last_coord        = nil;
 
@@ -166,6 +167,7 @@ var MISSILE = {
         m.alt     = nil;
         m.pitch   = 0;
         m.hdg     = nil;
+        m.elapsed_last           = 0;
 
         # for seeker head and stuff
         m.max_g_current = m.max_g;
@@ -334,9 +336,9 @@ var MISSILE = {
             var alpha = getprop("orientation/alpha-deg");
             var beta = getprop("orientation/side-slip-deg");# positive is air from right
 
-            var alpha_diff = alpha * math.cos(ac_roll*D2R) * ((ac_roll > 90 or ac_roll < -90)?-1:1) + beta * math.sin(ac_roll*D2R);
-            #alpha_diff = alpha > 0?alpha_diff:0;# not using alpha if its negative to avoid missile flying through aircraft.
-            #ac_pitch = ac_pitch - alpha_diff;
+            var alpha_diff = alpha * math.cos(ac_roll*D2R) + beta * math.sin(ac_roll*D2R);
+            alpha_diff = alpha > 0?alpha_diff:0;# not using alpha if its negative to avoid missile flying through aircraft.
+            ac_pitch = ac_pitch - alpha_diff;
             
             var beta_diff = beta * math.cos(ac_roll*D2R) * ((ac_roll > 90 or ac_roll < -90)?-1:1) - alpha * math.sin(ac_roll*D2R);
             #ac_hdg = ac_hdg + beta_diff;
@@ -430,29 +432,42 @@ var MISSILE = {
         return clamp(speedLoss, -100000, 0);
     },
 
-    bleed32800at0g: func (dt) {
-        var loss_fps = 0 + ((dt - 0)/(15 - 0))*(-330 - 0);
+    bleed32800at0g: func () {
+        var loss_fps = 0 + ((me.last_dt - 0)/(15 - 0))*(-330 - 0);
         return loss_fps*M2FT;
     },
 
-    bleed32800at25g: func (dt) {
-        var loss_fps = 0 + ((dt - 0)/(3.5 - 0))*(-240 - 0);
+    bleed32800at25g: func () {
+        var loss_fps = 0 + ((me.last_dt - 0)/(3.5 - 0))*(-240 - 0);
         return loss_fps*M2FT;
     },
 
-    bleed0at0g: func (dt) {
-        var loss_fps = 0 + ((dt - 0)/(22 - 0))*(-950 - 0);
+    bleed0at0g: func () {
+        var loss_fps = 0 + ((me.last_dt - 0)/(22 - 0))*(-950 - 0);
         return loss_fps*M2FT;
     },
 
-    bleed0at25g: func (dt) {
-        var loss_fps = 0 + ((dt - 0)/(7 - 0))*(-750 - 0);
+    bleed0at25g: func () {
+        var loss_fps = 0 + ((me.last_dt - 0)/(7 - 0))*(-750 - 0);
         return loss_fps*M2FT;
-    },    
+    },
 
     update: func(){
         # calculate life time of the missile
         var dt = getprop("sim/time/delta-sec");
+
+        var elapsed = systime();
+
+        if (me.elapsed_last != 0) {
+            me.dt = (elapsed - me.elapsed_last)*getprop("sim/speed-up");
+            if(me.dt <= 0) {
+                # to prevent pow floating point error in line:cdm = 0.2965 * math.pow(me.speed_m, -1.1506) + me.cd;
+                # could happen if the OS adjusts the clock backwards
+                me.dt = 0.00001;
+            }
+        }
+        me.elapsed_last = elapsed;
+
         var init_launch = 0;
         if(me.life_time > 0)
         {
@@ -572,7 +587,7 @@ var MISSILE = {
         #print("acc: ", acc, " _drag_acc: ", drag_acc);
 
         if (me.last_dt != 0) {
-            speed_fps = speed_fps + me.energyBleed(me.g, me.altN.getValue(), me.last_dt);
+            speed_fps = speed_fps + me.energyBleed(me.g, me.altN.getValue());
         }
         
         # this is for ground detection fr A/G cruise missile
@@ -617,7 +632,7 @@ var MISSILE = {
         
         var grav_bomb = FALSE;
         if (me.force_lbs_1 == 0 and me.force_lbs_2 == 0) {
-            grav_bomb == TRUE;
+            grav_bomb = TRUE;
         }
 
         # Get target position.
@@ -901,7 +916,7 @@ var MISSILE = {
             var dev_e = 0;#me.curr_tgt_e;
             var dev_h = 0;#me.curr_tgt_h;
 
-            if (me.last_deviation_e != nil) {
+            if (me.last_deviation_e != nil and me.guidance == "heat") {
                 # its not our first seeker head move
                 # calculate if the seeker can keep up with the angular change of the target
 
