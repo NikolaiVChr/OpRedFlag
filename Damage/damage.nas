@@ -4,22 +4,27 @@ var TRUE  = 1;
 var FALSE = 0;
 
 var warhead_lbs = {
-    "aim-120":              44.0,
-    "AIM120":               44.0,
-    "RB-99":                44.0,
-    "aim-7":                88.0,
-    "RB-71":                88.0,
-    "aim-9":                20.8,
-    "RB-24J":               20.8,
-    "RB-74":                20.8,
-    "R74":                  16.0,
-    "MATRA-R530":           55.0,
-    "Meteor":               55.0,
-    "AIM-54":              135.0,
-    "Matra R550 Magic 2":   27.0,
-    "Matra MICA":           30.0,
-    "RB-15F":             440.92,
-    "SCALP":              992.00,
+    "aim-120":              44.00,
+    "AIM120":               44.00,
+    "RB-99":                44.00,
+    "aim-7":                88.00,
+    "RB-71":                88.00,
+    "aim-9":                20.80,
+    "RB-24J":               20.80,
+    "RB-74":                20.80,
+    "R74":                  16.00,
+    "MATRA-R530":           55.00,
+    "Meteor":               55.00,
+    "AIM-54":              135.00,
+    "Matra R550 Magic 2":   27.00,
+    "Matra MICA":           30.00,
+    "RB-15F":              440.92,
+    "SCALP":               992.00,
+    "KN-06":               315.00,
+    "GBU12":               190.00,
+    "GBU16":               450.00,
+    "Sea Eagle":           505.00,
+    "AGM65":               200.00,
 };
 
 var incoming_listener = func {
@@ -41,7 +46,7 @@ var incoming_listener = func {
       if (last_vector[1] == " FOX2 at" or last_vector[1] == " aim7 at" or last_vector[1] == " aim9 at"
           or last_vector[1] == " aim120 at" or last_vector[1] == " RB-24J fired at" or last_vector[1] == " RB-74 fired at"
           or last_vector[1] == " RB-71 fired at" or last_vector[1] == " RB-15F fired at"
-          or last_vector[1] == " RB-99 fired at" or m2000 == TRUE) {
+          or last_vector[1] == " RB-99 fired at" or last_vector[1] == " KN-06 fired at" or m2000 == TRUE) {
         # air2air being fired
         if (size(last_vector) > 2 or m2000 == TRUE) {
           #print("Missile launch detected at"~last_vector[2]~" from "~author);
@@ -96,7 +101,7 @@ var incoming_listener = func {
             }
           }
         }
-      } elsif (1 == 1) { # mirage: getprop("/controls/armament/mp-messaging")
+      } elsif (getprop("sim/model/f15/systems/armament/mp-messaging") == TRUE) { # mirage: getprop("/controls/armament/mp-messaging")
         # latest version of failure manager and taking damage enabled
         #print("damage enabled");
         var last1 = split(" ", last_vector[1]);
@@ -105,15 +110,17 @@ var incoming_listener = func {
           if (size(last_vector) > 3 and last_vector[3] == " "~callsign) {
             #print("that someone is me!");
             var type = last1[1];
-            if (type == "Matra") {
+            if (type == "Matra" or type == "Sea") {
               for (var i = 2; i < size(last1)-1; i += 1) {
                 type = type~" "~last1[i];
               }
             }
             var number = split(" ", last_vector[2]);
-            var distance = clamp(num(number[1])-3, 0, 1000000);
+            var distance = num(number[1]);
             #print(type~"|");
             if(distance != nil) {
+              var dist = distance;
+              distance = clamp(distance-3, 0, 1000000);
               var maxDist = 0;
 
               if (contains(warhead_lbs, type)) {
@@ -133,7 +140,7 @@ var incoming_listener = func {
 
               var failed = fail_systems(probability);
               var percent = 100 * probability;
-              print("Took "~percent~"% damage from "~type~" missile at "~distance~" meters distance! "~failed~" systems was hit.");
+              printf("Took %.1f%% damage from %s missile at %0.1f meters. %s systems was hit", percent,type,dist,failed);
               nearby_explosion();
             }
           } 
@@ -149,7 +156,7 @@ var incoming_listener = func {
               probability = 0.30;
             }
             var failed = fail_systems(probability);
-            print("Took "~probability*100~"% damage from cannon! "~failed~" systems was hit.");
+            printf("Took %.1f%% damage from cannon! %s systems was hit.", probability*100, failed);
             nearby_explosion();
           }
         }
@@ -221,89 +228,19 @@ var processCallsigns = func () {
 
 processCallsigns();
 
-#f15c
-var sendMis = func () {
-  var mkeys = keys(aircraft.AIM9.active);
-  var str = "";
-  foreach(var m; mkeys) {
-    var mid = m;
-    m = aircraft.AIM9.active[m];
-    if (m.status == 2) {
-      var lat = m.latN.getValue();
-      var lon = m.lonN.getValue();
-      var alt = m.altN.getValue();
-      #print();
-      #print(mid);
-      #print(lat);
-      #print(lon);
-      #print(alt);
-      str = str~mid~";"~lat~";"~lon~";"~alt~":";
-    }
-  }
-  setprop("sim/multiplay/generic/string[13]", str);
-  settimer(sendMis,0.05);
-}
-
-#f14b
-var sendMis = func () {
-  var mkeys = keys(fox2.AIM9.active);
-  var str = "";
-  foreach(var m; mkeys) {
-    var mid = m;
-    m = fox2.AIM9.active[m];
-    if (m.status == 2) {
-      var lat = m.latN.getValue();
-      var lon = m.lonN.getValue();
-      var alt = m.altN.getValue();
-      #print();
-      #print(mid);
-      #print(lat);
-      #print(lon);
-      #print(alt);
-      str = str~mid~";"~lat~";"~lon~";"~alt~":";
-    }
-  }
-  setprop("sim/multiplay/generic/string[13]", str);
-  settimer(sendMis,0.05);
-}
-
-#m2000-5
-var sendMis = func () {
-  var mkeys = keys(missile.MISSILE.active);
-  var str = "";
-  foreach(var m; mkeys) {
-    var mid = m;
-    m = missile.MISSILE.active[m];
-    if (m.status == 2) {
-      var lat = m.latN.getValue();
-      var lon = m.lonN.getValue();
-      var alt = m.altN.getValue();
-      #print();
-      #print(mid);
-      #print(lat);
-      #print(lon);
-      #print(alt);
-      str = str~mid~";"~lat~";"~lon~";"~alt~":";
-    }
-  }
-  setprop("sim/multiplay/generic/string[13]", str);
-  logTime();
-  settimer(sendMis,0.05);
-}
-
-var logTime = func{
-  #log time and date for outputing ucsv files for converting into KML files for google earth.
-  if (getprop("logging/log[0]/enabled") == TRUE and getprop("sim/time/utc/year") != nil) {
-    var date = getprop("sim/time/utc/year")~"/"~getprop("sim/time/utc/month")~"/"~getprop("sim/time/utc/day");
-    var time = getprop("sim/time/utc/hour")~":"~getprop("sim/time/utc/minute")~":"~getprop("sim/time/utc/second");
-
-    setprop("logging/date-log", date);
-    setprop("logging/time-log", time);
-  }
-}
-
-sendMis();
-
 setlistener("/sim/multiplay/chat-history", incoming_listener, 0, 0);
 
-setprop("/sim/failure-manager/display-on-screen", FALSE);
+#setprop("/sim/failure-manager/display-on-screen", FALSE);
+
+var re_init = func {
+  # repair the aircraft
+
+  var failure_modes = FailureMgr._failmgr.failure_modes;
+  var mode_list = keys(failure_modes);
+
+  foreach(var failure_mode_id; mode_list) {
+    FailureMgr.set_failure_level(failure_mode_id, 0);
+  }
+}
+
+setlistener("/sim/signals/reinit", re_init, 0, 0);
