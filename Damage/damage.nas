@@ -1,3 +1,11 @@
+#
+# Install: Include this code into an aircraft to make it damagable. (remember to add it to the -set file)
+#
+# Author: Nikolai V. Chr. (with some improvement by Onox and Pinto)
+#
+#
+
+
 var clamp = func(v, min, max) { v < min ? min : v > max ? max : v }
 
 var TRUE  = 1;
