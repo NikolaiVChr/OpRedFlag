@@ -15,11 +15,13 @@
 		<nasal>
 		    <load><![CDATA[
 		    	var up = 1;
+		    	var finish = 0;
 		    	var loop = func () {
 				    foreach( var tanker; props.globals.getNode("/ai/models",1).getChildren("tanker") ) {
 				        var callsign = tanker.getNode("callsign").getValue();
 				        if( callsign == nil ) continue;
-				        if( string.match(callsign,"Evading*") ) {
+				        if( string.match(callsign,"Evading*") or string.match(callsign,"Slow-evading*")
+				            or string.match(callsign,"Fast-evading*") or string.match(callsign,"Very-fast-evading*")) {
 				        	var node = tanker.getNode("position/altitude-ft", 1 );
 				        	var alt = node.getValue();
 				        	if(alt > 10000 and up == 1) {
@@ -31,16 +33,68 @@
 				          	node.setDoubleValue(alt);
 				        }
 			      	}
-			      	settimer(loop, 0);
+			      	if (finish == 0) {
+			      		settimer(loop, 0);
+			      	}
 			    }
 			    loop();
 		      	debug.dump('Moving targets scenario load script complete');
 		    ]]>
 		    </load>
+		    <unload><![CDATA[
+		    	finish = 1;
+		    	]]>
+		    </unload>
 		</nasal>
 
 		<entry>
 			<name>Tanker-1</name>
+			<callsign>Slow-evading-target</callsign>
+			<type>tanker</type>
+			<class>tanker</class>
+			<TACAN-channel-ID>041X</TACAN-channel-ID>
+			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<latitude>37.258</latitude>
+			<longitude>-115.797</longitude>
+			<altitude>15000</altitude>
+			<heading>020</heading>
+			<speed>300</speed>
+			<roll>-80</roll>
+			<pattern-length-nm>1</pattern-length-nm>
+		</entry>
+
+		<entry>
+			<name>Tanker-2</name>
+			<callsign>Slow-low-target</callsign>
+			<type>tanker</type>
+			<class>tanker</class>
+			<TACAN-channel-ID>041X</TACAN-channel-ID>
+			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<latitude>37.258</latitude>
+			<longitude>-115.797</longitude>
+			<altitude>9000</altitude>
+			<heading>020</heading>
+			<speed>300</speed>
+			<roll>30</roll>
+		</entry>
+
+		<entry>
+			<name>Tanker-3</name>
+			<callsign>Slow-high-target</callsign>
+			<type>tanker</type>
+			<class>tanker</class>
+			<TACAN-channel-ID>041X</TACAN-channel-ID>
+			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<latitude>37.258</latitude>
+			<longitude>-115.797</longitude>
+			<altitude>35000</altitude>
+			<heading>020</heading>
+			<speed>250</speed>
+			<roll>15</roll>
+		</entry>
+
+		<entry>
+			<name>Tanker-4</name>
 			<callsign>Evading-target</callsign>
 			<type>tanker</type>
 			<class>tanker</class>
@@ -51,12 +105,12 @@
 			<altitude>15000</altitude>
 			<heading>020</heading>
 			<speed>450</speed>
-			<roll>-80</roll>
-			<pattern-length-nm>6</pattern-length-nm>
+			<roll>80</roll>
+			<pattern-length-nm>1</pattern-length-nm>
 		</entry>
 
 		<entry>
-			<name>Tanker-2</name>
+			<name>Tanker-5</name>
 			<callsign>Low-target</callsign>
 			<type>tanker</type>
 			<class>tanker</class>
@@ -66,12 +120,12 @@
 			<longitude>-115.797</longitude>
 			<altitude>9000</altitude>
 			<heading>020</heading>
-			<speed>550</speed>
-			<roll>30</roll>
+			<speed>450</speed>
+			<roll>-40</roll>
 		</entry>
 
 		<entry>
-			<name>Tanker-3</name>
+			<name>Tanker-6</name>
 			<callsign>High-target</callsign>
 			<type>tanker</type>
 			<class>tanker</class>
@@ -81,53 +135,7 @@
 			<longitude>-115.797</longitude>
 			<altitude>35000</altitude>
 			<heading>020</heading>
-			<speed>300</speed>
-			<roll>15</roll>
-		</entry>
-
-		<entry>
-			<name>Tanker-4</name>
-			<callsign>Evading-target-2</callsign>
-			<type>tanker</type>
-			<class>tanker</class>
-			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
-			<latitude>37.258</latitude>
-			<longitude>-115.797</longitude>
-			<altitude>15000</altitude>
-			<heading>020</heading>
-			<speed>350</speed>
-			<roll>80</roll>
-			<pattern-length-nm>5</pattern-length-nm>
-		</entry>
-
-		<entry>
-			<name>Tanker-5</name>
-			<callsign>Low-target-2</callsign>
-			<type>tanker</type>
-			<class>tanker</class>
-			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
-			<latitude>37.258</latitude>
-			<longitude>-115.797</longitude>
-			<altitude>9000</altitude>
-			<heading>020</heading>
-			<speed>250</speed>
-			<roll>-40</roll>
-		</entry>
-
-		<entry>
-			<name>Tanker-6</name>
-			<callsign>High-target-2</callsign>
-			<type>tanker</type>
-			<class>tanker</class>
-			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
-			<latitude>37.258</latitude>
-			<longitude>-115.797</longitude>
-			<altitude>35000</altitude>
-			<heading>020</heading>
-			<speed>250</speed>
+			<speed>375</speed>
 			<roll>-80</roll>
 		</entry>
 
@@ -149,7 +157,7 @@
 		<!-- Nellis -->
 		<entry>
 			<name>Tanker-8</name>
-			<callsign>Evading-target-3</callsign>
+			<callsign>Fast-evading-target</callsign>
 			<type>tanker</type>
 			<class>tanker</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
@@ -159,13 +167,13 @@
 			<altitude>15000</altitude>
 			<heading>020</heading>
 			<speed>650</speed>
-			<roll>-80</roll>
-			<pattern-length-nm>4</pattern-length-nm>
+			<roll>-90</roll>
+			<pattern-length-nm>1</pattern-length-nm>
 		</entry>
 
 		<entry>
 			<name>Tanker-9</name>
-			<callsign>Low-target-3</callsign>
+			<callsign>Fast-low-target</callsign>
 			<type>tanker</type>
 			<class>tanker</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
@@ -174,13 +182,13 @@
 			<longitude>-115.300</longitude>
 			<altitude>9000</altitude>
 			<heading>020</heading>
-			<speed>850</speed>
+			<speed>650</speed>
 			<roll>30</roll>
 		</entry>
 
 		<entry>
 			<name>Tanker-10</name>
-			<callsign>High-target-3</callsign>
+			<callsign>Fast-high-target</callsign>
 			<type>tanker</type>
 			<class>tanker</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
@@ -195,53 +203,7 @@
 
 		<entry>
 			<name>Tanker-11</name>
-			<callsign>Evading-target-4</callsign>
-			<type>tanker</type>
-			<class>tanker</class>
-			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
-			<latitude>36.858</latitude>
-			<longitude>-115.300</longitude>
-			<altitude>15000</altitude>
-			<heading>020</heading>
-			<speed>550</speed>
-			<roll>80</roll>
-			<pattern-length-nm>3</pattern-length-nm>
-		</entry>
-
-		<entry>
-			<name>Tanker-12</name>
-			<callsign>Low-target-4</callsign>
-			<type>tanker</type>
-			<class>tanker</class>
-			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
-			<latitude>36.858</latitude>
-			<longitude>-115.300</longitude>
-			<altitude>9000</altitude>
-			<heading>020</heading>
-			<speed>450</speed>
-			<roll>-40</roll>
-		</entry>
-
-		<entry>
-			<name>Tanker-13</name>
-			<callsign>High-target-4</callsign>
-			<type>tanker</type>
-			<class>tanker</class>
-			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
-			<latitude>36.858</latitude>
-			<longitude>-115.300</longitude>
-			<altitude>35000</altitude>
-			<heading>020</heading>
-			<speed>450</speed>
-			<roll>-80</roll>
-		</entry>
-
-		<entry>
-			<name>Tanker-14</name>
-			<callsign>Fast-target-2</callsign>
+			<callsign>Very-fast-evading-target</callsign>
 			<type>tanker</type>
 			<class>tanker</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
@@ -251,7 +213,53 @@
 			<altitude>15000</altitude>
 			<heading>020</heading>
 			<speed>850</speed>
-			<roll>-100</roll>
+			<roll>90</roll>
+			<pattern-length-nm>1</pattern-length-nm>
+		</entry>
+
+		<entry>
+			<name>Tanker-12</name>
+			<callsign>Very-fast-low-target</callsign>
+			<type>tanker</type>
+			<class>tanker</class>
+			<TACAN-channel-ID>041X</TACAN-channel-ID>
+			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<latitude>36.858</latitude>
+			<longitude>-115.300</longitude>
+			<altitude>9000</altitude>
+			<heading>020</heading>
+			<speed>750</speed>
+			<roll>-40</roll>
+		</entry>
+
+		<entry>
+			<name>Tanker-13</name>
+			<callsign>Very-fast-high-target</callsign>
+			<type>tanker</type>
+			<class>tanker</class>
+			<TACAN-channel-ID>041X</TACAN-channel-ID>
+			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<latitude>36.858</latitude>
+			<longitude>-115.300</longitude>
+			<altitude>35000</altitude>
+			<heading>020</heading>
+			<speed>700</speed>
+			<roll>-80</roll>
+		</entry>
+
+		<entry>
+			<name>Tanker-14</name>
+			<callsign>Very-fast-target</callsign>
+			<type>tanker</type>
+			<class>tanker</class>
+			<TACAN-channel-ID>041X</TACAN-channel-ID>
+			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<latitude>36.858</latitude>
+			<longitude>-115.300</longitude>
+			<altitude>15000</altitude>
+			<heading>020</heading>
+			<speed>900</speed>
+			<roll>-90</roll>
 		</entry>
 
 
