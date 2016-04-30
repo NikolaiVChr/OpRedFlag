@@ -374,6 +374,15 @@ var MISSILE = {
         me.alt = aalt;
         me.pitch = ac_pitch;
         me.hdg = ac_hdg;
+
+        if (me.cruisealt > 10000) {
+            #
+            # adjust the snap-up altitude to initial distance of target.
+            #
+            var dst = me.coord.distance_to(me.Tgt.get_Coord()) * M2NM;
+            me.cruisealt = me.cruisealt - ((me.max_detect_rng - 10) - (dst - 10))*1000;
+            me.cruisealt = me.clamp(me.cruisealt, 10000, 200000);
+        }
         
         #me.smoke_prop.setBoolValue(1);
         #SwSoundVol.setValue(0);
@@ -407,17 +416,17 @@ var MISSILE = {
          return Cd;
     },
 
-    energyBleed: func (gForce, altitude, dt) {
+    energyBleed: func (gForce, altitude) {
         # Bleed of energy from pulling Gs.
         # This is very inaccurate, but better than nothing.
         #
-        # First we get the speedloss including loss due to normal drag:
-        var b300 = me.bleed32800at0g(dt);
-        var b325 = me.bleed32800at25g(dt)-b300;
+        # First we get the speedloss due to normal drag:
+        var b300 = me.bleed32800at0g();
+        var b000 = me.bleed0at0g();
         #
-        # We then subtract the normal drag.
-        var b000 = me.bleed0at0g(dt);
-        var b025 = me.bleed0at25g(dt)-b000;
+        # We then subtract the normal drag from the loss due to G and normal drag.
+        var b325 = me.bleed32800at25g()-b300;
+        var b025 = me.bleed0at25g()-b000;
         b300 = 0;
         b000 = 0;
         #
@@ -429,7 +438,8 @@ var MISSILE = {
         var speedLoss = speedLoss0 + ((altitude-0)/(32800-0))*(speedLoss32800-speedLoss0);
         #
         # For good measure the result is clamped to below zero.
-        return clamp(speedLoss, -100000, 0);
+        speedLoss = me.clamp(speedLoss, -100000, 0);
+        return speedLoss;
     },
 
     bleed32800at0g: func () {
