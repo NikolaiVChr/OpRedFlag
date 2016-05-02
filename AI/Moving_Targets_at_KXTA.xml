@@ -87,7 +87,7 @@
 			<model>Models/Aircraft/F-15-lowpoly.xml</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
-			<altitude>35000</altitude>
+			<altitude>36000</altitude>
 			<heading>020</heading>
 			<speed>250</speed>
 			<roll>15</roll>
@@ -133,7 +133,7 @@
 			<model>Models/Aircraft/F-15-lowpoly.xml</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
-			<altitude>35000</altitude>
+			<altitude>36000</altitude>
 			<heading>020</heading>
 			<speed>375</speed>
 			<roll>-80</roll>
@@ -148,7 +148,7 @@
 			<model>Models/Aircraft/F-15-lowpoly.xml</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
-			<altitude>15000</altitude>
+			<altitude>20000</altitude>
 			<heading>020</heading>
 			<speed>650</speed>
 			<roll>-100</roll>
@@ -195,7 +195,7 @@
 			<model>Models/Aircraft/F-15-lowpoly.xml</model>
 			<latitude>36.858</latitude>
 			<longitude>-115.300</longitude>
-			<altitude>35000</altitude>
+			<altitude>36000</altitude>
 			<heading>020</heading>
 			<speed>500</speed>
 			<roll>15</roll>
@@ -241,7 +241,7 @@
 			<model>Models/Aircraft/F-15-lowpoly.xml</model>
 			<latitude>36.858</latitude>
 			<longitude>-115.300</longitude>
-			<altitude>35000</altitude>
+			<altitude>36000</altitude>
 			<heading>020</heading>
 			<speed>700</speed>
 			<roll>-80</roll>
@@ -256,7 +256,7 @@
 			<model>Models/Aircraft/F-15-lowpoly.xml</model>
 			<latitude>36.858</latitude>
 			<longitude>-115.300</longitude>
-			<altitude>15000</altitude>
+			<altitude>20000</altitude>
 			<heading>020</heading>
 			<speed>900</speed>
 			<roll>-90</roll>

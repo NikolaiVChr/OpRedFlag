@@ -380,7 +380,7 @@ var MISSILE = {
             # adjust the snap-up altitude to initial distance of target.
             #
             var dst = me.coord.distance_to(me.Tgt.get_Coord()) * M2NM;
-            me.cruisealt = me.cruisealt - ((me.max_detect_rng - 10) - (dst - 10))*1000;
+            me.cruisealt = me.cruisealt - ((me.max_detect_rng - 10) - (dst - 10))*500;
             me.cruisealt = me.clamp(me.cruisealt, 10000, 200000);
         }
         
@@ -1016,7 +1016,7 @@ var MISSILE = {
                     me.diveToken = TRUE;
                 }
                 cruise_or_loft = 1;
-            } elsif (t_elev_deg < 0 and me.life_time < me.stage_1_duration+me.stage_2_duration+me.drop_time
+            } elsif (t_elev_deg < 0 #and me.life_time < me.stage_1_duration+me.stage_2_duration+me.drop_time
                      and t_dist_m * M2NM > cruise_minimum) {
                 # stage 1/2 cruising: keeping altitude since target is below and more than 5 miles out
 
