@@ -32,6 +32,8 @@ var Loading_missile = func(name)
     var seeker_angular_speed_dps = 30;   # you want this (much) higher for your modern missiles
     var arming_time_sec          = 1.2;  
     var guidance          = "radar";
+    var railLength        = 2.667;
+    var railForward       = 1;
    
     if(name == "Matra MICA")
     {
@@ -40,14 +42,14 @@ var Loading_missile = func(name)
         NoSmoke = "/Aircraft/Mirage-2000/Missiles/MatraMica/MatraMica.xml";
         Explosion = "/Aircraft/Mirage-2000/Missiles/MatraMica/explosion.xml";
         maxdetectionrngnm = 45;                      #  Not real Impact yet
-        fovdeg = 25;                                 # seeker optical FOV
+        fovdeg = 30;                                 # seeker optical FOV
         detectionfovdeg = 180;                       # Search pattern diameter (rosette scan)
-        trackmaxdeg = 110;                           # Seeker max total angular rotation
+        trackmaxdeg = 135;                           # Seeker max total angular rotation
         maxg = 50;                                   # In turn
-        thrustlbs1 = 20000;
-        thrustlbs2 = 1000;
-        thrust1durationsec = 3;
-        thrust2durationsec = 41;
+        thrustlbs1 = 4500;
+        thrustlbs2 = 1500;
+        thrust1durationsec = 8;
+        thrust2durationsec = 28;
         weightlaunchlbs = 216;
         weightwarheadlbs = 30;
         seeker_angular_speed_dps = 60;
@@ -55,7 +57,7 @@ var Loading_missile = func(name)
         dragarea = 0.30;                            # sq ft
         maxExplosionRange = 50;                      # in meter ! Due to the code, more the speed is important, more we need to have this figure high
         maxspeed = 4;                                # In Mach
-        life = 120;
+        life = 100;
         fox = "Fox 3";
         rail = "true";
         cruisealt = 0;
@@ -73,7 +75,7 @@ var Loading_missile = func(name)
         weightwarheadlbs = 44;
         maxExplosionRange = 50;                       # in meter !!Due to the code, more the speed is important, more we need to have this figure high
         maxspeed = 4;                                 # In Mach
-        life = 80;
+        life = 90;
         fox = "Fox 3";
         rail = "false";
         cruisealt = 36000;
@@ -81,10 +83,10 @@ var Loading_missile = func(name)
         min_guiding_speed_mach = 0.9;
         arming_time_sec = 1.6;
         seeker_angular_speed_dps = 30;
-        thrustlbs1 = 11000;
-        thrustlbs2 = 1000;
-        thrust1durationsec = 4;
-        thrust2durationsec = 36;
+        thrustlbs1 = 4500;
+        thrustlbs2 = 1500;
+        thrust1durationsec = 8;
+        thrust2durationsec = 24;
         dragcoeff = 0.50;
         dragarea = 0.2739;
     }
@@ -97,10 +99,10 @@ var Loading_missile = func(name)
         fovdeg = 25;                                  # seeker optical FOV
         detectionfovdeg = 180;                        # Search pattern diameter (rosette scan)
         trackmaxdeg = 110;                            # Seeker max total angular rotation
-        maxg = 21;                                    # In turn
-        thrustlbs1 = 3449.23;                              # guess
+        maxg = 30;                                    # In turn
+        thrustlbs1 = 3000;                              # guess
         thrustlbs2 = 0;
-        thrust1durationsec =  4;
+        thrust1durationsec =  5;
         thrust2durationsec =  0;
         weightlaunchlbs = 169;
         weightwarheadlbs = 27;
@@ -109,7 +111,7 @@ var Loading_missile = func(name)
         dragarea = 0.150;                             # sq ft
         maxExplosionRange = 40;                       # Due to the code, more the speed is important, more we need to have this figure high
         maxspeed = 2.7;                               # In Mach
-        life = 35;
+        life = 45;
         fox = "Fox 2";
         rail = "true";
         cruisealt = 0;
@@ -223,7 +225,7 @@ var Loading_missile = func(name)
         maxdetectionrngnm = 135;                      # Not real Impact yet
         fovdeg = 25;                                  # seeker optical FOV
         detectionfovdeg = 180;                        # Search pattern diameter (rosette scan)
-        trackmaxdeg = 110;                            # Seeker max total angular rotation
+        trackmaxdeg = 180;                            # Seeker max total angular rotation
         maxg = 20;                                    # In turn
         thrustlbs1 = 2750;                             # guess
         thrust1durationsec = 1000;                     # Mk.36 Mod.7,8
@@ -249,9 +251,9 @@ var Loading_missile = func(name)
         maxdetectionrngnm = 134;                      # Not real Impact yet
         fovdeg = 25;                                  # seeker optical FOV
         detectionfovdeg = 180;                        # Search pattern diameter (rosette scan)
-        trackmaxdeg = 110;                            # Seeker max total angular rotation
+        trackmaxdeg = 180;                            # Seeker max total angular rotation
         maxg = 15;                                    # In turn
-        thrustlbs1 = 1000;                             # guess
+        thrustlbs1 = 2000;                             # guess
         thrust1durationsec = 1000;                     # Mk.36 Mod.7,8
         thrustlbs2 = 0;
         thrust2durationsec =  0;
@@ -400,5 +402,7 @@ var Loading_missile = func(name)
     setprop("controls/armament/missile/seeker-angular-speed-dps", seeker_angular_speed_dps);
     setprop("controls/armament/missile/arming-time-sec", arming_time_sec);
     setprop("controls/armament/missile/guidance", guidance);
+    setprop("controls/armament/missile/rail-length-m", railLength);
+    setprop("controls/armament/missile/rail-point-forward", railForward);
     return 1;
 }
