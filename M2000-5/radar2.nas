@@ -706,7 +706,7 @@ var Radar = {
         {
           append(me.Check_List, 1);
          }else{
-          append(me.Check_List, me.doppler(SelectedObject));
+          append(me.Check_List, 1);#me.doppler(SelectedObject));
          }
         if(me.Check_List[4] == 0)
         {
