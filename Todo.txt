@@ -15,16 +15,17 @@ Implement better time keeping in F15/F14/Mirage for missiles.
 Adjust drag for aim-7. And put the new stats into the other planes.
 Put release into pitch wind on planes, or trash it?
 Only heat missile should have angular speed.
+Make the F14 cannon work.
 
 Fairly small tasks
 ==================
-Make the F14 cannon work.
 Make unguided bomb not require a target. Just run release() directly.
-Make JA37 menu option: reload cannon.
 Did I break laser guided bombs in the mirage? (pretty sure I did, if they used to be guided)
 Put in failure modes in mirage. Elec should be needed for firing.
 Implement damage formula Raider1 found to damage code.
 AIM-120/7 on rails will be rail launched, else dropped.
+Key to center view and zoom.
+Dig up some old F15 for Raider1 to test.
 
 Bigger tasks
 ============
