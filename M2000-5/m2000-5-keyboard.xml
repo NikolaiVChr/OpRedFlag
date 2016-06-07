@@ -317,6 +317,15 @@
       </binding>
      </key>
     
+
+    <key n="87">
+        <name>W</name>
+        <desc>Reset view</desc>
+        <binding>
+            <command>nasal</command>
+            <script>mirage2000.resetView();</script>
+        </binding>
+    </key>
   </keyboard>
   
 </PropertyList>
