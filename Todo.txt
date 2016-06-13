@@ -16,6 +16,8 @@ Adjust drag for aim-7. And put the new stats into the other planes.
 Put release into pitch wind on planes, or trash it?
 Only heat missile should have angular speed.
 Make the F14 cannon work.
+F-14 cannon does not do damage, check shell name!!!!!!
+Key to center view and zoom.
 
 Fairly small tasks
 ==================
@@ -24,8 +26,9 @@ Did I break laser guided bombs in the mirage? (pretty sure I did, if they used t
 Put in failure modes in mirage. Elec should be needed for firing.
 Implement damage formula Raider1 found to damage code.
 AIM-120/7 on rails will be rail launched, else dropped.
-Key to center view and zoom.
 Dig up some old F15 for Raider1 to test.
+Increase the cannon radius to 75 meters, to make more reliable hits.
+
 
 Bigger tasks
 ============
