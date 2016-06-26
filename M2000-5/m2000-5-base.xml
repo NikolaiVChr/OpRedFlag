@@ -464,6 +464,10 @@
       <file>Aircraft/Mirage-2000/Nasal/tanker.nas</file>
     </tanker>
 
+    <blackout>
+        <file>Aircraft/Mirage-2000/Nasal/blackout.nas</file>
+    </blackout>
+
   </nasal>
 
 </PropertyList>
