@@ -10,7 +10,6 @@ var warhead_lbs = {
     "aim-7":                88.00,
     "RB-71":                88.00,
     "aim-9":                20.80,
-    "AIM-9":                20.80,
     "RB-24":                20.80,
     "RB-24J":               20.80,
     "RB-74":                20.80,
@@ -424,7 +423,7 @@ var not = func {
         if (substr(bits,5,1) == "1") {
           msg = msg~"Used time"~"warp..";
         }
-        if (substr(bits,6,1) == "1") {
+        if (getprop("/controls/armament/mp-messaging") == FALSE and substr(bits,6,1) == "1") {
           msg = msg~"Have dam"~"age off..";
         }
         if (substr(bits,7,1) == "1") {
