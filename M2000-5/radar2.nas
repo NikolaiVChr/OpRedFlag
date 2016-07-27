@@ -90,7 +90,8 @@ var Radar = {
         
         # for Target Selection
         m.tgts_list         = [];
-        m.Target_Index      = 0 ; # for Target Selection
+        m.Target_Index      = -1 ; # for Target Selection
+        m.Target_Callsign   = nil;
         
         #Source behavior
         m.OurHdg        = 0;
@@ -798,12 +799,22 @@ var Radar = {
       if (me.Target_Index > (size(me.tgts_list)-1)) {
         me.Target_Index = 0;
       }
+      if (size(me.tgts_list) > 0) {
+        me.Target_Callsign = me.tgts_list[me.Target_Index].get_Callsign();
+      } else {
+        me.Target_Callsign = nil;
+      }
     },
 
     previous_Target_Index: func(){
       me.Target_Index = me.Target_Index - 1;
       if (me.Target_Index < 0) {
         me.Target_Index = size(me.tgts_list)-1;
+      }
+      if (size(me.tgts_list) > 0) {
+        me.Target_Callsign = me.tgts_list[me.Target_Index].get_Callsign();
+      } else {
+        me.Target_Callsign = nil;
       }
     },
 
@@ -816,11 +827,20 @@ var Radar = {
         {
             if( me.Target_Index < 0)
             {
-                 me.Target_Index = size(me.tgts_list) - 1;
+                me.Target_Callsign = nil;
+                setprop("/ai/closest/range", 0);
+                return;#me.Target_Index = size(me.tgts_list) - 1;
             }
             if( me.Target_Index > size(me.tgts_list) - 1)
             {
-                 me.Target_Index = 0;
+                me.Target_Callsign = nil;
+                setprop("/ai/closest/range", 0);
+                return;#me.Target_Index = 0;
+            }
+            if (me.Target_Callsign != me.tgts_list[me.Target_Index].get_Callsign()) {
+                me.Target_Callsign = nil;
+                setprop("/ai/closest/range", 0);
+                return;
             }
             var MyTarget = me.tgts_list[ me.Target_Index];
             closeRange   = me.targetRange(MyTarget);
@@ -857,13 +877,18 @@ var Radar = {
       }
       if(me.Target_Index < 0)
       {
-        me.Target_Index = size(me.tgts_list) - 1;
+        return nil;#me.Target_Index = size(me.tgts_list) - 1;
       }
       if(me.Target_Index > size(me.tgts_list) - 1)
       {
-        me.Target_Index = 0;
+        return nil;#me.Target_Index = 0;
       }
-      return me.tgts_list[me.Target_Index];
+      if (me.Target_Callsign == me.tgts_list[me.Target_Index].get_Callsign()) {
+        return me.tgts_list[me.Target_Index];
+      } else {
+        me.Target_Callsign = nil;
+        return nil;
+      }
     },
     #toggle_Type: func(){
     #  me.detectionTypeIndex = math.mod(me.detectionTypeIndex + 1, size(me.detectionTypetab));
