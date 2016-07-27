@@ -17,7 +17,7 @@
 		    	var up = 1;
 		    	var finish = 0;
 		    	var loop = func () {
-				    foreach( var tanker; props.globals.getNode("/ai/models",1).getChildren("tanker") ) {
+				    foreach( var tanker; props.globals.getNode("/ai/models",1).getChildren("aircraft") ) {
 				        var callsign = tanker.getNode("callsign").getValue();
 				        if( callsign == nil ) continue;
 				        if( string.match(callsign,"Evading*") or string.match(callsign,"Slow-evading*")
