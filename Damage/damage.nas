@@ -18,6 +18,7 @@ var warhead_lbs = {
     "aim-7":                88.00,
     "RB-71":                88.00,
     "aim-9":                20.80,
+    "AIM9":                 20.80,
     "AIM-9":                20.80,
     "RB-24":                20.80,
     "RB-24J":               20.80,
@@ -44,6 +45,9 @@ var warhead_lbs = {
     "LAU-68":               10.00,
     "M317":                145.00,
     "GBU-31":              945.00,
+	"AIM132":               22.05,
+	"ALARM":               450.00,
+	"STORMSHADOW":         850.00,
 };
 
 var incoming_listener = func {
