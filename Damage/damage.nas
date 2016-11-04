@@ -203,7 +203,7 @@ var incoming_listener = func {
             #print("hitting me");
 
             var probability = cannon_types[last_vector[1]];
-            print("probability: " ~ probability);
+            #print("probability: " ~ probability);
             
             var failed = fail_systems(probability);
             printf("Took %.1f%% damage from cannon! %s systems was hit.", probability*100, failed);
