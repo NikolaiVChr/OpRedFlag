@@ -45,9 +45,12 @@ var warhead_lbs = {
     "LAU-68":               10.00,
     "M317":                145.00,
     "GBU-31":              945.00,
-	"AIM132":               22.05,
-	"ALARM":               450.00,
-	"STORMSHADOW":         850.00,
+    "AIM132":               22.05,
+    "ALARM":               450.00,
+    "STORMSHADOW":         850.00,
+    "R-60":                  6.60,
+    "R-27R1":               85.98,
+    "R-27T1":               85.98,
 };
 
 var incoming_listener = func {
