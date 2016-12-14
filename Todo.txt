@@ -31,7 +31,12 @@ Increase the cannon radius to 75 meters, to make more reliable hits.
 
 Next release:
 -------------
+Bigger font on F15 HUD
+Revert Gforce decimal
+
 Obscure blackout
+
+
 Missiles
 Redout
 Crash damage

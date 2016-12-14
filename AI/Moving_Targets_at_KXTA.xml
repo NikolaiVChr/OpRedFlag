@@ -32,6 +32,7 @@
 			        		alt = alt + 10*up;
 				          	node.setDoubleValue(alt);
 				        }
+				        tanker.getNode("orientation/pitch-deg", 1 ).setDoubleValue(0);
 			      	}
 			      	if (finish == 0) {
 			      		settimer(loop, 0);
