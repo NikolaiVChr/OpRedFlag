@@ -16,6 +16,11 @@
 		    <load><![CDATA[
 		    	var up = 1;
 		    	var finish = 0;
+
+		    	foreach( var tanker; props.globals.getNode("/ai/models",1).getChildren("aircraft") ) {
+		    		tanker.getNode("orientation/pitch-deg", 1 ).setDoubleValue(0);
+		    	}
+
 		    	var loop = func () {
 				    foreach( var tanker; props.globals.getNode("/ai/models",1).getChildren("aircraft") ) {
 				        var callsign = tanker.getNode("callsign").getValue();
@@ -32,7 +37,6 @@
 			        		alt = alt + 10*up;
 				          	node.setDoubleValue(alt);
 				        }
-				        tanker.getNode("orientation/pitch-deg", 1 ).setDoubleValue(0);
 			      	}
 			      	if (finish == 0) {
 			      		settimer(loop, 0);
