@@ -1,33 +1,16 @@
 Done, needs testing
 ===================
-New drag on other planes. (for now not mirage, as it be a pain to restat all those missiles)
-Port anti-cheat code from Viggen/F15 to F14
-Damage report distance in console is off.
-Port anti-cheat code from Viggen/F15/F14 to Mirage.
-Pinto terrain mask optimization into Mirage/F15/F15
-Gravity bombs and Cruise-missiles on F15/14.
-When F15 fires aim-120 on ground, it will report a redicoulous long distance.
-Termination messages.
-Review hide behind terrain in F15/F14 for anomalies.
-Make missiles bleed energy when doing high G turns.
-Mirage scalp and sea-eagle should have lower min speed for guiding.
-Implement better time keeping in F15/F14/Mirage for missiles.
-Adjust drag for aim-7. And put the new stats into the other planes.
-Put release into pitch wind on planes, or trash it?
-Only heat missile should have angular speed.
-Make the F14 cannon work.
-F-14 cannon does not do damage, check shell name!!!!!!
-Key to center view and zoom.
+
 
 Fairly small tasks
 ==================
-Make unguided bomb not require a target. Just run release() directly.
+Pinto terrain mask optimization into Mirage/F15/F15
+Gravity bombs and Cruise-missiles on F15/14.
 Did I break laser guided bombs in the mirage? (pretty sure I did, if they used to be guided)
-Put in failure modes in mirage. Elec should be needed for firing.
 Implement damage formula Raider1 found to damage code.
 AIM-120/7 on rails will be rail launched, else dropped.
-Dig up some old F15 for Raider1 to test.
-Increase the cannon radius to 75 meters, to make more reliable hits.
+Make the 2 other AIM-54.
+Adjust AIM-54 more.
 
 Next release:
 -------------
