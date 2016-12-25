@@ -1,0 +1,106 @@
+Sidewinders
+===========
+
+AIM-9B
+------
+German source
+	Diameter :130mm. (5 inch)
+	Speed : mach 1.7
+	Range : 3.2 km (1.73 NM)
+	Launch weight : 70.4 kg
+	Fuel: 19.06 kg (40.02 lbm)
+	Direct navigation
+	Burn: 2.2 seconds
+	Beam: +-2 degs
+	Gyro: +-25 degs
+	Arm: 0.4-0.5 secs
+	Guide: min 0.8 mach
+
+SMC/CS
+	Engine: 3860 lbf for 2.2 secs
+	Weight max launch: 164 lbm
+	Weight burnout: 123 lbm
+	Max range: ‪4.6 NM at 60kft (launch at M1.0, target at M0.6), 5.76 NM at 50kft, ‪0.99 NM at sealevel
+	Speed: 2000-2500 fps above launch aircraft
+	Fuel max: 41 lbm
+
+aam
+	Gyro: +-25 degs, 11 deg/s
+	Sun: 20 deg (5 degs for later versions)
+	G: 10 at sealevel
+
+RB-24
+-----
+
+Swedish airforce
+	Arming condition: Acceleration > 18 g in 1.4 sec
+	Weight: 73 kg (‪160.9375‬ lbm)
+	Arming time: 2.2 sec
+	Engine thrust: 19000 N (4271.37 lbf)
+	Engine burn time: 2.2 sec
+	Max speed above the aircraft: M 1.5
+	Min speed for steering: M 0.8
+	Selfdestruct: 26 sec
+	Target seeking beam width: +-2 degrees
+	Target seeker precision speed: 10 deg/sec
+	Max steered time at 3000 m altitude: ca 22 sec
+
+AIM-9J
+------
+
+German source
+	Proportional navigation
+	Range : 14.5 km (‪7.83 NM)
+	Speed : mach 2.5+
+	Launch weight : 80.7kg (177.913‬ lbm)
+	Fuel: 19.06 kg (40.02 lbm)
+	Burn: 2.2 seconds
+	Beam: +-2 degs
+	Gyro: +-25 degs
+	Arm: 0.4-0.5 secs
+	Guide: min 0.8 mach
+
+aam
+	Gyro: +-25 degs, 16 deg/s
+	G: 22 sealevel, 13 16Km
+
+RB-24J
+------
+
+Swedish airforce
+	Arming condition: Acceleration > 18 g in 1.4 sec
+	Weight: 81 kg (‪178.5744‬ lbm)
+	Arming time: 1.4 sec
+	Engine thrust: 17000 N (3820.22 lbf)
+	Engine burn time: 3.5 sec
+	Max speed above the aircraft: M 2.0
+	Min speed for steering: M 0.8
+	Selfdestruct: 43 sec
+	Target seeking beam width: +-1 deg
+	Target seeker precision speed: 14 deg/sec
+	Max steered time at 3000 m altitude: ca 40 sec
+
+
+AIM-9L
+------
+
+SMC
+	Engine: 2660 lbf for 5.23 secs
+	Weight max launch: 186.2 lbm
+	Weight burnout: 125.8 lbm
+	Max tracking range: 0.82-5.13 NM (launch at M0.9, 10Kft)
+	Max limit: 4.6 NM against M0.9 5G target (launch M0.9, 10Kft)
+	Max launch range: 2.13 NM at 10Kft at trail
+	Speed: 2000-2500 fps above launch aircraft
+	Fuel max: 60.4 lbm
+
+aam
+	Gyro: +-67 degs
+	G: 32
+	FCS FOV: +-27 degs
+
+RB-74
+-----
+
+Swedish airforce
+	Max speed above the aircraft: M 3.0
