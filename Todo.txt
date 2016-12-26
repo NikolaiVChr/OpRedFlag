@@ -9,20 +9,12 @@ Gravity bombs and Cruise-missiles on F15/14.
 Did I break laser guided bombs in the mirage? (pretty sure I did, if they used to be guided)
 Implement damage formula Raider1 found to damage code.
 AIM-120/7 on rails will be rail launched, else dropped.
-Make the 2 other AIM-54.
 Adjust AIM-54 more.
 
 Next release:
 -------------
-Bigger font on F15 HUD
-Revert Gforce decimal
-
-Obscure blackout
-
-
-Missiles
-Redout
-Crash damage
+AIM-9 fuel 3 punds diff
+Round check for sun
 
 Bigger tasks
 ============

@@ -29,6 +29,13 @@ aam
 	Sun: 20 deg (5 degs for later versions)
 	G: 10 at sealevel
 
+SAM-Sim
+	Gyro: +-25 degs, 8 deg/s
+	G: 12
+	Engine: 2.2 sec at 17300 N
+	Range for launch: 1.8km (0.97 NM) sealevel, 10.6km (5.72 NM) at 15km (50000 ft)
+
+
 RB-24
 -----
 
@@ -98,6 +105,11 @@ aam
 	Gyro: +-67 degs
 	G: 32
 	FCS FOV: +-27 degs
+
+SAM-Sim
+	G: 35
+	Kinematic range: 17km (9.18 NM) at high altitude
+	Gyro: +-40 degs
 
 RB-74
 -----
