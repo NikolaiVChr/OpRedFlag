@@ -319,6 +319,25 @@
 
 		<entry>
 			<name>Tanker-16</name>
+			<callsign>Target 30k</callsign>
+			<type>aircraft</type>
+			<class>target</class>
+			<altitude-ft>30000</altitude-ft>
+			<speed-ktas>588</speed-ktas>
+			<bank>0</bank>
+			<!--<pattern-length-nm>0</pattern-length-nm>-->
+			<TACAN-channel-ID>041X</TACAN-channel-ID>
+			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<latitude>37.258</latitude>
+			<longitude>-115.797</longitude>
+			<altitude>30000</altitude>
+			<heading>000</heading>
+			<speed>588</speed>
+			<roll>0</roll>
+		</entry>
+
+		<entry>
+			<name>Tanker-17</name>
 			<callsign>Target 36k</callsign>
 			<type>aircraft</type>
 			<class>target</class>

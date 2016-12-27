@@ -110,6 +110,7 @@ SAM-Sim
 	G: 35
 	Kinematic range: 17km (9.18 NM) at high altitude
 	Gyro: +-40 degs
+	FCS FOV: +-27.5 degs
 
 RB-74
 -----
