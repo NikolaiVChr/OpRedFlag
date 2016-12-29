@@ -117,3 +117,39 @@ RB-74
 
 Swedish airforce
 	Max speed above the aircraft: M 3.0
+
+
+Sparrow
+=======
+
+AIM-7F
+------
+
+CS/SMC
+	Missile mach: 2.9              (sounds like absolute, but must be relative else no way it can perform those hits)
+	Flight: 2.5 to 75 seconds
+	Fuel: 135 lbm
+	Thrust: 5750/1018 lbf for 4.5/11.0 seconds
+	Aerodynamic range: 53 NM at 40000 ft
+	Seeker range: 22 NM at fighter sized target
+	To hit: (level shot)
+		target and aircraft M0.9 rear shot at sealevel: 3.5 NM
+		target and aircraft M0.9 head-on shot at sealevel: 20 NM
+		target and aircraft M2.0 rear shot at 40k ft: 9.5 NM
+		target and aircraft M2.0 head-on shot at 40k ft: 22 NM
+	To hit: (lofted shot)
+		Aircraft M0.9 sealevel, target M0.7 sealevel, head-on: 16.5 NM
+		Aircraft M0.9 sealevel, target M1.25 at 15k ft, head-on: 18.25 NM
+		Aircraft M0.9 sealevel, target M1.00 at 35k ft, head-on: 14.00 NM
+		Aircraft M0.9 sealevel, target M1.25 at 15k ft, head-on: 4.00 NM
+
+
+
+AIM-7M
+------
+
+Basic
+	Max speed: 2.5 mach above aircraft
+	Minimum: 1000 ft
+	G: 25
+	Engine: 3.5/12.5 seconds
