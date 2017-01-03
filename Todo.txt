@@ -13,8 +13,6 @@ Adjust AIM-54 more.
 
 Next release:
 -------------
-AIM-9 fuel 3 punds diff
-Round check for sun
 
 Bigger tasks
 ============
