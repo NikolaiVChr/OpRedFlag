@@ -21,8 +21,8 @@ var cannon_types = {
     " GAU-8/A hit":           0.10, # 30mm
     " BK27 cannon hit":       0.07, # 27mm
     " GSh-30 hit":            0.10, # 30mm
-    " 7.62 hit":              0.02, # 7.62mm
-    " 50 BMG hit":            0.03, # 12.7mm
+    " 7.62 hit":              0.005,# 7.62mm
+    " 50 BMG hit":            0.015,# 12.7mm
 };
     
     
