@@ -110,7 +110,7 @@ var incoming_listener = func {
     var last = hist_vector[size(hist_vector)-1];
     var last_vector = split(":", last);
     var author = last_vector[0];
-    var callsign = left(getprop("sim/multiplay/callsign"),7);
+    var callsign = getprop("sim/multiplay/callsign");
     callsign = size(callsign) < 8 ? callsign : left(callsign,7);
     if (size(last_vector) > 1 and author != callsign) {
       # not myself
