@@ -4,12 +4,8 @@ Done, needs testing
 
 Fairly small tasks
 ==================
-Pinto terrain mask optimization into Mirage/F15/F15
 Gravity bombs and Cruise-missiles on F15/14.
-Did I break laser guided bombs in the mirage? (pretty sure I did, if they used to be guided)
 Implement damage formula Raider1 found to damage code.
-AIM-120/7 on rails will be rail launched, else dropped.
-Adjust AIM-54 more.
 
 Flash at explosion
 Flares on other planes
@@ -20,7 +16,6 @@ Next release:
 
 Bigger tasks
 ============
-Merge missile code with Shinobi's, so we only have 1 missile code to maintain.
 
 
 How-to keep updated with Richards ORF branch:
@@ -45,18 +40,11 @@ Goal: Same missile code for all 4 aircraft: JA37, F15, F14 and M2000
 
 Already done:
 -------------
-Restructure methods to seperate flying from searching/lock updates.
-Missile streak visible over MP (prototype)
-Rail or drop (7ft) simulation (solve if should be released into wind or not)
-Cruise/cruising missiles (merge with my lofting/crusing)
-Getting target properties from radar/property tree
-Move armament stats to generic place in property tree
 For future addition to new aircrafts, make sure to retain code to put diamond on default FG HUD.
 
 Shinobi stuff that should be added:
 -------
 Max speed (convert to max speed above launch platform for some missiles)
-Heat seeking (merge with my simulation of that)
 
 Problems to solve:
 ------------------
