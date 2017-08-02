@@ -7,53 +7,19 @@ Fairly small tasks
 Gravity bombs and Cruise-missiles on F15/14.
 Implement damage formula Raider1 found to damage code.
 
-Flash at explosion
-Flares on other planes
+Flash at explosion (request from S)
+Flares on F14
 
+Get RCS tested and up and running.
 
 Next release:
 -------------
 
 Bigger tasks
 ============
+Get emisary to work with MP hit msgs.
 
-
-How-to keep updated with Richards ORF branch:
----------------------------------------------
-+1 - Fetch his branch
-+2 - Copy those files into my ORF repo one by one, and check diff
-3 - Modify those files in the aircraft/f-15
-+4 - Commit the unmodified files to my ORF repo
-+5 - Copy the modified files into my ORF repo and commit them.
-+6 - Make further changes (Loft, Cruise, G-Drop, Rail & drop) both planes!
-+7 - Commit those files.
-+8 - Copy and commit the same files to local ORF branch.
-9 - Make pull request if needed.
-10 - Simplify the above points :)
-
-
-===================
-Merge missile code:
-===================
-
-Goal: Same missile code for all 4 aircraft: JA37, F15, F14 and M2000
-
-Already done:
--------------
-For future addition to new aircrafts, make sure to retain code to put diamond on default FG HUD.
-
-Shinobi stuff that should be added:
--------
-Max speed (convert to max speed above launch platform for some missiles)
-
-Problems to solve:
-------------------
-How to port my check of target uniqueness and painted.
-Time keeping system?
-
-Future:
--------
-Chaff sim
-Better flare sim
-Missile/lock warning on TWR
-No MP chat msg.
+Done needs testing
+==================
+Make f14 less prone to tail scrape
+Make F15 have radar failure mode.
