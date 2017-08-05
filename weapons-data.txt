@@ -153,3 +153,13 @@ Basic
 	Minimum: 1000 ft
 	G: 25
 	Engine: 3.5/12.5 seconds
+
+
+Flightgear tests:
+=================
+Impulse per fuel: AIM-54c has 329.67 (lbf*s)/lbm.
+Impulse per fuel: AIM-120b has 246.46 (lbf*s)/lbm.
+Impulse per fuel: AIM-7F has 274.61 (lbf*s)/lbm.
+Impulse per fuel: AIM-9L has 230.33 (lbf*s)/lbm.
+Impulse per fuel: AIM-9J has 318.33 (lbf*s)/lbm.
+Impulse per fuel: AIM-9B has 223.63 (lbf*s)/lbm.
