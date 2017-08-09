@@ -36,6 +36,8 @@
 			        		}
 			        		alt = alt + 10*up;
 				          	node.setDoubleValue(alt);
+				          	tanker.getNode("rotors/main/blade[3]/position-deg", 1 ).setDoubleValue(rand());#chaff
+				          	tanker.getNode("rotors/main/blade[3]/flap-deg", 1 ).setDoubleValue(rand());#flare
 				        }
 			      	}
 			      	if (finish == 0) {

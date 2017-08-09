@@ -4,13 +4,11 @@ Done, needs testing
 
 Fairly small tasks
 ==================
-Gravity bombs and Cruise-missiles on F15/14.
+Gravity bombs on 14.
 Implement damage formula Raider1 found to damage code.
-
 Flash at explosion (request from S)
-Flares on F14
-
 Get RCS tested and up and running.
+
 
 Next release:
 -------------
@@ -18,8 +16,11 @@ Next release:
 Bigger tasks
 ============
 Get emisary to work with MP hit msgs.
+Missile Launch Detector (MLD) and Missile Approach Warning (MAW) systems.
 
 Done needs testing
 ==================
 Make f14 less prone to tail scrape
 Make F15 have radar failure mode.
+Flares/chaff on F14
+Improve chaff handling alot.
