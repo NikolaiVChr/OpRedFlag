@@ -18,3 +18,9 @@ Done needs testing
 ==================
 Make F15 have radar failure mode.
 Missiles A/A should not lock onto still targets.
+
+WWI
+===
+Damage shader: albedo, scorched and alpha.
+Localized damage: Calc location on shooter.
+Many hits: Avarage somehow.

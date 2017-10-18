@@ -35,6 +35,9 @@ SAM-Sim
 	Engine: 2.2 sec at 17300 N
 	Range for launch: 1.8km (0.97 NM) sealevel, 10.6km (5.72 NM) at 15km (50000 ft)
 
+vietnam report
+	gimbal limit 25 degs
+
 
 RB-24
 -----
@@ -79,6 +82,19 @@ vietnam report
 	max guide duration 40 s
 	lateral G: 22 sealevel - 13 50kft
 	launch max 7G
+
+AIM-9E
+------
+
+vietnam report
+	peak thrust 4200 lbf
+	burn time 2.2 s
+	total impulse 8800 lbf/s
+	seeker 12 deg/s
+	max guide duration 20 s
+	lateral G: 11 sealevel - 6 50kft
+	launch max 7G
+	gimbal limit 40 degs
 
 RB-24J
 ------
@@ -130,6 +146,18 @@ Swedish airforce
 
 Sparrow
 =======
+
+AIM-7C (AAM-N-6)
+------
+
+CS/SMC
+	Fuel: 69.4 lbm
+	Thurst: 7100 lbf for 2.04 s
+	Impulse: 14484 lbf-sec
+	Diameter: 8 inch
+	Max struct. acc.: 15 G
+	Max engagement range: 37 Kft at 50Kft alt. And launch and target speed is 0.9 M.
+	Absolute speed: 3.0 Mach (the perf. charts stop at this number)
 
 AIM-7F
 ------
@@ -238,8 +266,8 @@ german = website
 SMC/CS = Standard missile Characteristics
 WP     = 1984 weapons file
 54sim  = Aim 54 simulation paper
-nam rep= 
-sweaf  = arboga robot museam report
+nam rep= aim-9j southeast asia introduction
+sweaf  = arboga robot museum report
 forecast=missile forecast
 
 Flightgear tests:
