@@ -87,6 +87,10 @@ var warhead_lbs = {
     "R-27T1":               85.98,
     "R-73E":                16.31,
     "R-77":                 49.60,
+    "RN-14T":              800.00, #fictional, thermobaeric replacement for the RN-24 nuclear bomb
+    "RN-18T":             1200.00, #fictional, thermobaeric replacement for the RN-28 nuclear bomb
+    "ZB-250":              236.99,
+    "ZB-500":              473.99,
     "KH-25MP":             197.53,
     "FAB-100":              92.59,
     "OFAB-100":             92.59,
