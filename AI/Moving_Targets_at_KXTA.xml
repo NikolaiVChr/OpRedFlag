@@ -109,6 +109,18 @@
 			<altitude type="double">4750</altitude>
 		</entry>
 
+		<entry>
+			<type>ship</type>
+			<model>Models/Buildings/factory.ac</model>
+			<name>Factory</name>
+			<latitude type="double">37.258</latitude>
+			<longitude type="double">-115.797</longitude>
+			<speed type="double">0</speed>
+			<rudder type="double">0</rudder>
+			<heading type="double">000</heading>
+			<altitude type="double">4750</altitude>
+		</entry>
+
 		<!--<pattern-length-nm>0</pattern-length-nm>-->
 
 		<entry>
