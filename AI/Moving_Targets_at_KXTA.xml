@@ -40,8 +40,15 @@
 				          	tanker.getNode("rotors/main/blade[3]/flap-deg", 1 ).setDoubleValue(rand());#flare
 				        }
 			      	}
+			      	foreach( var tanker; props.globals.getNode("/ai/models",1).getChildren("ship") ) {
+				        var lat = tanker.getNode("position/latitude-deg").getValue();
+				        var lon = tanker.getNode("position/longitude-deg").getValue();
+				        var node = tanker.getNode("position/altitude-ft", 1 );
+				        var alt = geo.elevation(lat, lon);
+				        node.setDoubleValue(alt==nil?0:alt*M2FT+1.5);
+			      	}
 			      	if (finish == 0) {
-			      		settimer(loop, 0);
+			      		settimer(loop, 0.05);
 			      	}
 			    }
 			    loop();
@@ -55,14 +62,64 @@
 		</nasal>
 
 		<entry>
+			<type>ship</type>
+			<model>Models/Military/humvee-pickup-odrab-low-poly.xml</model>
+			<name>Humvee1</name>
+			<latitude type="double">37.258</latitude>
+			<longitude type="double">-115.797</longitude>
+			<speed type="double">40</speed>
+			<rudder type="double">0.5</rudder>
+			<heading type="double">030</heading>
+			<altitude type="double">4750</altitude>
+		</entry>
+
+		<entry>
+			<type>ship</type>
+			<model>Models/Military/humvee-pickup-odrab-low-poly.xml</model>
+			<name>Humvee2</name>
+			<latitude type="double">37.258</latitude>
+			<longitude type="double">-115.797</longitude>
+			<speed type="double">40</speed>
+			<rudder type="double">0.25</rudder>
+			<heading type="double">020</heading>
+			<altitude type="double">4750</altitude>
+		</entry>
+
+		<entry>
+			<type>ship</type>
+			<model>Models/Military/humvee-pickup-odrab-low-poly.xml</model>
+			<name>Humvee3</name>
+			<latitude type="double">37.258</latitude>
+			<longitude type="double">-115.797</longitude>
+			<speed type="double">40</speed>
+			<rudder type="double">0.75</rudder>
+			<heading type="double">010</heading>
+			<altitude type="double">4750</altitude>
+		</entry>
+
+		<entry>
+			<type>ship</type>
+			<model>Models/Military/humvee-pickup-odrab-low-poly.xml</model>
+			<name>Humvee4</name>
+			<latitude type="double">37.258</latitude>
+			<longitude type="double">-115.797</longitude>
+			<speed type="double">40</speed>
+			<rudder type="double">1</rudder>
+			<heading type="double">000</heading>
+			<altitude type="double">4750</altitude>
+		</entry>
+
+		<!--<pattern-length-nm>0</pattern-length-nm>-->
+
+		<entry>
 			<name>Tanker-1</name>
 			<callsign>Slow-evading-target</callsign>
 			<type>aircraft</type>
-			<class>target</class>
+			<class>jet_fighter</class>
 			<altitude-ft>15000</altitude-ft>
 			<speed-ktas>300</speed-ktas>
 			<bank>-90</bank>
-			<!--<pattern-length-nm>0</pattern-length-nm>-->
+			
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
 			<model>Models/Aircraft/F-15-lowpoly.xml</model>
 			<latitude>37.258</latitude>
@@ -77,7 +134,7 @@
 			<name>Tanker-2</name>
 			<callsign>Slow-low-target</callsign>
 			<type>tanker</type>
-			<class>target</class>
+			<class>jet_fighter</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
 			<model>Models/Aircraft/F-15-lowpoly.xml</model>
 			<latitude>37.258</latitude>
@@ -107,7 +164,7 @@
 			<name>Tanker-4</name>
 			<callsign>Evading-target</callsign>
 			<type>aircraft</type>
-			<class>target</class>
+			<class>jet_fighter</class>
 			<altitude-ft>15000</altitude-ft>
 			<speed-ktas>450</speed-ktas>
 			<bank>90</bank>
@@ -167,12 +224,13 @@
 			<roll>-100</roll>
 		</entry>
 
-		<!-- Nellis -->
+		
 		<entry>
+			<note>Nellis stuff here:</note>
 			<name>Tanker-8</name>
 			<callsign>Fast-evading-target</callsign>
 			<type>aircraft</type>
-			<class>target</class>
+			<class>jet_fighter</class>
 			<altitude-ft>15000</altitude-ft>
 			<speed-ktas>650</speed-ktas>
 			<bank>-90</bank>
@@ -221,7 +279,7 @@
 			<name>Tanker-11</name>
 			<callsign>Very-fast-evading-target</callsign>
 			<type>aircraft</type>
-			<class>target</class>
+			<class>jet_fighter</class>
 			<altitude-ft>15000</altitude-ft>
 			<speed-ktas>850</speed-ktas>
 			<bank>90</bank>
@@ -285,11 +343,10 @@
 			<name>Tanker-15</name>
 			<callsign>Target 20k</callsign>
 			<type>aircraft</type>
-			<class>target</class>
+			<class>jet_fighter</class>
 			<altitude-ft>20000</altitude-ft>
 			<speed-ktas>624</speed-ktas>
 			<bank>0</bank>
-			<!--<pattern-length-nm>0</pattern-length-nm>-->
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
 			<model>Models/Aircraft/F-15-lowpoly.xml</model>
 			<latitude>37.258</latitude>
@@ -301,14 +358,13 @@
 		</entry>
 
 		<entry>
-			<name>Tanker-15</name>
+			<name>Tanker-16</name>
 			<callsign>Target 25k</callsign>
 			<type>aircraft</type>
-			<class>target</class>
+			<class>jet_fighter</class>
 			<altitude-ft>25000</altitude-ft>
 			<speed-ktas>613</speed-ktas>
 			<bank>0</bank>
-			<!--<pattern-length-nm>0</pattern-length-nm>-->
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
 			<model>Models/Aircraft/F-15-lowpoly.xml</model>
 			<latitude>37.258</latitude>
@@ -320,14 +376,13 @@
 		</entry>
 
 		<entry>
-			<name>Tanker-16</name>
+			<name>Tanker-17</name>
 			<callsign>Target 30k</callsign>
 			<type>aircraft</type>
-			<class>target</class>
+			<class>jet_fighter</class>
 			<altitude-ft>30000</altitude-ft>
 			<speed-ktas>588</speed-ktas>
 			<bank>0</bank>
-			<!--<pattern-length-nm>0</pattern-length-nm>-->
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
 			<model>Models/Aircraft/F-15-lowpoly.xml</model>
 			<latitude>37.258</latitude>
@@ -339,14 +394,13 @@
 		</entry>
 
 		<entry>
-			<name>Tanker-17</name>
+			<name>Tanker-18</name>
 			<callsign>Target 36k</callsign>
 			<type>aircraft</type>
-			<class>target</class>
+			<class>jet_fighter</class>
 			<altitude-ft>36000</altitude-ft>
 			<speed-ktas>585</speed-ktas>
 			<bank>0</bank>
-			<!--<pattern-length-nm>0</pattern-length-nm>-->
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
 			<model>Models/Aircraft/F-15-lowpoly.xml</model>
 			<latitude>37.258</latitude>
@@ -356,7 +410,6 @@
 			<speed>585</speed>
 			<roll>0</roll>
 		</entry>
-
 
 	</scenario>
 

@@ -258,6 +258,25 @@ forecast
 	2650daN impulse
 	lateral G 50
 
+Harpoon
+=======
+AGM-84
+------
+WP
+	thrust 660 lbf singlestage
+	warhead 500 lbm
+	diam 13.5 inch
+	weight 1160 lbm
+	inertial/radar
+wiki
+	range 50 NM (E variant)
+
+GBU-12
+======
+WP
+	weight 606.67 lbs
+
+
 Sources:
 ========
 Basic  = 
