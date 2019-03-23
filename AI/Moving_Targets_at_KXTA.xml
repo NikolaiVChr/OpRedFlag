@@ -63,7 +63,7 @@
 
 		<entry>
 			<type>ship</type>
-			<model>Models/Military/humvee-pickup-odrab-low-poly.xml</model>
+			<model>Models/Military/humvee-pickup-odrab-low-poly.ac</model>
 			<name>Humvee1</name>
 			<latitude type="double">37.258</latitude>
 			<longitude type="double">-115.797</longitude>
@@ -75,7 +75,7 @@
 
 		<entry>
 			<type>ship</type>
-			<model>Models/Military/humvee-pickup-odrab-low-poly.xml</model>
+			<model>Models/Military/humvee-pickup-odrab-low-poly.ac</model>
 			<name>Humvee2</name>
 			<latitude type="double">37.258</latitude>
 			<longitude type="double">-115.797</longitude>
@@ -87,7 +87,7 @@
 
 		<entry>
 			<type>ship</type>
-			<model>Models/Military/humvee-pickup-odrab-low-poly.xml</model>
+			<model>Models/Military/humvee-pickup-odrab-low-poly.ac</model>
 			<name>Humvee3</name>
 			<latitude type="double">37.258</latitude>
 			<longitude type="double">-115.797</longitude>
@@ -99,7 +99,7 @@
 
 		<entry>
 			<type>ship</type>
-			<model>Models/Military/humvee-pickup-odrab-low-poly.xml</model>
+			<model>Models/Military/humvee-pickup-odrab-low-poly.ac</model>
 			<name>Humvee4</name>
 			<latitude type="double">37.258</latitude>
 			<longitude type="double">-115.797</longitude>
@@ -133,7 +133,7 @@
 			<bank>-90</bank>
 			
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>AI/Aircraft/F-15/Models/F-15-lowpoly.ac</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
 			<altitude>15000</altitude>
@@ -148,7 +148,7 @@
 			<type>tanker</type>
 			<class>jet_fighter</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>AI/Aircraft/f-14b/Models/F-14-lowpoly.ac</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
 			<altitude>9000</altitude>
@@ -163,7 +163,7 @@
 			<type>tanker</type>
 			<class>tanker</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>AI/Aircraft/eurofighter/Models/typhoon-ai.ac</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
 			<altitude>36000</altitude>
@@ -182,7 +182,7 @@
 			<bank>90</bank>
 			
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>AI/Aircraft/f16/Models/f-16_lowpoly.ac</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
 			<altitude>15000</altitude>
@@ -197,7 +197,7 @@
 			<type>tanker</type>
 			<class>tanker</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>AI/Aircraft/F-18/Models/F-18-model.ac</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
 			<altitude>9000</altitude>
@@ -212,7 +212,7 @@
 			<type>tanker</type>
 			<class>tanker</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>AI/Aircraft/F-4/Models/F-4_lowpoly.ac</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
 			<altitude>36000</altitude>
@@ -227,7 +227,7 @@
 			<type>tanker</type>
 			<class>tanker</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>AI/Aircraft/JA37/Models/JA-37-lowpoly.ac</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
 			<altitude>20000</altitude>
@@ -248,7 +248,7 @@
 			<bank>-90</bank>
 			
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>AI/Aircraft/MiG-21bis/Models/MiG-21bis-lowpoly.ac</model>
 			<latitude>36.858</latitude>
 			<longitude>-115.300</longitude>
 			<altitude>15000</altitude>
@@ -263,7 +263,7 @@
 			<type>tanker</type>
 			<class>tanker</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>AI/Aircraft/T-38/Models/T38.ac</model>
 			<latitude>36.858</latitude>
 			<longitude>-115.300</longitude>
 			<altitude>9000</altitude>
@@ -278,7 +278,7 @@
 			<type>tanker</type>
 			<class>tanker</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>Models/Aircraft/F-15-lowpoly.ac</model>
 			<latitude>36.858</latitude>
 			<longitude>-115.300</longitude>
 			<altitude>36000</altitude>
@@ -297,7 +297,7 @@
 			<bank>90</bank>
 			
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>Models/Aircraft/F-15-lowpoly.ac</model>
 			<latitude>36.858</latitude>
 			<longitude>-115.300</longitude>
 			<altitude>15000</altitude>
@@ -312,7 +312,7 @@
 			<type>tanker</type>
 			<class>tanker</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>Models/Aircraft/F-15-lowpoly.ac</model>
 			<latitude>36.858</latitude>
 			<longitude>-115.300</longitude>
 			<altitude>9000</altitude>
@@ -327,7 +327,7 @@
 			<type>tanker</type>
 			<class>tanker</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>Models/Aircraft/F-15-lowpoly.ac</model>
 			<latitude>36.858</latitude>
 			<longitude>-115.300</longitude>
 			<altitude>36000</altitude>
@@ -342,7 +342,7 @@
 			<type>tanker</type>
 			<class>tanker</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>Models/Aircraft/F-15-lowpoly.ac</model>
 			<latitude>36.858</latitude>
 			<longitude>-115.300</longitude>
 			<altitude>20000</altitude>
@@ -360,7 +360,7 @@
 			<speed-ktas>624</speed-ktas>
 			<bank>0</bank>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>Models/Aircraft/F-15-lowpoly.ac</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
 			<altitude>20000</altitude>
@@ -378,7 +378,7 @@
 			<speed-ktas>613</speed-ktas>
 			<bank>0</bank>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>Models/Aircraft/F-15-lowpoly.ac</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
 			<altitude>25000</altitude>
@@ -396,7 +396,7 @@
 			<speed-ktas>588</speed-ktas>
 			<bank>0</bank>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>Models/Aircraft/F-15-lowpoly.ac</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
 			<altitude>30000</altitude>
@@ -414,7 +414,7 @@
 			<speed-ktas>585</speed-ktas>
 			<bank>0</bank>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>Models/Aircraft/F-15-lowpoly.xml</model>
+			<model>Models/Aircraft/F-15-lowpoly.ac</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
 			<altitude>36000</altitude>
