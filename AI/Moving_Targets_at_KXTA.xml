@@ -7,8 +7,7 @@
 		<description>
 			The following scenario puts 14 planes in orbit over
 			KXTA. 
-
-			Dave Culp,  davidculp2 at comcast.net
+			
 			Nikolai V. Chr.
 		</description>
 
@@ -17,9 +16,9 @@
 		    	var up = 1;
 		    	var finish = 0;
 
-		    	foreach( var tanker; props.globals.getNode("/ai/models",1).getChildren("aircraft") ) {
-		    		tanker.getNode("orientation/pitch-deg", 1 ).setDoubleValue(0);
-		    	}
+		    	#foreach( var tanker; props.globals.getNode("/ai/models",1).getChildren("aircraft") ) {
+		    	#	tanker.getNode("orientation/pitch-deg", 1 ).setDoubleValue(0);
+		    	#}
 
 		    	var loop = func () {
 				    foreach( var tanker; props.globals.getNode("/ai/models",1).getChildren("aircraft") ) {
@@ -27,19 +26,37 @@
 				        if( callsign == nil ) continue;
 				        if( string.match(callsign,"Evading*") or string.match(callsign,"Slow-evading*")
 				            or string.match(callsign,"Fast-evading*") or string.match(callsign,"Very-fast-evading*")) {
+				            
+				            var nodemode = tanker.getNode("controls/flight/vertical-mode", 1);
+				            nodemode.setValue("alt");
+				            var nodealt = tanker.getNode("controls/flight/target-alt", 1);
 				        	var node = tanker.getNode("position/altitude-ft", 1 );
 				        	var alt = node.getValue();
-				        	if(alt > 10000 and up == 1) {
-			        			up = -1;
-			        		} elsif (alt < 7500 and up == -1) {
-			        			up = 1;
+				        	if(alt >= 15000) {
+			        			nodealt.setValue(7400);
+			        		} elsif (alt <= 7500) {
+			        			nodealt.setValue(16000);
+			        		} elsif (nodealt.getValue()==nil) {# or math.abs(nodealt.getValue()) != 35
+			        			nodealt.setValue(16000);
 			        		}
-			        		alt = alt + 10*up;
-				          	node.setDoubleValue(alt);
+			        		#alt = alt + 10*up;
+				          	#node.setDoubleValue(alt);
+				          	
+				          	if (rand()>0.75) {
+					          	var nodemode2 = tanker.getNode("controls/flight/lateral-mode", 1);
+					          	nodemode2.setValue("roll");
+				          		var noderoll = tanker.getNode("controls/flight/target-roll", 1);
+				          		noderoll.setValue(0+rand()*90);
+				          	}
 				          	tanker.getNode("rotors/main/blade[3]/position-deg", 1 ).setDoubleValue(rand());#chaff
 				          	tanker.getNode("rotors/main/blade[3]/flap-deg", 1 ).setDoubleValue(rand());#flare
 				        }
 			      	}
+			      	if (finish == 0) {
+			      		settimer(loop, 2);
+			      	}
+			    }
+			    var loop2 = func () {
 			      	foreach( var tanker; props.globals.getNode("/ai/models",1).getChildren("ship") ) {
 				        var lat = tanker.getNode("position/latitude-deg").getValue();
 				        var lon = tanker.getNode("position/longitude-deg").getValue();
@@ -48,10 +65,11 @@
 				        node.setDoubleValue(alt==nil?0:alt*M2FT+1.5);
 			      	}
 			      	if (finish == 0) {
-			      		settimer(loop, 0.05);
+			      		settimer(loop2, 0.05);
 			      	}
 			    }
 			    loop();
+			    loop2();
 		      	debug.dump('Moving targets scenario load script complete');
 		    ]]>
 		    </load>
