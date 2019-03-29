@@ -46,7 +46,7 @@
 					          	var nodemode2 = tanker.getNode("controls/flight/lateral-mode", 1);
 					          	nodemode2.setValue("roll");
 				          		var noderoll = tanker.getNode("controls/flight/target-roll", 1);
-				          		noderoll.setValue(0+rand()*90);
+				          		noderoll.setValue(-90+rand()*180);
 				          	}
 				          	tanker.getNode("rotors/main/blade[3]/position-deg", 1 ).setDoubleValue(rand());#chaff
 				          	tanker.getNode("rotors/main/blade[3]/flap-deg", 1 ).setDoubleValue(rand());#flare
@@ -166,7 +166,7 @@
 			<type>tanker</type>
 			<class>jet_fighter</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>AI/Aircraft/f-14b/Models/F-14-lowpoly.ac</model>
+			<model>AI/Aircraft/f-14b/Models/F-14-low-poly.ac</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
 			<altitude>9000</altitude>
@@ -230,7 +230,7 @@
 			<type>tanker</type>
 			<class>tanker</class>
 			<TACAN-channel-ID>041X</TACAN-channel-ID>
-			<model>AI/Aircraft/F-4/Models/F-4_lowpoly.ac</model>
+			<model>AI/Aircraft/F-4/F-4_lowpoly.ac</model>
 			<latitude>37.258</latitude>
 			<longitude>-115.797</longitude>
 			<altitude>36000</altitude>
