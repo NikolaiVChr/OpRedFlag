@@ -46,7 +46,7 @@
 					          	var nodemode2 = tanker.getNode("controls/flight/lateral-mode", 1);
 					          	nodemode2.setValue("roll");
 				          		var noderoll = tanker.getNode("controls/flight/target-roll", 1);
-				          		noderoll.setValue(-90+rand()*180);
+				          		noderoll.setValue(0+rand()*90);
 				          	}
 				          	tanker.getNode("rotors/main/blade[3]/position-deg", 1 ).setDoubleValue(rand());#chaff
 				          	tanker.getNode("rotors/main/blade[3]/flap-deg", 1 ).setDoubleValue(rand());#flare
