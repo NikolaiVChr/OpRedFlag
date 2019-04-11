@@ -1,16 +1,24 @@
 #
 # Install: Include this code into an aircraft to make it damagable. (remember to add it to the -set file)
 #
-# Author: Nikolai V. Chr. (with some improvement by Onox and Pinto)
+# Authors: Nikolai V. Chr. and Pinto (with improvement by Onox)
 #
 #
 
 
-var clamp = func(v, min, max) { v < min ? min : v > max ? max : v }
+############################ Config ######################################################################################
+var full_damage_dist_m = 3;# can vary from aircraft to aircraft depending on how many failure modes it has. For assets this should be average diameter of the asset.
+var use_hitpoints_instead_of_failure_modes_bool = 0;# mainly used by assets that don't have failure modes.
+var hp_max = 80;# given a direct hit, how much pounds of warhead is needed to kill. Only used if hitpoints is enabled.
+var hitable_by_air_munitions = 1;# if anti-air can do damage
+var hitable_by_cannon = 1;# if cannon can do damage
+var hitable_by_ground_munitions = 1;# if anti-ground/marine can do damage
+##########################################################################################################################
 
 var TRUE  = 1;
 var FALSE = 0;
 
+var hp = hp_max;
 
 var cannon_types = {
     " M70 rocket hit":        0.25, #135mm
@@ -25,32 +33,21 @@ var cannon_types = {
     " 7.62 hit":              0.005,# 7.62mm
     " 50 BMG hit":            0.015,# 12.7mm
     " S-5 rocket hit":        0.20, #55mm
-};
-    
-    
+};    
     
 var warhead_lbs = {
+    # Anti-ground/marine warheads
     "AGM-65":              126.00,
     "AGM-84":              488.00,
     "AGM-88":              146.00,
     "AGM65":               200.00,
     "AGM-154A":            493.00,
     "AGM-158":            1000.00,
-    "aim-120":              44.00,
-    "AIM-120":              44.00,
-    "AIM-54":              135.00,
-    "aim-7":                88.00,
-    "AIM-7":                88.00,
-    "aim-9":                20.80,
-    "AIM-9":                20.80,
-    "AIM120":               44.00,
-    "AIM132":               22.05,
-    "AIM9":                 20.80,
     "ALARM":               450.00,
     "AM39-Exocet":         364.00, 
     "AS-37-Martel":        330.00, 
     "AS30L":               529.00,
-    "CBU-87":              128.00,
+    "CBU-87":                3.00,# bomblet warhead.
     "Exocet":              364.00,
     "FAB-100":              92.59,
     "FAB-250":             202.85,
@@ -62,14 +59,47 @@ var warhead_lbs = {
     "GBU16":               450.00,
     "HVAR":                  7.50,#P51
     "KAB-500":             564.38,
+    "LAU-68":               10.00,
+    "M71":                 200.00,
+    "M71R":                200.00,
+    "M90":                   3.00,# bomblet warhead.
+    "MK-82":               192.00,
+    "MK-83":               445.00,
+    "MK-84":               945.00,
+    "OFAB-100":             92.59,
+    "RB-04E":              661.00,
+    "RB-05A":              353.00,
+    "RB-15F":              440.92,
+    "RB-75":               126.00,
+    "RN-14T":              800.00, #fictional, thermobaeric replacement for the RN-24 nuclear bomb
+    "RN-18T":             1200.00, #fictional, thermobaeric replacement for the RN-28 nuclear bomb
+    "RS-2US":               28.66,
+    "S-21":                245.00,
+    "S-24":                271.00, 
+    "SCALP":               992.00,
+    "Sea Eagle":           505.00,
+    "SeaEagle":            505.00,
+    "STORMSHADOW":         850.00,
+    "ZB-250":              236.99,
+    "ZB-500":              473.99,
+};
+
+var warhead_air_lbs = {
+    # Anti-air warheads
+    "aim-120":              44.00,
+    "AIM-120":              44.00,
+    "AIM-54":              135.00,
+    "aim-7":                88.00,
+    "AIM-7":                88.00,
+    "aim-9":                20.80,
+    "AIM-9":                20.80,
+    "AIM120":               44.00,
+    "AIM132":               22.05,
+    "AIM9":                 20.80,
     "Kh-25MP":             197.53,
     "Kh-66":               244.71,
     "KN-06":               315.00,
-    "LAU-68":               10.00,
     "M317":                145.00,
-    "M71":                 200.00,
-    "M71R":                200.00,
-    "M90":                 500.00,
     "Magic-2":              27.00, 
     "Matra MICA":           30.00,
     "Matra R550 Magic 2":   27.00,
@@ -80,10 +110,6 @@ var warhead_lbs = {
     "Meteor":               55.00,
     "MICA-EM":              30.00, 
     "MICA-IR":              30.00, 
-    "MK-82":               192.00,
-    "MK-83":               445.00,
-    "MK-84":               945.00,
-    "OFAB-100":             92.59,
     "R-13M":                16.31,
     "R-27R1":               85.98,
     "R-27T1":               85.98,
@@ -95,27 +121,13 @@ var warhead_lbs = {
     "R-73E":                16.31,
     "R-77":                 49.60,
     "R74":                  16.00,
-    "RB-04E":              661.00,
     "RB-05A":              353.00,
-    "RB-15F":              440.92,
     "RB-24":                20.80,
     "RB-24J":               20.80,
     "RB-71":                88.00,
     "RB-74":                20.80,
-    "RB-75":               126.00,
     "RB-99":                44.00,
-    "RN-14T":              800.00, #fictional, thermobaeric replacement for the RN-24 nuclear bomb
-    "RN-18T":             1200.00, #fictional, thermobaeric replacement for the RN-28 nuclear bomb
-    "RS-2US":               28.66,
-    "S-21":                245.00,
-    "S-24":                271.00,
-    "S530D":                66.00, 
-    "SCALP":               992.00,
-    "Sea Eagle":           505.00,
-    "SeaEagle":            505.00,
-    "STORMSHADOW":         850.00,
-    "ZB-250":              236.99,
-    "ZB-500":              473.99,
+    "S530D":                66.00,
 };
 
 var fireMsgs = {
@@ -125,7 +137,7 @@ var fireMsgs = {
     " FOX2 at":       nil, # heat
     " FOX1 at":       nil, # semi-radar
 
-    # Viggen
+    # Generic
     " Fox 1 at":      nil, # semi-radar
     " Fox 2 at":      nil, # heat
     " Fox 3 at":      nil, # radar
@@ -135,7 +147,7 @@ var fireMsgs = {
     " Rifle at":      nil, # TV guided
     " Sniper at":     nil, # anti-radiation
 
-    # SAM and missile frigate
+    # SAM, fleet and missile frigate
     " Bird away at":  nil, # G/A
 
     # F15
@@ -163,62 +175,8 @@ var incoming_listener = func {
       }
       if (contains(fireMsgs, last_vector[1]) or m2000 == TRUE) {
         # air2air being fired
-        if (size(last_vector) > 2 or m2000 == TRUE) {
-          #print("Missile launch detected at"~last_vector[2]~" from "~author);
-          if (m2000 == TRUE or last_vector[2] == " "~callsign) {
-            # its being fired at me
-            #print("Incoming!");
-            var enemy = getCallsign(author);
-            if (enemy != nil) {
-              #print("enemy identified");
-              var bearingNode = enemy.getNode("radar/bearing-deg");
-              if (bearingNode != nil) {
-                #print("bearing to enemy found");
-                var bearing = bearingNode.getValue();
-                var heading = getprop("orientation/heading-deg");
-                var clock = bearing - heading;
-                while(clock < 0) {
-                  clock = clock + 360;
-                }
-                while(clock > 360) {
-                  clock = clock - 360;
-                }
-                #print("incoming from "~clock);
-                if (clock >= 345 or clock < 15) {
-                  playIncomingSound("12");
-                } elsif (clock >= 15 and clock < 45) {
-                  playIncomingSound("1");
-                } elsif (clock >= 45 and clock < 75) {
-                  playIncomingSound("2");
-                } elsif (clock >= 75 and clock < 105) {
-                  playIncomingSound("3");
-                } elsif (clock >= 105 and clock < 135) {
-                  playIncomingSound("4");
-                } elsif (clock >= 135 and clock < 165) {
-                  playIncomingSound("5");
-                } elsif (clock >= 165 and clock < 195) {
-                  playIncomingSound("6");
-                } elsif (clock >= 195 and clock < 225) {
-                  playIncomingSound("7");
-                } elsif (clock >= 225 and clock < 255) {
-                  playIncomingSound("8");
-                } elsif (clock >= 255 and clock < 285) {
-                  playIncomingSound("9");
-                } elsif (clock >= 285 and clock < 315) {
-                  playIncomingSound("10");
-                } elsif (clock >= 315 and clock < 345) {
-                  playIncomingSound("11");
-                } else {
-                  playIncomingSound("");
-                }
-                return;
-              }
-            }
-          }
-        }
-      } elsif (1==1) { # mirage: getprop("/controls/armament/mp-messaging")
-        # latest version of failure manager and taking damage enabled
-        #print("damage enabled");
+        warn(last_vector,m2000,callsign,author);
+      } elsif (getprop("payload/armament/msg")) {
         var last1 = split(" ", last_vector[1]);
         if(size(last1) > 2 and last1[size(last1)-1] == "exploded" ) {
           #print("missile hitting someone");
@@ -236,40 +194,74 @@ var incoming_listener = func {
             if(distance != nil) {
               var dist = distance;
 
-              if (type == "M90") {
-                var prob = rand()*0.5;
-                var failed = fail_systems(prob);
+              if (type == "M90" or type == "CBU-87") {
+                # cluster munition
+                var lbs = warhead_lbs[type];
+                var maxDist = maxDamageDistFromWarhead(lbs);
+                var distance = math.max(0,rand()*2.5-full_damage_dist_m);#being 0 to 2.5 meters from a bomblet on average.
+                var diff = maxDist-distance;
+                diff = diff * diff;
+                var probability = diff / (maxDist*maxDist);
+                if (use_hitpoints_instead_of_failure_modes_bool) {
+                  var hpDist = maxDamageDistFromWarhead(hp_max);
+                  probability = (maxDist/hpDist)*probability;
+                }
+                var failed = fail_systems(probability);
                 var percent = 100 * prob;
-                printf("Took %.1f%% damage from %s clusterbombs at %0.1f meters. %s systems was hit", percent,type,dist,failed);
+                printf("Took %.1f%% damage from %s clusterbomb at %0.1f meters from bomblet. %s systems was hit", percent,type,distance,failed);
                 nearby_explosion();
                 return;
               }
 
-              distance = clamp(distance-3, 0, 1000000);
-              var maxDist = 0;
-
-              if (contains(warhead_lbs, type)) {
-                maxDist = maxDamageDistFromWarhead(warhead_lbs[type]);
+              distance = math.max(distance-full_damage_dist_m, 0);
+              
+              var maxDist = 0;# distance where the explosion dont hurt us anymore
+              var lbs = 0;
+              
+              if (hitable_by_ground_munitions and contains(warhead_lbs, type)) {
+                lbs = warhead_lbs[type];
+                maxDist = maxDamageDistFromWarhead(lbs);#3*sqrt(lbs)
+              } elsif (hitable_by_air_munitions and contains(warhead_air_lbs, type)) {
+                lbs = warhead_air_lbs[type];
+                maxDist = maxDamageDistFromWarhead(lbs);
               } else {
                 return;
               }
-
+              
               var diff = maxDist-distance;
               if (diff < 0) {
                 diff = 0;
               }
-              
               diff = diff * diff;
-              
+                            
               var probability = diff / (maxDist*maxDist);
+              
+              if (use_hitpoints_instead_of_failure_modes_bool) {
+                var hpDist = maxDamageDistFromWarhead(hp_max);
+                probability = (maxDist/hpDist)*probability;
+              }
 
               var failed = fail_systems(probability);
               var percent = 100 * probability;
               printf("Took %.1f%% damage from %s missile at %0.1f meters. %s systems was hit", percent,type,dist,failed);
               nearby_explosion();
+              
+              ## example 1: ##
+              # 300 lbs warhead, 50 meters distance
+              # maxDist=52
+              # diff = 52-50 = 2
+              # diff^2 = 4
+              # prob = 4/2700 = 0.15%
+              
+              ## example 2: ##
+              # 300 lbs warhead, 25 meters distance
+              # maxDist=52
+              # diff = 52-25 = 27
+              # diff^2 = 729
+              # prob = 729/2700 = 27%
             }
-          } 
-        } elsif (cannon_types[last_vector[1]] != nil) {
+          }
+        } elsif (hitable_by_cannon and cannon_types[last_vector[1]] != nil) {
           if (size(last_vector) > 2 and last_vector[2] == " "~callsign) {
             if (size(last_vector) < 4) {
               # msg is either missing number of hits, or has no trailing dots from spam filter.
@@ -313,17 +305,86 @@ var maxDamageDistFromWarhead = func (lbs) {
 }
 
 var fail_systems = func (probability) {
-    var failure_modes = FailureMgr._failmgr.failure_modes;
-    var mode_list = keys(failure_modes);
-    var failed = 0;
-    foreach(var failure_mode_id; mode_list) {
-        if (rand() < probability) {
-            FailureMgr.set_failure_level(failure_mode_id, 1);
-            failed += 1;
-        }
+    if (use_hitpoints_instead_of_failure_modes_bool) {
+      hp -= hp_max * probability;
+      printf("HP: %d/%d", hp, hp_max);
+      setprop("sam/damage", math.max(0,100*hp/hp_max));#used in HUD
+      if ( hp < 0 ) {
+        setprop("/carrier/sunk/",1);#we are dead
+        setprop("/sim/multiplay/generic/int[2]",1);#radar off
+        setprop("/sim/multiplay/generic/int[0]",1);#smoke on
+        setprop("/sim/messages/copilot", getprop("sim/multiplay/callsign")~" dead.");
+      }
+      return -1;
+    } else {
+      var failure_modes = FailureMgr._failmgr.failure_modes;
+      var mode_list = keys(failure_modes);
+      var failed = 0;
+      foreach(var failure_mode_id; mode_list) {
+          if (rand() < probability) {
+              FailureMgr.set_failure_level(failure_mode_id, 1);
+              failed += 1;
+          }
+      }
+      return failed;
     }
-    return failed;
 };
+
+var warn = func (last_vector,m2000,callsign,author) {
+  if (size(last_vector) > 2 or m2000 == TRUE) {
+    #print("Missile launch detected at"~last_vector[2]~" from "~author);
+    if (m2000 == TRUE or last_vector[2] == " "~callsign) {
+      # its being fired at me
+      #print("Incoming!");
+      var enemy = getCallsign(author);
+      if (enemy != nil) {
+        #print("enemy identified");
+        var bearingNode = enemy.getNode("radar/bearing-deg");
+        if (bearingNode != nil) {
+          #print("bearing to enemy found");
+          var bearing = bearingNode.getValue();
+          var heading = getprop("orientation/heading-deg");
+          var clock = bearing - heading;
+          while(clock < 0) {
+            clock = clock + 360;
+          }
+          while(clock > 360) {
+            clock = clock - 360;
+          }
+          #print("incoming from "~clock);
+          if (clock >= 345 or clock < 15) {
+            playIncomingSound("12");
+          } elsif (clock >= 15 and clock < 45) {
+            playIncomingSound("1");
+          } elsif (clock >= 45 and clock < 75) {
+            playIncomingSound("2");
+          } elsif (clock >= 75 and clock < 105) {
+            playIncomingSound("3");
+          } elsif (clock >= 105 and clock < 135) {
+            playIncomingSound("4");
+          } elsif (clock >= 135 and clock < 165) {
+            playIncomingSound("5");
+          } elsif (clock >= 165 and clock < 195) {
+            playIncomingSound("6");
+          } elsif (clock >= 195 and clock < 225) {
+            playIncomingSound("7");
+          } elsif (clock >= 225 and clock < 255) {
+            playIncomingSound("8");
+          } elsif (clock >= 255 and clock < 285) {
+            playIncomingSound("9");
+          } elsif (clock >= 285 and clock < 315) {
+            playIncomingSound("10");
+          } elsif (clock >= 315 and clock < 345) {
+            playIncomingSound("11");
+          } else {
+            playIncomingSound("");
+          }
+          return;
+        }
+      }
+    }
+  }
+}
 
 var playIncomingSound = func (clock) {
   setprop("sound/incoming"~clock, 1);
@@ -332,12 +393,6 @@ var playIncomingSound = func (clock) {
 
 var stopIncomingSound = func (clock) {
   setprop("sound/incoming"~clock, 0);
-}
-
-var callsign_struct = {};
-var getCallsign = func (callsign) {
-  var node = callsign_struct[callsign];
-  return node;
 }
 
 var nearby_explosion = func {
@@ -352,6 +407,12 @@ var nearby_explosion_a = func {
 
 var nearby_explosion_b = func {
   setprop("damage/sounds/nearby-explode-on", 0);
+}
+
+var callsign_struct = {};
+var getCallsign = func (callsign) {
+  var node = callsign_struct[callsign];
+  return node;
 }
 
 var processCallsigns = func () {
