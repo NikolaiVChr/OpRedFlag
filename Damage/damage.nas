@@ -13,10 +13,17 @@ var full_damage_dist_m = 3;# Can vary from aircraft to aircraft depending on how
                            # For assets this should be average radius of the asset.
 var use_hitpoints_instead_of_failure_modes_bool = 0;# mainly used by assets that don't have failure modes.
 var hp_max = 80;# given a direct hit, how much pounds of warhead is needed to kill. Only used if hitpoints is enabled.
-var hitable_by_air_munitions = 1;# if anti-air can do damage
-var hitable_by_cannon = 1;# if cannon can do damage
+var hitable_by_air_munitions = 1;   # if anti-air can do damage
+var hitable_by_cannon = 1;          # if cannon can do damage
 var hitable_by_ground_munitions = 1;# if anti-ground/marine can do damage
 ##########################################################################################################################
+
+##
+## TODO:
+##      Include mechanics for hitting fleet
+##      Move all to emesary
+##      
+
 
 var TRUE  = 1;
 var FALSE = 0;
@@ -24,22 +31,22 @@ var FALSE = 0;
 var hp = hp_max;
 
 var cannon_types = {
-    " M70 rocket hit":        0.25, #135mm
-    " S-5 rocket hit":        0.20, # 55mm
-    " M55 cannon shell hit":  0.10, # 30mm
-    " KCA cannon shell hit":  0.10, # 30mm
-    " Gun Splash On ":        0.10, # 30mm
-    " GSh-30 hit":            0.10, # 30mm
-    " GAU-8/A hit":           0.10, # 30mm
-    " BK27 cannon hit":       0.07, # 27mm
-    " GSh-23 hit":            0.065,# 23mm
-    " M61A1 shell hit":       0.05, # 20mm
-    " 7.62 hit":              0.005,# 7.62mm (non-explosive)
-    " 50 BMG hit":            0.015,# 12.7mm (non-explosive)    
+    " M70 rocket hit":        0.250, #135mm
+    " S-5 rocket hit":        0.200, # 55mm
+    " M55 cannon shell hit":  0.100, # 30mm
+    " KCA cannon shell hit":  0.100, # 30mm
+    " Gun Splash On ":        0.100, # 30mm
+    " GSh-30 hit":            0.100, # 30mm
+    " GAU-8/A hit":           0.100, # 30mm
+    " BK27 cannon hit":       0.070, # 27mm
+    " GSh-23 hit":            0.065, # 23mm
+    " M61A1 shell hit":       0.050, # 20mm
+    " 50 BMG hit":            0.015, # 12.7mm (non-explosive)    
+    " 7.62 hit":              0.005, # 7.62mm (non-explosive)    
 };    
     
 var warhead_lbs = {
-    # Anti-ground/marine warheads
+    # Anti-ground/marine warheads (sorted alphabetically)
     "AGM-65":              126.00,
     "AGM-84":              488.00,
     "AGM-88":              146.00,
@@ -90,7 +97,7 @@ var warhead_lbs = {
 };
 
 var warhead_air_lbs = {
-    # Anti-air warheads
+    # Anti-air warheads (sorted alphabetically)
     "aim-120":              44.00,
     "AIM-120":              44.00,
     "AIM-54":              135.00,
@@ -131,6 +138,12 @@ var warhead_air_lbs = {
     "RB-74":                20.80,
     "RB-99":                44.00,
     "S530D":                66.00,
+};
+
+var cluster = {
+    # cluster munition list
+    "M90": nil,
+    "CBU-87": nil,
 };
 
 var fireMsgs = {
@@ -197,11 +210,11 @@ var incoming_listener = func {
             if(distance != nil) {
               var dist = distance;
 
-              if (type == "M90" or type == "CBU-87") {
+              if (contains(cluster, type)) {
                 # cluster munition
                 var lbs = warhead_lbs[type];
                 var maxDist = maxDamageDistFromWarhead(lbs);
-                var distance = math.max(0,rand()*2.5-full_damage_dist_m);#being 0 to 2.5 meters from a bomblet on average.
+                var distance = math.max(0,rand()*2-full_damage_dist_m);#being 0 to 2 meters from a bomblet on average.
                 var diff = maxDist-distance;
                 diff = diff * diff;
                 var probability = diff / (maxDist*maxDist);
@@ -312,13 +325,12 @@ var incoming_listener = func {
 }
 
 var maxDamageDistFromWarhead = func (lbs) {
-  # very simple
+  # Calc at what distance the warhead will do zero damage every time.
   var dist = 3*math.sqrt(lbs);
-
   return dist;
 }
 
-var fail_systems = func (probability, factor = 100) {
+var fail_systems = func (probability, factor = 100) {#this factor needs tuning after all asset hitpoints have been evaluated.
     if (use_hitpoints_instead_of_failure_modes_bool) {
       hp -= factor * probability;
       printf("HP: %d/%d", hp, hp_max);
@@ -438,17 +450,18 @@ var processCallsigns = func () {
       callsign_struct[callsign] = player;
     }
   }
-  settimer(processCallsigns, 1.5);
+  settimer(processCallsigns, 5);
 }
 
 processCallsigns();
 
 setlistener("/sim/multiplay/chat-history", incoming_listener, 0, 0);
 
-#setprop("/sim/failure-manager/display-on-screen", FALSE);
+# prevent flooding the pilots screen with failure modes that fail when getting hit.
+setprop("/sim/failure-manager/display-on-screen", FALSE);
 
 var re_init = func {
-  # repair the aircraft
+  # repair the aircraft at relocation to another airport.
 
   var failure_modes = FailureMgr._failmgr.failure_modes;
   var mode_list = keys(failure_modes);
