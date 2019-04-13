@@ -44,7 +44,9 @@ var cannon_types = {
     " 50 BMG hit":            0.015, # 12.7mm (non-explosive)    
     " 7.62 hit":              0.005, # 7.62mm (non-explosive)    
 };    
-    
+
+# lbs of warheads is explosive+fragmentation+fuse, so total warhead mass.
+
 var warhead_lbs = {
     # Anti-ground/marine warheads (sorted alphabetically)
     "AGM-65":              126.00,
