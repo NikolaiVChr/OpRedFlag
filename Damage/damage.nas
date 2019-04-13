@@ -7,7 +7,10 @@
 
 
 ############################ Config ######################################################################################
-var full_damage_dist_m = 3;# can vary from aircraft to aircraft depending on how many failure modes it has. For assets this should be average diameter of the asset.
+var full_damage_dist_m = 3;# Can vary from aircraft to aircraft depending on how many failure modes it has.
+                           # Many modes (like Viggen) ought to have lower number like zero.
+                           # Few modes (like F-14) ought to have larger number such as 3.
+                           # For assets this should be average radius of the asset.
 var use_hitpoints_instead_of_failure_modes_bool = 0;# mainly used by assets that don't have failure modes.
 var hp_max = 80;# given a direct hit, how much pounds of warhead is needed to kill. Only used if hitpoints is enabled.
 var hitable_by_air_munitions = 1;# if anti-air can do damage
@@ -22,6 +25,7 @@ var hp = hp_max;
 
 var cannon_types = {
     " M70 rocket hit":        0.25, #135mm
+    " S-5 rocket hit":        0.20, # 55mm
     " M55 cannon shell hit":  0.10, # 30mm
     " KCA cannon shell hit":  0.10, # 30mm
     " Gun Splash On ":        0.10, # 30mm
@@ -30,9 +34,8 @@ var cannon_types = {
     " BK27 cannon hit":       0.07, # 27mm
     " GSh-30 hit":            0.10, # 30mm
     " GSh-23 hit":            0.065,# 23mm
-    " 7.62 hit":              0.005,# 7.62mm
-    " 50 BMG hit":            0.015,# 12.7mm
-    " S-5 rocket hit":        0.20, #55mm
+    " 7.62 hit":              0.005,# 7.62mm (non-explosive)
+    " 50 BMG hit":            0.015,# 12.7mm (non-explosive)    
 };    
     
 var warhead_lbs = {
@@ -206,7 +209,7 @@ var incoming_listener = func {
                   var hpDist = maxDamageDistFromWarhead(hp_max);
                   probability = (maxDist/hpDist)*probability;
                 }
-                var failed = fail_systems(probability);
+                var failed = fail_systems(probability, hp_max);
                 var percent = 100 * prob;
                 printf("Took %.1f%% damage from %s clusterbomb at %0.1f meters from bomblet. %s systems was hit", percent,type,distance,failed);
                 nearby_explosion();
@@ -241,10 +244,21 @@ var incoming_listener = func {
                 probability = (maxDist/hpDist)*probability;
               }
 
-              var failed = fail_systems(probability);
+              var failed = fail_systems(probability, hp_max);
               var percent = 100 * probability;
               printf("Took %.1f%% damage from %s missile at %0.1f meters. %s systems was hit", percent,type,dist,failed);
               nearby_explosion();
+              
+              ####
+              # I don't remember all the considerations that went into our original warhead damage model.
+              # But looking at the formula it looks like they all do 100% damage at 0 meter hit,
+              # and warhead size is only used to determine the decrease of damage with distance increase.
+              # It sorta gets the job done though, so I am hesitant to advocate that warheads above a certain
+              # size should give 100% damage for some distance, and that warheads smaller than certain size should
+              # not give 100% damage even on direct hit.
+              # Anyway, for hitpoint based assets, this is now the case. Maybe we should consider to also do something
+              # similar for failure mode based aircraft. ~Nikolai
+              ####
               
               ## example 1: ##
               # 300 lbs warhead, 50 meters distance
@@ -304,9 +318,9 @@ var maxDamageDistFromWarhead = func (lbs) {
   return dist;
 }
 
-var fail_systems = func (probability) {
+var fail_systems = func (probability, factor = 100) {
     if (use_hitpoints_instead_of_failure_modes_bool) {
-      hp -= hp_max * probability;
+      hp -= factor * probability;
       printf("HP: %d/%d", hp, hp_max);
       setprop("sam/damage", math.max(0,100*hp/hp_max));#used in HUD
       if ( hp < 0 ) {
