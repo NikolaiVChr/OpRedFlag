@@ -29,11 +29,11 @@ var cannon_types = {
     " M55 cannon shell hit":  0.10, # 30mm
     " KCA cannon shell hit":  0.10, # 30mm
     " Gun Splash On ":        0.10, # 30mm
-    " M61A1 shell hit":       0.05, # 20mm
+    " GSh-30 hit":            0.10, # 30mm
     " GAU-8/A hit":           0.10, # 30mm
     " BK27 cannon hit":       0.07, # 27mm
-    " GSh-30 hit":            0.10, # 30mm
     " GSh-23 hit":            0.065,# 23mm
+    " M61A1 shell hit":       0.05, # 20mm
     " 7.62 hit":              0.005,# 7.62mm (non-explosive)
     " 50 BMG hit":            0.015,# 12.7mm (non-explosive)    
 };    
