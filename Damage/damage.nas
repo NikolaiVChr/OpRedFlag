@@ -16,6 +16,7 @@ var hp_max = 80;# given a direct hit, how much pounds of warhead is needed to ki
 var hitable_by_air_munitions = 1;   # if anti-air can do damage
 var hitable_by_cannon = 1;          # if cannon can do damage
 var hitable_by_ground_munitions = 1;# if anti-ground/marine can do damage
+var is_fleet = 0;  # Is really 7 ships, 3 of which has offensive missiles.
 ##########################################################################################################################
 
 ##
@@ -33,6 +34,7 @@ var hp = hp_max;
 var cannon_types = {
     #
     # 0.20 means a direct hit will disable 20% of the failure modes in average.
+    # 0.20 also means a direct hit will do 20 hitpoints damage.
     #
     " M70 rocket hit":        0.250, #135mm
     " S-5 rocket hit":        0.200, # 55mm
@@ -336,8 +338,10 @@ var maxDamageDistFromWarhead = func (lbs) {
 }
 
 var fail_systems = func (probability, factor = 100) {#this factor needs tuning after all asset hitpoints have been evaluated.
-    if (use_hitpoints_instead_of_failure_modes_bool) {
-      hp -= factor * probability;
+    if (fleet) {
+      return fail_fleet_systems(probability, factor);
+    } elsif (use_hitpoints_instead_of_failure_modes_bool) {
+      hp -= factor * probability*(0.75+rand()*0.25);# from 75 to 100% damage
       printf("HP: %d/%d", hp, hp_max);
       setprop("sam/damage", math.max(0,100*hp/hp_max));#used in HUD
       if ( hp < 0 ) {
@@ -359,6 +363,43 @@ var fail_systems = func (probability, factor = 100) {#this factor needs tuning a
       }
       return failed;
     }
+};
+
+hp_f = [hp_max,hp_max,hp_max,hp_max,hp_max,hp_max,hp_max];
+
+var fail_fleet_systems = func (probability, factor) {
+  var no = 7;
+  while (no > 6 or hp_f[no] < 0) {
+    no = int(rand()*7);
+    if (hp_f[no] < 0) {
+      if (rand() > 0.9) {
+        armament.defeatSpamFilter("You shot one of our already sinking ships, you are just mean.");
+        hp_f[no] -= factor * probability*(0.75+rand()*0.25);# from 75 to 100% damage
+        print("HP["~no~"]: " ~ hp_f[no] ~ "/" ~ hp_max);
+        return;
+      }
+    }
+  }
+  hp_f[no] -= factor * probability*(0.75+rand()*0.25);# from 75 to 100% damage
+  printf("HP[%d]: %d/%d", no, hp_f[no], hp_max);
+  #setprop("sam/damage", math.max(0,100*hp/hp_max));#used in HUD
+  if ( hp_f[no] < 0 ) {
+    setprop("/sim/multiplay/generic/bool["~(no+40)~"]",1);
+    armament.defeatSpamFilter("So you sank one of our ships, we will get you for that!");
+    if (!getprop("/carrier/disabled") and hp_f[0]<0 and hp_f[1]<0 and hp_f[2]<0) {
+      setprop("/carrier/disabled",1);
+      armament.defeatSpamFilter("Captain our offensive capability is crippled!");
+    }
+    if (hp_f[0]<0 and hp_f[1]<0 and hp_f[2]<0 and hp_f[3]<0 and hp_f[4]<0 and hp_f[5]<0 and hp_f[6]<0) {
+      setprop("/carrier/sunk",1);
+      setprop("/sim/multiplay/generic/int[2]",1);#radar off
+      setprop("/sim/messages/copilot", getprop("sim/multiplay/callsign")~" dead.");
+      armament.defeatSpamFilter("S.O.S. Heeelp");
+    } else {
+      armament.defeatSpamFilter("This is not over yet..");
+    }    
+  }
+  return -1;
 };
 
 var warn = func (last_vector,m2000,callsign,author) {
