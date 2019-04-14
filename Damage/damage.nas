@@ -31,6 +31,9 @@ var FALSE = 0;
 var hp = hp_max;
 
 var cannon_types = {
+    #
+    # 0.20 means a direct hit will disable 20% of the failure modes in average.
+    #
     " M70 rocket hit":        0.250, #135mm
     " S-5 rocket hit":        0.200, # 55mm
     " M55 cannon shell hit":  0.100, # 30mm
