@@ -30,6 +30,7 @@ var TRUE  = 1;
 var FALSE = 0;
 
 var hp = hp_max;
+setprop("sam/damage", math.max(0,100*hp/hp_max));#used in HUD
 
 var cannon_types = {
     #
@@ -72,6 +73,7 @@ var warhead_lbs = {
     "GBU-12":              190.00,
     "GBU-24":              945.00,
     "GBU-31":              945.00,
+    "GBU-54":              190.00,
     "GBU12":               190.00,
     "GBU16":               450.00,
     "HVAR":                  7.50,#P51
@@ -94,7 +96,7 @@ var warhead_lbs = {
     "RN-18T":             1200.00, #fictional, thermobaeric replacement for the RN-28 nuclear bomb
     "RS-2US":               28.66,
     "S-21":                245.00,
-    "S-24":                271.00, 
+    "S-24":                271.00,
     "SCALP":               992.00,
     "Sea Eagle":           505.00,
     "SeaEagle":            505.00,
@@ -145,6 +147,7 @@ var warhead_air_lbs = {
     "RB-74":                20.80,
     "RB-99":                44.00,
     "S530D":                66.00,
+    "S48N6":               330.00,# 48N6 from S-300pmu
 };
 
 var cluster = {
@@ -230,7 +233,7 @@ var incoming_listener = func {
                   probability = (maxDist/hpDist)*probability;
                 }
                 var failed = fail_systems(probability, hp_max);
-                var percent = 100 * prob;
+                var percent = 100 * probability;
                 printf("Took %.1f%% damage from %s clusterbomb at %0.1f meters from bomblet. %s systems was hit", percent,type,distance,failed);
                 nearby_explosion();
                 return;
