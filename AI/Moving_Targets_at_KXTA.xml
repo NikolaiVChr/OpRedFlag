@@ -64,7 +64,7 @@
                 var node = tanker.getNode("position/altitude-ft", 1 );
                 var alt = geo.elevation(lat, lon);
                 node.setDoubleValue(alt==nil?0:alt*M2FT+1.5);
-                var callsign = tanker.getNode("callsign").getValue();
+                var callsign = tanker.getNode("name").getValue();
                 if( callsign == "Factory" ) continue;
                 tanker.getNode("controls/tgt-speed-kts", 1).setDoubleValue(40); # hmm, this control seems to have changed in 2019.1?! Well works now.               
               }
@@ -74,7 +74,7 @@
               }
               print("Scenario proper unloaded.");
               foreach( var tanker; props.globals.getNode("/ai/models",1).getChildren("ship") ) {
-                var callsign = tanker.getNode("callsign").getValue();
+                var callsign = tanker.getNode("name").getValue();
                 if( !string.match(callsign,"Humvee*") ) continue;
                 tanker.remove(); # hmm, shouldn't be needed,  but is :(              
               }
