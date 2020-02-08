@@ -44,12 +44,14 @@ var cannon_types = {
     " Gun Splash On ":        0.100, # 30mm
     " GSh-30 hit":            0.100, # 30mm
     " GAU-8/A hit":           0.100, # 30mm
+    " Mk3Z hit":              0.100, # 30mm Jaguar
     " BK27 cannon hit":       0.070, # 27mm
     " GSh-23 hit":            0.065, # 23mm
     " M61A1 shell hit":       0.050, # 20mm
     " 50 BMG hit":            0.015, # 12.7mm (non-explosive)    
     " 7.62 hit":              0.005, # 7.62mm (non-explosive)
-    " Hydra-70 hit":          0.25, #    
+    " Hydra-70 hit":          0.250, # F-16
+    " SNEB hit":              0.250, # Jaguar   
 };    
 
 # lbs of warheads is explosive+fragmentation+fuse, so total warhead mass.
@@ -67,7 +69,9 @@ var warhead_lbs = {
     "AM39-Exocet":         364.00, 
     "AS-37-Martel":        330.00, 
     "AS30L":               529.00,
-    "CBU-87":              100.00,# bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.
+    "BL755":               100.00,# 800lb bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.    
+    "CBU-87":              100.00,# bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.    
+    "CBU-105":             100.00,# bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.    
     "Exocet":              364.00,
     "FAB-100":              92.59,
     "FAB-250":             202.85,
@@ -88,6 +92,7 @@ var warhead_lbs = {
     "M90":                  10.00,# bomblet warhead. x3 of real mass.
     "MK-82":               192.00,
     "MK-83":               445.00,
+    "MK-83HD":             445.00,
     "MK-84":               945.00,
     "OFAB-100":             92.59,
     "RB-04E":              661.00,
@@ -122,6 +127,7 @@ var warhead_air_lbs = {
     "KN-06":               315.00,
     "M317":                145.00,
     "Magic-2":              27.00, 
+    "Majic":                26.45,
     "Matra MICA":           30.00,
     "Matra R550 Magic 2":   27.00,
     "MATRA-R530":           55.00,
@@ -156,6 +162,8 @@ var cluster = {
     # cluster munition list
     "M90": nil,
     "CBU-87": nil,
+    "CBU-105": nil,
+    "BL755": nil,
 };
 
 var fireMsgs = {
@@ -361,14 +369,48 @@ var fail_systems = func (probability, factor = 100) {#this factor needs tuning a
       var mode_list = keys(failure_modes);
       var failed = 0;
       foreach(var failure_mode_id; mode_list) {
+        #print(failure_mode_id);
           if (rand() < probability) {
               FailureMgr.set_failure_level(failure_mode_id, 1);
               failed += 1;
+              if (failure_mode_id == "Engines/engine") {
+                # fail UH1 yasim:
+                setprop("sim/model/uh1/state",0);
+                setprop("controls/engines/engine/magnetos", 0);
+                #set a listener so that if a restart is attempted, it'll fail.
+                yasim_list = setlistener("sim/model/uh1/state",func {setprop("sim/model/uh1/state",0);});
+              }
+          }
+      }
+      if (rand() < probability) {
+          # fail UH1 yasim:
+          setprop("sim/model/uh1/state",0);
+          setprop("controls/engines/engine/magnetos", 0);
+          #set a listener so that if a restart is attempted, it'll fail.
+          if (yasim_list == nil) {
+            yasim_list = setlistener("sim/model/uh1/state",func {setprop("sim/model/uh1/state",0);});
           }
       }
       return failed;
     }
 };
+var yasim_list = nil;
+
+var repairYasim = func {
+  if (yasim_list != nil) {
+    removelistener(yasim_list);
+    yasim_list = nil;
+  }
+  setprop("sim/crashed", 0);
+  var failure_modes = FailureMgr._failmgr.failure_modes;
+  var mode_list = keys(failure_modes);
+
+    foreach(var failure_mode_id; mode_list) {
+      FailureMgr.set_failure_level(failure_mode_id, 0);
+    }
+}
+
+setlistener("/sim/signals/reinit", repairYasim);
 
 hp_f = [hp_max,hp_max,hp_max,hp_max,hp_max,hp_max,hp_max];
 
