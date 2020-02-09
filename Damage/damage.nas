@@ -21,7 +21,6 @@ var is_fleet = 0;  # Is really 7 ships, 3 of which has offensive missiles.
 
 ##
 ## TODO:
-##      Include mechanics for hitting fleet
 ##      Move all to emesary
 ##      
 
@@ -456,6 +455,7 @@ var warn = func (last_vector,m2000,callsign,author) {
       # its being fired at me
       #print("Incoming!");
       var enemy = getCallsign(author);
+      var sam = size(last_vector) > 2 and last_vector[1] == " Bird away at"?1:0;
       if (enemy != nil) {
         #print("enemy identified");
         var bearingNode = enemy.getNode("radar/bearing-deg");
@@ -498,6 +498,7 @@ var warn = func (last_vector,m2000,callsign,author) {
           } else {
             playIncomingSound("");
           }
+          setLaunch(author, sam);
           return;
         }
       }
@@ -512,6 +513,17 @@ var playIncomingSound = func (clock) {
 
 var stopIncomingSound = func (clock) {
   setprop("sound/incoming"~clock, 0);
+}
+
+var setLaunch = func (c,s) {
+  setprop("sound/rwr-launch-sam", s);
+  setprop("sound/rwr-launch", c);
+  settimer(func {stopLaunch();},7);
+}
+
+var stopLaunch = func () {
+  setprop("sound/rwr-launch", "");
+  setprop("sound/rwr-launch-sam", 0);
 }
 
 var nearby_explosion = func {
