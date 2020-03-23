@@ -1,5 +1,6 @@
 #
 # Install: Include this code into an aircraft to make it damagable. (remember to add it to the -set file)
+#          for damage to be recognised, the property /payload/armament/msg must be 1
 #
 # Authors: Nikolai V. Chr. and Pinto (with improvement by Onox)
 #
