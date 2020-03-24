@@ -208,6 +208,8 @@ var incoming_listener = func {
       if (find(" at " ~ callsign ~ ". Release ", last_vector[1]) != -1) {
         # a m2000 is firing at us
         m2000 = TRUE;
+      } elsif (find(" Maddog released", last_vector[1]) != -1) {
+        m2000 = TRUE;
       }
       if (contains(fireMsgs, last_vector[1]) or m2000 == TRUE) {
         # air2air being fired
@@ -373,34 +375,62 @@ var fail_systems = func (probability, factor = 100) {#this factor needs tuning a
           if (rand() < probability) {
               FailureMgr.set_failure_level(failure_mode_id, 1);
               failed += 1;
-              if (failure_mode_id == "Engines/engine") {
-                # fail UH1 yasim:
+              if (failure_mode_id == "Engines/engine" and yasim_list != nil and getprop("sim/flight-model") == "yasim") {
+                # fail  yasim:
                 setprop("sim/model/uh1/state",0);
                 setprop("controls/engines/engine/magnetos", 0);
+                setprop("controls/engines/engine/cutoff", 1);
+                setprop("controls/engines/engine/on-fire", 1);
                 #set a listener so that if a restart is attempted, it'll fail.
                 yasim_list = setlistener("sim/model/uh1/state",func {setprop("sim/model/uh1/state",0);});
+                yasim_list2 = setlistener("controls/engines/engine/cutoff",func {setprop("controls/engines/engine/cutoff",1);});
+              }
+              if (failure_mode_id == "Engines/engine[1]" and yasim_list3 != nil and getprop("sim/flight-model") == "yasim") {
+                # fail  yasim:
+                setprop("controls/engines/engine[1]/magnetos", 0);
+                setprop("controls/engines/engine[1]/cutoff", 1);
+                setprop("controls/engines/engine[1]/on-fire", 1);
+                #set a listener so that if a restart is attempted, it'll fail.
+                yasim_list3 = setlistener("controls/engines/engine[1]/cutoff",func {setprop("controls/engines/engine[1]/cutoff",1);});
+              }
+              if (failure_mode_id == "Engines/engine[2]" and yasim_list4 != nil and getprop("sim/flight-model") == "yasim") {
+                # fail  yasim:
+                setprop("controls/engines/engine[2]/magnetos", 0);
+                setprop("controls/engines/engine[2]/cutoff", 1);
+                setprop("controls/engines/engine[2]/on-fire", 1);
+                #set a listener so that if a restart is attempted, it'll fail.
+                yasim_list4 = setlistener("controls/engines/engine[2]/cutoff",func {setprop("controls/engines/engine[2]/cutoff",1);});
+              }
+              if (failure_mode_id == "Engines/engine[3]" and yasim_list5 != nil and getprop("sim/flight-model") == "yasim") {
+                # fail  yasim:
+                setprop("controls/engines/engine[3]/magnetos", 0);
+                setprop("controls/engines/engine[3]/cutoff", 1);
+                setprop("controls/engines/engine[3]/on-fire", 1);
+                #set a listener so that if a restart is attempted, it'll fail.
+                yasim_list5 = setlistener("controls/engines/engine[3]/cutoff",func {setprop("controls/engines/engine[3]/cutoff",1);});
               }
           }
       }
-      if (rand() < probability) {
-          # fail UH1 yasim:
-          setprop("sim/model/uh1/state",0);
-          setprop("controls/engines/engine/magnetos", 0);
-          #set a listener so that if a restart is attempted, it'll fail.
-          if (yasim_list == nil) {
-            yasim_list = setlistener("sim/model/uh1/state",func {setprop("sim/model/uh1/state",0);});
-          }
-      }
+      
       return failed;
     }
 };
 var yasim_list = nil;
+var yasim_list2 = nil;
+var yasim_list3 = nil;
+var yasim_list4 = nil;
+var yasim_list5 = nil;
 
 var repairYasim = func {
-  if (yasim_list != nil) {
-    removelistener(yasim_list);
-    yasim_list = nil;
-  }
+  if (yasim_list != nil) {removelistener(yasim_list); yasim_list=nil;}
+  if (yasim_list2 != nil) {removelistener(yasim_list2); yasim_list2=nil;}
+  if (yasim_list3 != nil) {removelistener(yasim_list3); yasim_list3=nil;}
+  if (yasim_list4 != nil) {removelistener(yasim_list4); yasim_list4=nil;}
+  if (yasim_list5 != nil) {removelistener(yasim_list5); yasim_list5=nil;}
+  setprop("controls/engines/engine[0]/on-fire", 0);
+  setprop("controls/engines/engine[1]/on-fire", 0);
+  setprop("controls/engines/engine[2]/on-fire", 0);
+  setprop("controls/engines/engine[3]/on-fire", 0);
   setprop("sim/crashed", 0);
   var failure_modes = FailureMgr._failmgr.failure_modes;
   var mode_list = keys(failure_modes);
@@ -556,10 +586,12 @@ var processCallsigns = func () {
       callsign_struct[callsign] = player;
     }
   }
-  settimer(processCallsigns, 5);
 }
 
-processCallsigns();
+var processCallsignsTimer = maketimer(1.5, processCallsigns);
+processCallsignsTimer.simulatedTime = 1;
+processCallsignsTimer.start();
+
 
 setlistener("/sim/multiplay/chat-history", incoming_listener, 0, 0);
 
