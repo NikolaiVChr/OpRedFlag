@@ -375,7 +375,7 @@ var fail_systems = func (probability, factor = 100) {#this factor needs tuning a
           if (rand() < probability) {
               FailureMgr.set_failure_level(failure_mode_id, 1);
               failed += 1;
-              if (failure_mode_id == "Engines/engine" and yasim_list != nil and getprop("sim/flight-model") == "yasim") {
+              if (failure_mode_id == "Engines/engine" and yasim_list == nil and getprop("sim/flight-model") == "yasim") {
                 # fail  yasim:
                 setprop("sim/model/uh1/state",0);
                 setprop("controls/engines/engine/magnetos", 0);
@@ -385,7 +385,7 @@ var fail_systems = func (probability, factor = 100) {#this factor needs tuning a
                 yasim_list = setlistener("sim/model/uh1/state",func {setprop("sim/model/uh1/state",0);});
                 yasim_list2 = setlistener("controls/engines/engine/cutoff",func {setprop("controls/engines/engine/cutoff",1);});
               }
-              if (failure_mode_id == "Engines/engine[1]" and yasim_list3 != nil and getprop("sim/flight-model") == "yasim") {
+              if (failure_mode_id == "Engines/engine[1]" and yasim_list3 == nil and getprop("sim/flight-model") == "yasim") {
                 # fail  yasim:
                 setprop("controls/engines/engine[1]/magnetos", 0);
                 setprop("controls/engines/engine[1]/cutoff", 1);
@@ -393,7 +393,7 @@ var fail_systems = func (probability, factor = 100) {#this factor needs tuning a
                 #set a listener so that if a restart is attempted, it'll fail.
                 yasim_list3 = setlistener("controls/engines/engine[1]/cutoff",func {setprop("controls/engines/engine[1]/cutoff",1);});
               }
-              if (failure_mode_id == "Engines/engine[2]" and yasim_list4 != nil and getprop("sim/flight-model") == "yasim") {
+              if (failure_mode_id == "Engines/engine[2]" and yasim_list4 == nil and getprop("sim/flight-model") == "yasim") {
                 # fail  yasim:
                 setprop("controls/engines/engine[2]/magnetos", 0);
                 setprop("controls/engines/engine[2]/cutoff", 1);
@@ -401,7 +401,7 @@ var fail_systems = func (probability, factor = 100) {#this factor needs tuning a
                 #set a listener so that if a restart is attempted, it'll fail.
                 yasim_list4 = setlistener("controls/engines/engine[2]/cutoff",func {setprop("controls/engines/engine[2]/cutoff",1);});
               }
-              if (failure_mode_id == "Engines/engine[3]" and yasim_list5 != nil and getprop("sim/flight-model") == "yasim") {
+              if (failure_mode_id == "Engines/engine[3]" and yasim_list5 == nil and getprop("sim/flight-model") == "yasim") {
                 # fail  yasim:
                 setprop("controls/engines/engine[3]/magnetos", 0);
                 setprop("controls/engines/engine[3]/cutoff", 1);
