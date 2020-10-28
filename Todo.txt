@@ -1,23 +1,14 @@
 Fairly small tasks
 ==================
-Gravity bombs on 14.
-Implement damage formula Raider1 found to damage code.
-Flash at explosion (request from S)
 
 Next release:
 -------------
-Update crash and stress in f14/f15.
 
 Bigger tasks
 ============
-Get emisary to work with MP hit msgs.
-Missile Launch Detector (MLD) and Missile Approach Warning (MAW) systems.
-Generic pylon system (Mig21/Viggen)
 
 Done needs testing
 ==================
-Make F15 have radar failure mode.
-Missiles A/A should not lock onto still targets.
 
 WWI
 ===
