@@ -1,2 +1,1 @@
-# OpRedFlag
-Aircraft files modified for Operation Red Flag (KSUU Crew)
+# OpRedFlag - Meta data for Operation Red Flag Aircraft and assets
