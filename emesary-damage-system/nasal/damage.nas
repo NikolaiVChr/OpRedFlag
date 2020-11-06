@@ -74,7 +74,7 @@ var warheads = {
     "BL755":             [11,  100.00,1,1],# 800lb bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.    
     "CBU-87":            [12,  100.00,1,1],# bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.    
     "CBU-105":           [13,  100.00,1,1],# bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.    
-    "AS 37 ARMAT":       [14,  330.00,1,0],
+    "AS 37 Armat":       [14,  330.00,1,0],
     "FAB-100":           [15,   92.59,1,0],
     "FAB-250":           [16,  202.85,1,0],
     "FAB-500":           [17,  564.38,1,0],
@@ -754,6 +754,8 @@ var reckon_create = func (kee, dyna, stime) {
     path = getprop("payload/armament/models") ~ "heavy_smoke.xml";
   } elsif (dyna[7] ==3) {
     path = getprop("payload/armament/models") ~ "the-flare.xml";
+  } elsif (dyna[7] == -1) {
+    return nil;
   }
   var static = ModelManager.new(path, dyna[1],dyna[2],dyna[3]*M2FT,dyna[5],dyna[6],dyna[7]==0);#path,lat,lon,alt_m,heading,pitch
   if (static != nil) {
