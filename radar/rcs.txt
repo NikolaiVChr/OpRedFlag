@@ -1,4 +1,4 @@
-LAST UPDATED OCT 28 2020
+LAST UPDATED APR 17 2021
 
 var rcs_oprf_database = {
     # This list contains the mandatory RCS frontal values for OPRF (anno 1997), feel free to add non-OPRF to your aircraft we don't care.
@@ -51,6 +51,7 @@ var rcs_oprf_database = {
     "ch53e":                    20,     
 # OPRF assets:
     "depot":                    170,
+    "ZSU-23-4M":                3,
     "buk-m2":                   7,   
     "truck":                    1.5,
     "missile_frigate":          450, 
