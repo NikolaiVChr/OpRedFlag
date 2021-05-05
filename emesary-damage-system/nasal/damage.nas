@@ -1,6 +1,8 @@
 #
 # Install: Include this code into an aircraft to make it damagable. (remember to add it to the -set file)
 #          for damage to be recognised, the property /payload/armament/msg must be 1
+#          if /payload/armament/spectator is 1 and /payload/armament/msg is 0, missile trails, craters, flares,
+#          and missile warnings will be received, but not actual damage.
 #
 # Authors: Nikolai V. Chr., Pinto and Richard (with improvement by Onox)
 #
@@ -256,7 +258,7 @@ var DamageRecipient =
                   notification.Flags = 0;
                   notification.RemoteCallsign = "";
                 }
-                if(getprop("payload/armament/msg") == 0 and notification.RemoteCallsign != notification.Callsign) {
+                if(getprop("payload/armament/msg") == 0 and getprop("payload/armament/spectator") != 1 and notification.RemoteCallsign != notification.Callsign) {
                   return emesary.Transmitter.ReceiptStatus_NotProcessed;
                 }
                                 
@@ -488,7 +490,7 @@ var DamageRecipient =
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
             if (notification.NotificationType == "StaticNotification") {
-                if(getprop("payload/armament/msg") == 0) {
+                if(getprop("payload/armament/msg") == 0 and getprop("payload/armament/spectator") != 1) {
                   return emesary.Transmitter.ReceiptStatus_NotProcessed;
                 }
                 if (notification.Kind == CREATE and getprop("payload/armament/enable-craters") == 1 and statics["obj_"~notification.UniqueIdentity] == nil) {
@@ -919,11 +921,15 @@ setlistener("payload/armament/msg", func {
   check_for_Request();
 },0,0);
 
+setlistener("payload/armament/spectator", func {
+  check_for_Request();
+},0,0);
+
 var last_check = -65;
 
 var check_for_Request = func {
   # This sends out a notification to ask other aircraft for all craters
-  if (getprop("payload/armament/enable-craters") == 1 and getprop("sim/multiplay/online") and getprop("payload/armament/msg") and systime()-last_check > 60) {
+  if (getprop("payload/armament/enable-craters") == 1 and getprop("sim/multiplay/online") and (getprop("payload/armament/spectator") or getprop("payload/armament/msg")) and systime()-last_check > 60) {
     last_check = systime();
     var msg = notifications.StaticNotification.new("stat", int(rand()*15000000), REQUEST_ALL, 0);
     msg.IsDistinct = 0;
