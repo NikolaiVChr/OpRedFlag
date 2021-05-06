@@ -1,6 +1,6 @@
-LAST UPDATED APR 17 2021
 
 var rcs_oprf_database = {
+    #Revision MAY 05 2021
     # This list contains the mandatory RCS frontal values for OPRF (anno 1997), feel free to add non-OPRF to your aircraft we don't care.
     "default":                  150,    #default value if target's model isn't listed
     "f-14b":                    12,     
@@ -11,7 +11,7 @@ var rcs_oprf_database = {
     "f15-bs":                   0.0001,
     "F-16":                     2,
     "JA37-Viggen":              3,      
-    "AJ37-Viggen":              3,      
+    "AJ37-Viggen":              3,      # gone
     "AJS37-Viggen":             3,      
     "JA37Di-Viggen":            3,
     "m2000-5":                  1,      
@@ -20,7 +20,7 @@ var rcs_oprf_database = {
     "707":                      100,    
     "707-TT":                   100,    
     "EC-137D":                  110,    
-    "B-1B":                     10,
+    "B-1B":                     6,
     "Blackbird-SR71A":          0.25,
     "Blackbird-SR71B":          0.30,
     "Blackbird-SR71A-BigTail":  0.30,
@@ -48,21 +48,27 @@ var rcs_oprf_database = {
     "uh1":                      30,     
     "212-TwinHuey":             25,     
     "412-Griffin":              25,     
-    "ch53e":                    20,     
+    "ch53e":                    20,
+    "Mil-Mi-8":                 30,     #guess, Hunter
+    "CH47":                     20,     #guess, Hunter
+    "mi24":                     25,     #guess, Hunter
+    "tigre":                    6,      #guess, Hunter
 # OPRF assets:
-    "depot":                    170,
-    "ZSU-23-4M":                3,
-    "buk-m2":                   7,   
-    "truck":                    1.5,
+# Notice that the non-SEA of these have been very reduced to simulate hard to find in ground clutter
+    "depot":                    0.17,
+    "ZSU-23-4M":                0.03,
+    "buk-m2":                   0.07,
+    "S-75":                     0.09,
+    "truck":                    0.15,
     "missile_frigate":          450, 
     "frigate":                  450,   
-    "tower":                    60,       
-    "gci":                      50,
-    "s-300":                    17,
-    "MIM104D":                  17,
-    "struct":                   170,   
+    "tower":                    0.60,       # gone
+    "gci":                      0.50,
+    "s-300":                    0.17,
+    "MIM104D":                  0.17,
+    "struct":                   0.17,   
     "rig":                      500,
-    "point":                    120,
+    "point":                    0.12,
 # Automats:
     "MiG-29":                   6,
     "SU-27":                    15,
