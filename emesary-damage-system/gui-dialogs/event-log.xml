@@ -50,7 +50,6 @@
 	<button>
                 <valign>top</valign>
                 <pref-width>90</pref-width>
-                <pref-height>20</pref-height>
                 <border>2</border>
 		<legend>Refresh</legend>
 		<binding>
