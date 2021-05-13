@@ -37,12 +37,12 @@
 	<nasal>
         <open>
             <![CDATA[
-                setprop("sim/model/mig21/event-log", "Click refresh to see the combat event log..");
+                setprop("sim/gui/dialogs/flightlog/buffer", "Click refresh to see the combat event log..");
             ]]>
         </open>
         <close>
         	<![CDATA[
-                setprop("sim/model/mig21/event-log", "");
+                setprop("sim/gui/dialogs/flightlog/buffer", "");
             ]]>
         </close>
     </nasal>
@@ -66,7 +66,7 @@
 				} else {
 					str = "The aircraft must be still to read the combat event log.";
 				}
-				setprop("sim/model/mig21/event-log", str);
+				setprop("sim/gui/dialogs/flightlog/buffer", str);
 			]]></script>
 		</binding>
 	</button>
@@ -86,7 +86,7 @@
 	    <pref-width>500</pref-width>
 		<pref-height>500</pref-height>
 
-	    <property>/sim/model/mig21/event-log</property>
+	    <property>/sim/gui/dialogs/flightlog/buffer</property>
 		<live>true</live>
 	    <slider>15</slider> <!--width for slider -->
 	    <wrap>false</wrap> <!-- don't wrap text; default: true -->
