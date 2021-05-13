@@ -74,7 +74,7 @@ var rcs_oprf_database = {
     "struct":                   0.20,   
     "rig":                      500,
     "point":                    0.14,
-    "hunter":                   0.10,
+    "hunter":                   0.10,    #sea assets, Hunter
 # Automats:
     "MiG-29":                   6,
     "SU-27":                    15,
