@@ -80,7 +80,7 @@
             <!-- Makes window content resizeable. -->
             <halign>fill</halign>
             <valign>fill</valign>
-            <stretch>true</stretch>>
+            <stretch>true</stretch>
 
 	    <!-- dimensions -->
 	    <pref-width>500</pref-width>
