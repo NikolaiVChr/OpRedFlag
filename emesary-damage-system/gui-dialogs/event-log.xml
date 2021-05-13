@@ -48,9 +48,10 @@
     </nasal>
 	
 	<button>
-		<!--<x>0</x>
-		<y>0</y>-->
-		<halign>centre</halign>
+                <valign>top</valign>
+                <pref-width>90</pref-width>
+                <pref-height>20</pref-height>
+                <border>2</border>
 		<legend>Refresh</legend>
 		<binding>
 			<command>nasal</command>
@@ -76,10 +77,10 @@
 	</text>
 
 	<textbox>
-	  <!-- Makes window content resizable. -->
-	  <halign>fill</halign>
-	  <valign>fill</valign>
-	  <stretch>true</stretch>
+            <!-- Makes window content resizeable. -->
+            <halign>fill</halign>
+            <valign>fill</valign>
+            <stretch>true</stretch>>
 
 	    <!-- dimensions -->
 	    <pref-width>500</pref-width>
