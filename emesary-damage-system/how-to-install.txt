@@ -15,7 +15,7 @@ Put in damage.damageLog.push(phrase); where appropiate to add stuff to event-log
 XML
 ===
 In -set file add <type-id> to each weapon. Make sure number match the list in damage.nas.
-Remove or update chaff/flare resistance, default is now 0.85
+Remove or update chaff/flare resistance in weapon stats.
 In -set file add these to /payload/armament:
 	<enable-craters type="bool">true</enable-craters>
 	<MLW-bearing type="double">0</MLW-bearing>
@@ -25,6 +25,18 @@ In -set file add these to /payload/armament:
 	<MAW-active type="bool">false</MAW-active>
 	<spike type="bool">false</spike>
 
+And these to /payload/d-config: (remember to adjust those that need, see comments at top of damage.nas)
+        <full_damage_dist_m type="double">3</full_damage_dist_m>
+        <use_hitpoints_instead_of_failure_modes_bool type="bool">false</use_hitpoints_instead_of_failure_modes_bool>
+        <hp_max type="double">80</hp_max>
+        <hitable_by_air_munitions type="bool">true</hitable_by_air_munitions>
+        <hitable_by_cannon type="bool">true</hitable_by_cannon>
+        <is_fleet type="bool">false</is_fleet>
+        <rwr_to_screen type="bool">true</rwr_to_screen>
+        <tacview_supported type="bool">false</tacview_supported>
+        <m28_auto type="bool">false</m28_auto>
+        <mlw_max type="double">2.25</mlw_max>
+        <auto_flare_caller type="bool">false</auto_flare_caller>
+
 Emesary
 =======
-Remove emesary.nas and emesary_mp_bridge.nas from the aircraft once 2020.3.1 is released.
