@@ -1,21 +1,20 @@
-COPY FILES
-==========
-The model files should be in the folder listed in /payload/armament/models
+These instructions are to convert old damage/missile system to emesary.
+Its not a full guide to convert a non armed aircraft to an armed damagable aircraft.
 
-Add a menu button or item to open the event-log.xml
-And edit the event-log.xml to make it aircraft specific.
+Set file
+========
+Add a menu button or item to open the dialog 'flightlog'.
 
 NASAL
 =====
-Edit the header of damage.nas.
 Find where cannon hit sends out msgs, and convert to send out notifications. (Same with submodel bombs). And same with where create craters from submodels.
 Remove fire msgs (fox3 etc)
 Put in damage.damageLog.push(phrase); where appropiate to add stuff to event-log.
 
-XML
-===
-In -set file add <type-id> to each weapon. Make sure number match the list in damage.nas.
-Remove or update chaff/flare resistance in weapon stats.
+Set file's payload section
+=========================-
+In -set file add <type-id> to each weapon stats. Make sure number match the list in damage.nas.
+Remove chaff/flare resistance in weapon stats.
 In -set file add these to /payload/armament:
 	<enable-craters type="bool">true</enable-craters>
 	<MLW-bearing type="double">0</MLW-bearing>
@@ -39,5 +38,11 @@ And these to /payload/d-config: (remember to adjust those that need, see comment
         <mlw_max type="double">2.25</mlw_max>
         <auto_flare_caller type="bool">false</auto_flare_caller>
 
-Emesary
-=======
+Files
+=====
+Add ArmamentNotification.nas and GeoBridgedTransmitter.nas into namespace 'notifications'.
+Add damage.nas to namespace 'damage'.
+Add missile-code.nas to namespace 'armament'.
+Add vector.nas to namespace 'vector'.
+The model files should be in the folder listed in /payload/armament/models
+The event-log.xml should be placed in aircraft-folder/gui/dialogs
