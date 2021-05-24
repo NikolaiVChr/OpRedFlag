@@ -2203,8 +2203,8 @@ var AIM = {
 			me.pitch      += me.track_signal_e;
 			me.hdg        += me.track_signal_h;
 			me.pitch       = math.max(-90, math.min(90, me.pitch));
-			me.printGuideDetails("%04.1f deg elevation command done, new pitch: %04.1f deg", me.track_signal_e, me.pitch);
-			me.printGuideDetails("%05.1f deg bearing command done, new heading: %05.1f", me.last_track_h, me.hdg);
+			me.printGuideDetails("%04.1f deg pitch    command done, new pitch: %04.1f deg", me.track_signal_e, me.pitch);
+			me.printGuideDetails("%05.1f deg heading command done, new heading: %05.1f", me.last_track_h, me.hdg);
 		}
 
        	me.last_track_e = me.track_signal_e;
@@ -2914,12 +2914,14 @@ var AIM = {
 		#var (t_course, me.dist_curr) = courseAndDistance(me.coord, me.t_coord);
 		#me.dist_curr = me.dist_curr * NM2M;	
 
+		me.curr_deviation_h = geo.normdeg180(me.curr_deviation_h);
+
 		me.printFlightDetails("Elevation to target %05.2f degs, pitch deviation %05.2f degs, pitch %05.2f degs", me.t_elev_deg, me.curr_deviation_e, me.pitch);
 		me.printFlightDetails("Bearing to target %06.2f degs, heading deviation %06.2f degs, heading %06.2f degs", me.t_course, me.curr_deviation_h, me.hdg);
 		me.printFlightDetails("Altitude above launch platform = %07.1f ft", M2FT * (me.coord.alt()-me.ac.alt()));
 		me.printFlightDetails("Altitude. Target %07.1f. Missile %07.1f. Atan2 %04.1f degs", me.t_coord.alt()*M2FT, me.coord.alt()*M2FT, math.atan2( me.t_coord.alt()-me.coord.alt(), me.dist_curr ) * R2D);
 
-		me.curr_deviation_h = geo.normdeg180(me.curr_deviation_h);
+		
 
 		if (math.abs(me.curr_deviation_h) < 15) {
 			me.guidanceLawHorizInit = 0;
@@ -3194,19 +3196,23 @@ var AIM = {
 			#
 			# missile own movement is subtracted from this change due to seeker being on gyroscope
 			#
+			# This needs to be redone with linear algebra. The cos(t_elev_deg) is a feeble correction, helps though.
+			#
 			if (me.caged == FALSE) {
-				me.dve_dist = me.curr_deviation_e - me.last_deviation_e + me.last_track_e;
-				me.dvh_dist = me.curr_deviation_h - me.last_deviation_h + me.last_track_h;
+				me.dve_dist = math.cos(me.t_elev_deg*D2R)*(me.curr_deviation_e - me.last_deviation_e + me.last_track_e);
+				me.dvh_dist = geo.normdeg180(me.curr_deviation_h - me.last_deviation_h + me.last_track_h);
 			} else {
-				me.dve_dist = me.curr_deviation_e - me.last_deviation_e;
-				me.dvh_dist = me.curr_deviation_h - me.last_deviation_h;
+				me.dve_dist = math.cos(me.t_elev_deg*D2R)*(me.curr_deviation_e - me.last_deviation_e);
+				me.dvh_dist = geo.normdeg180(me.curr_deviation_h - me.last_deviation_h);
 			}
 			me.deviation_per_sec = math.sqrt(me.dve_dist*me.dve_dist+me.dvh_dist*me.dvh_dist)/me.dt;
-
+ 
 			if (me.deviation_per_sec > me.angular_speed) {
 				# lost lock due to angular speed limit
 				me.printStats("%s: %.1f deg/s too fast angular change for seeker head.", me.type, me.deviation_per_sec);
 				me.free = TRUE;
+			} else {
+				#me.printStatsDetails("%s: %.1f deg/s fine     angular change for seeker head.", me.type, me.deviation_per_sec);
 			}
 		}
 		me.last_deviation_e = me.curr_deviation_e;
@@ -4398,14 +4404,11 @@ var AIM = {
 					me.rng = me.tagt.get_range();
 					me.total_elev  = deviation_normdeg(OurPitch.getValue(), me.tagt.getElevation()); # deg.
 					me.total_horiz = deviation_normdeg(OurHdg.getValue(), me.tagt.get_bearing());    # deg.
-					
 					# Check if in range and in the seeker FOV.
 					if (me.checkForLock()) {
 						me.printSearch("pattern-search ready for lock");
 						
-						me.seeker_elev_target = me.total_elev;
-						me.seeker_head_target = me.total_horiz;
-						me.rotateTarget();
+						me.convertGlobalToSeekerViewDirection(me.tagt.get_bearing(), me.tagt.getElevation(), OurHdg.getValue(), OurPitch.getValue(), OurRoll.getValue());
 						me.testSeeker();
 						if (me.inBeam) {
 							me.printSearch("pattern-search found a lock");
@@ -4434,19 +4437,13 @@ var AIM = {
 				me.rng = me.tagt.get_range();
 				me.total_elev  = deviation_normdeg(OurPitch.getValue(), me.tagt.getElevation()); # deg.
 				me.total_horiz = deviation_normdeg(OurHdg.getValue(), me.tagt.get_bearing());    # deg.
-				
 				# Check if in range and in the seeker FOV.
 				if (me.checkForLock()) {
 					me.printSearch("rdr-slave-search ready for lock");
+					me.convertGlobalToSeekerViewDirection(me.tagt.get_bearing(), me.tagt.getElevation(), OurHdg.getValue(), OurPitch.getValue(), OurRoll.getValue());
 					if (me.caged) {
-						me.seeker_elev_target = me.total_elev;
-						me.seeker_head_target = me.total_horiz;
-						me.rotateTarget();
 						me.moveSeeker();
 					}
-					me.seeker_elev_target = me.total_elev;
-					me.seeker_head_target = me.total_horiz;
-					me.rotateTarget();
 					me.testSeeker();
 					if (me.inBeam) {
 						me.printSearch("rdr-slave-search found a lock");
@@ -4490,13 +4487,10 @@ var AIM = {
 					me.rng = me.tagt.get_range();
 					me.total_elev  = deviation_normdeg(OurPitch.getValue(), me.tagt.getElevation()); # deg.
 					me.total_horiz = deviation_normdeg(OurHdg.getValue(), me.tagt.get_bearing());    # deg.
-					
 					# Check if in range and in the seeker FOV.
 					if (me.checkForLock()) {
 						me.printSearch("bore-search ready for lock");
-						me.seeker_elev_target = me.total_elev;
-						me.seeker_head_target = me.total_horiz;
-						me.rotateTarget();
+						me.convertGlobalToSeekerViewDirection(me.tagt.get_bearing(), me.tagt.getElevation(), OurHdg.getValue(), OurPitch.getValue(), OurRoll.getValue());
 						me.testSeeker();
 						if (me.inBeam) {
 							me.printSearch("bore-search found a lock");
@@ -4522,15 +4516,13 @@ var AIM = {
 				if (me.checkForClass()) {
 					me.tagt = me.slaveContact;
 					me.rng = me.tagt.get_range();
-					me.total_elev  = deviation_normdeg(OurPitch.getValue(), me.tagt.getElevation()); # deg.
-					me.total_horiz = deviation_normdeg(OurHdg.getValue(), me.tagt.get_bearing());    # deg.
 					
 					# Check if in range and in the seeker FOV.
+					me.total_elev  = deviation_normdeg(OurPitch.getValue(), me.tagt.getElevation()); # deg.
+					me.total_horiz = deviation_normdeg(OurHdg.getValue(), me.tagt.get_bearing());    # deg.
 					if (me.checkForLock()) {
 						me.printSearch("dir-search ready for lock");
-						me.seeker_elev_target = me.total_elev;
-						me.seeker_head_target = me.total_horiz;
-						me.rotateTarget();
+						me.convertGlobalToSeekerViewDirection(me.tagt.get_bearing(), me.tagt.getElevation(), OurHdg.getValue(), OurPitch.getValue(), OurRoll.getValue());
 						me.testSeeker();
 						if (me.inBeam) {
 							me.printSearch("dir-search found a lock");
@@ -4560,17 +4552,20 @@ var AIM = {
 		settimer(func me.update_lock(), 0.1);
 	},
 
-	rotateTarget: func {
-		var polar_dist  = math.sqrt(me.seeker_elev_target*me.seeker_elev_target+me.seeker_head_target*me.seeker_head_target);
-		if (polar_dist == 0) return;
-		var polar_angle = math.asin(me.seeker_elev_target/polar_dist)*R2D;
-		if (me.seeker_head_target<0) {
-			polar_angle = 180 - polar_angle;
-		}
-		var roll = OurRoll.getValue();
-		polar_angle += roll;
-		me.seeker_head_target = polar_dist*math.cos(polar_angle*D2R);
-		me.seeker_elev_target = polar_dist*math.sin(polar_angle*D2R);
+	convertGlobalToSeekerViewDirection: func  (bearing, elevation, heading, pitch, roll) {		
+		me.target_x = math.cos(bearing*D2R)*math.cos(elevation*D2R);
+        me.target_y = -math.sin(bearing*D2R)*math.cos(elevation*D2R);
+        me.target_z = math.sin(elevation*D2R);
+        me.target_vector = [me.target_x,me.target_y,me.target_z];
+		me.rollLaunchvehicle  = vector.Math.rollMatrix(-roll);
+        me.pitchLaunchvehicle = vector.Math.pitchMatrix(-pitch);
+        me.yawLaunchvehicle   = vector.Math.yawMatrix(heading);
+        me.rotation = vector.Math.multiplyMatrices(me.rollLaunchvehicle, vector.Math.multiplyMatrices(me.pitchLaunchvehicle, me.yawLaunchvehicle));
+        me.target_vector_from_seekers_view = vector.Math.multiplyMatrixWithVector(me.rotation, me.target_vector);
+        me.angles = vector.Math.cartesianToEuler(me.target_vector_from_seekers_view);
+        
+        me.seeker_head_target = me.angles[0]==nil?0:geo.normdeg180(me.angles[0]);
+        me.seeker_elev_target = me.angles[1];
 	},
 
 	moveSeekerInFullPattern: func {
@@ -4640,20 +4635,34 @@ var AIM = {
 		me.seeker_elapsed = getprop("sim/time/elapsed-sec");
 		if (me.seeker_last_time != 0) {
 			me.seeker_time = me.seeker_elapsed - me.seeker_last_time;
-			me.seeker_elev_delta = me.seeker_elev_target - me.seeker_elev;
-			me.seeker_head_delta = me.seeker_head_target - me.seeker_head;
-			me.seeker_delta = me.clamp(math.sqrt(me.seeker_elev_delta*me.seeker_elev_delta+me.seeker_head_delta*me.seeker_head_delta),0.000001, 100000);
 			me.seeker_max_move = me.seeker_time*me.angular_speed;
-			me.seeker_reduce = me.clamp(me.seeker_max_move/me.seeker_delta,0,1);
-			me.seeker_elev_delta *= me.seeker_reduce;
-			me.seeker_head_delta *= me.seeker_reduce;
-			me.seeker_elev_n = me.seeker_elev+me.seeker_elev_delta;
-			me.seeker_head_n = me.seeker_head+me.seeker_head_delta;
+			
+			# Build unit vector components for seeker and target location in aircraft frame:
+			me.target_x = math.cos(me.seeker_head_target*D2R)*math.cos(me.seeker_elev_target*D2R);
+	        me.target_y = -math.sin(me.seeker_head_target*D2R)*math.cos(me.seeker_elev_target*D2R);
+	        me.target_z = math.sin(me.seeker_elev_target*D2R);
 
-			if (math.sqrt(me.seeker_elev_n*me.seeker_elev_n+me.seeker_head_n*me.seeker_head_n) < me.max_seeker_dev) {
-				me.seeker_head = me.seeker_head_n;
-				me.seeker_elev = me.seeker_elev_n;
-				#me.printSearch("seeker moved");
+	        me.seeker_x = math.cos(me.seeker_head*D2R)*math.cos(me.seeker_elev*D2R);
+	        me.seeker_y = -math.sin(me.seeker_head*D2R)*math.cos(me.seeker_elev*D2R);
+	        me.seeker_z = math.sin(me.seeker_elev*D2R);
+
+	        me.seeker_reset = [1,0,0];
+
+	        me.ideal_seeker_deviation = vector.Math.angleBetweenVectors([me.seeker_x,me.seeker_y,me.seeker_z],[me.target_x,me.target_y,me.target_z]);
+	        me.ideal_total_seeker_deviation = vector.Math.angleBetweenVectors(me.seeker_reset, [me.target_x,me.target_y,me.target_z]);
+	        
+	        if (me.ideal_seeker_deviation > me.seeker_max_move) {
+				me.new_seeker_vector = vector.Math.rotateVectorTowardsVector([me.seeker_x,me.seeker_y,me.seeker_z],[me.target_x,me.target_y,me.target_z],me.seeker_max_move);				
+				me.new_seeker_deviation = vector.Math.angleBetweenVectors(me.seeker_reset, me.new_seeker_vector);
+
+				if (me.new_seeker_deviation < me.max_seeker_dev) {
+					me.new_seeker_pos = vector.Math.cartesianToEuler(me.new_seeker_vector);
+					me.seeker_head = me.new_seeker_pos[0]==nil?0:geo.normdeg180(me.new_seeker_pos[0]);
+					me.seeker_elev = me.new_seeker_pos[1];
+				}
+			} elsif (me.ideal_total_seeker_deviation < me.max_seeker_dev) {
+				me.seeker_elev = me.seeker_elev_target;
+				me.seeker_head = me.seeker_head_target;
 			}
 		}
 		me.seeker_last_time = me.seeker_elapsed;
@@ -4662,12 +4671,21 @@ var AIM = {
 
 	testSeeker: func {
 		me.inBeam = FALSE;
-		me.seeker_elev_delta = me.seeker_elev_target - me.seeker_elev;
-		me.seeker_head_delta = me.seeker_head_target - me.seeker_head;
-		me.seeker_delta = me.clamp(math.sqrt(me.seeker_elev_delta*me.seeker_elev_delta+me.seeker_head_delta*me.seeker_head_delta),0.000001, 100000);
 
-		me.printSearch("seeker to target %.1f degs. Beam radius %.1f degs.", me.seeker_delta, me.beam_width_deg);
-		if (me.seeker_delta < me.beam_width_deg) {
+		# Build unit vector components for seeker and target location in aircraft frame:
+		me.target_x = math.cos(me.seeker_head_target*D2R)*math.cos(me.seeker_elev_target*D2R);
+        me.target_y = -math.sin(me.seeker_head_target*D2R)*math.cos(me.seeker_elev_target*D2R);
+        me.target_z = math.sin(me.seeker_elev_target*D2R);
+
+        me.seeker_x = math.cos(me.seeker_head*D2R)*math.cos(me.seeker_elev*D2R);
+        me.seeker_y = -math.sin(me.seeker_head*D2R)*math.cos(me.seeker_elev*D2R);
+        me.seeker_z = math.sin(me.seeker_elev*D2R);
+
+
+		# we measure the geodesic angle between where seeker is pointing and where the target is.
+		me.target_deviation = vector.Math.angleBetweenVectors([me.target_x,me.target_y,me.target_z],[me.seeker_x,me.seeker_y,me.seeker_z]);
+
+		if (me.target_deviation < me.beam_width_deg) {
 			me.inBeam = TRUE;
 			#me.printSearch("in beam");
 		}
@@ -4752,26 +4770,24 @@ var AIM = {
 				return;
 			}
 
-			me.curr_deviation_e = deviation_normdeg(OurPitch.getValue(), me.Tgt.getElevation());
-			me.curr_deviation_h = deviation_normdeg(OurHdg.getValue(), me.Tgt.get_bearing());
 			if (!me.caged or (me.mode_slave and me.command_tgt)) {
-				me.seeker_elev_target = me.curr_deviation_e;
-				me.seeker_head_target = me.curr_deviation_h;
-				me.rotateTarget();
+				me.convertGlobalToSeekerViewDirection(me.Tgt.get_bearing(), me.Tgt.getElevation(), OurHdg.getValue(), OurPitch.getValue(), OurRoll.getValue());
+				# Notice: seeker_xxxx_target is used both for denoting where seeker should move towards and where the target is. In this case its both:
 				me.moveSeeker();
 			} elsif (me.mode_bore) {
 				me.seeker_elev_target = 0;
 				me.seeker_head_target = 0;
+				# Notice: seeker_xxxx_target is used both for denoting where seeker should move towards and where the target is. In this case its the former:
 				me.moveSeeker();
 			} elsif (me.mode_slave and !me.command_tgt) {
 				me.seeker_elev_target = me.command_dir_pitch;
 				me.seeker_head_target = me.command_dir_heading;
+				# Notice: seeker_xxxx_target is used both for denoting where seeker should move towards and where the target is. In this case its the former:
 				me.moveSeeker();
 			}
 
-			me.seeker_elev_target = me.curr_deviation_e;
-			me.seeker_head_target = me.curr_deviation_h;
-			me.rotateTarget();
+			# Notice: seeker_xxxx_target is used both for denoting where seeker should move towards and where the target is. In this case its the latter:
+			me.convertGlobalToSeekerViewDirection(me.Tgt.get_bearing(), me.Tgt.getElevation(), OurHdg.getValue(), OurPitch.getValue(), OurRoll.getValue());
 			me.testSeeker();
 			if (!me.inBeam) {
 				me.printSearch("out of beam");
