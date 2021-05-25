@@ -35,6 +35,65 @@ var FireControl = {
 		setlistener("controls/armament/dual",func{fc.updateDual()},nil,0);
 		return fc;
 	},
+
+	cage: func (cageIt) {
+		foreach (var p;me.pylons) {
+			var ws = p.getWeapons();
+			foreach (var w;ws) {
+				if (w.parents[0] == armament.AIM and (w.guidance == "heat" and w.target_air)) {# or w.guidance=="vision"
+					w.setCaged(cageIt);
+				}
+			}
+		}
+	},
+
+	isCaged: func () {
+		foreach (var p;me.pylons) {
+			var ws = p.getWeapons();
+			foreach (var w;ws) {
+				if (w.parents[0] == armament.AIM and (w.guidance == "heat" and w.target_air)) {# or w.guidance=="vision"
+					return w.isCaged();
+				}
+			}
+		}
+	},
+
+	toggleCage: func () {
+		var c = 0;
+		foreach (var p;me.pylons) {
+			var ws = p.getWeapons();
+			foreach (var w;ws) {
+				if (w.parents[0] == armament.AIM and (w.guidance == "heat" and w.target_air)) {# or w.guidance=="vision"
+					c = w.isCaged()?1:-1;
+					break;
+				}
+			}
+			if (c != 0) break;
+		}
+		if (c != 0) me.cage(c==-1?1:0);
+	},
+
+	setAutocage: func (auto) {
+		foreach (var p;me.pylons) {
+			var ws = p.getWeapons();
+			foreach (var w;ws) {
+				if (w.parents[0] == armament.AIM and (w.guidance == "heat" and w.target_air)) {# or w.guidance=="vision"
+					w.setAutoUncage(auto);
+				}
+			}
+		}
+	},
+
+	isAutocage: func () {
+		foreach (var p;me.pylons) {
+			var ws = p.getWeapons();
+			foreach (var w;ws) {
+				if (w.parents[0] == armament.AIM and (w.guidance == "heat" and w.target_air)) {# or w.guidance=="vision"
+					return w.isAutoUncage();
+				}
+			}
+		}
+	},
 	
 	getDropMode: func {
 		#0=ccrp, 1 = ccip
