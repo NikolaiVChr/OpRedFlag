@@ -584,7 +584,7 @@ var ContactTracked = {
 
 var encode_contact = func(contact) {
     # Encode bitfield
-    var bits = contact.iff != nil ? contact.iff : IFF_UNKNOWN;
+    var bits = contact["iff"] != nil ? contact.iff : IFF_UNKNOWN;
 
     return emesary.TransferString.encode(clean_callsign(contact.callsign))
         ~ emesary.TransferByte.encode(bits);
