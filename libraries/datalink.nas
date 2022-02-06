@@ -355,6 +355,7 @@ var send_data = func(data, timeout=nil) {
         # Skip missing extensions with a warning
         if (!contains(extensions, ext)) {
             printf("Warning: unknown datalink extension %s in send_data().\n", ext);
+            continue;
         }
         str = str ~ data_separator ~ extensions[ext].prefix ~ extensions[ext].encode(data[ext]);
     }
