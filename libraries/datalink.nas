@@ -181,9 +181,18 @@
 
 
 #### Version and changelog
-# current: v1.0.1, minimum compatible: v1.0.0
+# current: v1.1.0, minimum compatible: v1.0.0
 #
-## v1.0.1: Add is_known(), is_friendly(), is_hostile() helpers to extension "contacts".
+## v1.1.0:
+# Allow external transmission restrictions
+# Make transmitting contact IFF optional
+# Ensure personal identifier has no '!'
+# '\n' is redundant for printf()
+# Fix separator character in documentation
+# Fix error when sending unknown extension
+#
+## v1.0.1:
+# Add is_known(), is_friendly(), is_hostile() helpers to extension "contacts".
 #
 ## v1.0.0: Initial version
 # - Core protocol for datalink channel.
