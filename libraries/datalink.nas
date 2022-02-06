@@ -21,6 +21,15 @@
 # * Optional
 #   /instrumentation/datalink/receive_period = 1        receiving loop update rate
 #
+# Optional: Re-define the function
+#   datalink.can_transmit(callsign, mp_prop, mp_index)
+#
+# This function should return 'true' when the given aircraft is able to transmit over datalink to us.
+# For instance, it can be used to check line of sight and maximum range.
+# The default implementation always returns true (always able to transmit).
+# Arguments are callsign, property node /ai/models/multiplayer[i], index of the former node.
+#
+#
 # API:
 # - get_data(callsign)
 #     Returns all datalink information about 'callsign' as an object, or nil if there is none.
@@ -194,6 +203,11 @@ var mp_path = "sim/multiplay/generic/string["~mp_string~"]";
 var channel_hash_period = 600;
 
 var receive_period = getprop("/instrumentation/datalink/receive_period") or 1;
+
+# Should be overwitten to add transmission restrictions.
+var can_transmit = func(contact, mp_prop, mp_index) {
+    return 1;
+}
 
 ### Properties
 
@@ -441,6 +455,10 @@ var receive_loop = func {
 
         # Check channel
         if (!check_channel(tokens[0], callsign, my_channel)) continue;
+
+        # We check this _after_ the channel. Checking the channel is quite cheap,
+        # and we don't know how slow this function is, it might have a get_cart_ground_intersection()
+        if (!can_transmit(callsign, mp, idx)) continue;
 
         # Add to list of connected aircrafts.
         append(connected_callsigns, callsign);
