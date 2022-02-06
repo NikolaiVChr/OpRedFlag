@@ -121,7 +121,7 @@
 #### Protocol:
 #
 # Data is transmitted on MP generic string[7], with the following format:
-#   <channel>(|<data>)+
+#   <channel>(!<data>)+
 #
 # <channel> is a hash of the datalink channel. See hash_channel() and check_channel_hash().
 # Each <data> block corresponds to data sent by an extension.
@@ -147,7 +147,7 @@
 #
 # encode(data)              extension encoding function.
 #   Must return the encoding of the extension data (i.e. <data> when calling
-#   send_data({name: <data>})) into a string, which may use any character except '|'.
+#   send_data({name: <data>})) into a string, which may use any character except '!'.
 #   The extension prefix must not be part of the encoded string.
 #
 # decode(aircrafts_data, callsign, index, string)      extension decoding function.
