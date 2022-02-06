@@ -104,7 +104,7 @@
 #
 ## Sending data
 # Set the identifier with send_data({"identifier": <identifier>, ...});
-# The identifier must be a string.
+# The identifier must be a string. It must not contain '!'.
 
 ### Coordinate transmission (extension name: "point")
 #
@@ -511,7 +511,14 @@ var ContactIdentifier = {
 
 var encode_identifier = func(ident) {
     # Force string conversion
-    return ""~ident;
+    ident = ""~ident;
+
+    if (find("!", ident) >= 0) {
+        printf("Datalink: Identifier is not allowed to contain '!': %s.", ident);
+        return "";
+    } else {
+        return ident;
+    }
 }
 
 var decode_identifier = func(aircrafts_data, callsign, str) {
