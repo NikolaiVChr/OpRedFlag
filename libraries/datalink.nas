@@ -307,11 +307,11 @@ var contact_parents = [Contact];
 
 var register_extension = func(name, prefix, class, encode, decode) {
     if (contains(extensions, name)) {
-        printf("Datalink: double registration of extension '%s'. Skipping.\n", name);
+        printf("Datalink: double registration of extension '%s'. Skipping.", name);
         return -1;
     }
     if (contains(extension_prefixes, prefix)) {
-        printf("Datalink: double registration of extension prefix '%s'. Skipping.\n", name);
+        printf("Datalink: double registration of extension prefix '%s'. Skipping.", name);
         return -1;
     }
     extensions[name] = { prefix: prefix, encode: encode, decode: decode, };
@@ -354,7 +354,7 @@ var send_data = func(data, timeout=nil) {
     foreach(var ext; keys(data)) {
         # Skip missing extensions with a warning
         if (!contains(extensions, ext)) {
-            printf("Warning: unknown datalink extension %s in send_data().\n", ext);
+            printf("Warning: unknown datalink extension %s in send_data().", ext);
             continue;
         }
         str = str ~ data_separator ~ extensions[ext].prefix ~ extensions[ext].encode(data[ext]);
