@@ -188,7 +188,7 @@ var radar_signatures = {
                 "E-8R":                     AIR_RADAR,
                 "EC-137D":                  AIR_RADAR,
                 "Mig-28":                   AIR_RADAR,
-                "2K12":                     AIR_RADAR,#Air radar tone chosen so that there is at least some lock tone until asset-specific is created
+                "SA-6":                     AIR_RADAR,#Air radar tone chosen so that there is at least some lock tone until asset-specific is created
                 "ZSU-23-4M":                "gnd-23",
                 "S-75":                     "gnd-02",
                 "buk-m2":                   "gnd-11",

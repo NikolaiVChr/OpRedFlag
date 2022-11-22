@@ -75,7 +75,7 @@ var rcs_oprf_database = {
     "rig":                      500,
     "point":                    0.7,
     "hunter":                   0.10,    #sea assets, Hunter
-    "2k12":                     0.10,
+    "SA-6":                     0.10,
 # Automats:
     "MiG-29":                   6,
     "SU-27":                    15,
@@ -87,7 +87,7 @@ var rcs_oprf_database = {
 };
 
 
-var ground_assets = ["depot", "ZSU-23-4M", "buk-m2", "S-75", "s-300", "MIM104D", "truck", "tower", "gci", "struct", "point", "hunter"];
+var ground_assets = ["depot", "ZSU-23-4M", "buk-m2", "SA-6", "S-75", "s-300", "MIM104D", "truck", "tower", "gci", "struct", "point", "hunter"];
 
 ### Amend table rcs_oprf_database to use real instead of reduced ground assets RCS values.
 #
