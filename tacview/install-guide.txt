@@ -1,0 +1,5 @@
+Copy it into
+
+C:\ProgramData\Tacview\Data\Database\Default Properties
+
+before starting Tacview.

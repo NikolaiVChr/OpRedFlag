@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<DefaultPropertiesCollection LoadingOrder="0.5">
+
+	<DefaultProperties Id="FixedWing.JA37" Base="FixedWing.AJ37">
+		<Criteria>
+			<Name>JA 37</Name>
+			<Name>JA 37 Viggen</Name>
+			<Name>JA37Di-Viggen</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>JA 37</ShortName>
+			<LongName>JA 37 Viggen</LongName>
+			<FullName>Saab JA 37Di Viggen</FullName>
+		</Properties>
+	</DefaultProperties>
+	
+	<DefaultProperties Base="AntiAircraft.SAM.SA-10.5P85D" Id="AntiAircraft.SAM.SA-20">
+		<Criteria>
+			<Name>s-300</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>SA-20</ShortName>
+			<LongName>SA-20 Gargoyle (LN)</LongName>
+			<FullName>SA-20 Gargoyle (S-300PMU)</FullName>
+			<EngagementRange>111120</EngagementRange>
+		</Properties>
+	</DefaultProperties>
+
+	<DefaultProperties Base="AntiAircraft.SAM.MIM-104.M901" Id="AntiAircraft.SAM.MIM104D">
+		<Criteria>
+			<Name>MIM104D</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>PAC-2</ShortName>
+			<LongName>Patriot Battery</LongName>
+			<FullName>MIM104D Patriot PAC-2 (GEM)</FullName>
+			<EngagementRange>50000</EngagementRange>
+		</Properties>
+	</DefaultProperties>
+	
+	<DefaultProperties Base="AntiAircraft.SAM.SA-11.9A310M1" Id="AntiAircraft.SAM.SA-11.M2">
+		<Criteria>
+			<Name>buk-m2</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>SA-11</ShortName>
+			<LongName>SA-11 Buk (LN)</LongName>
+			<FullName>SA-11 Buk-M2 (Launcher)</FullName>
+			<EngagementRange>46300</EngagementRange>
+		</Properties>
+	</DefaultProperties>
+	
+	<DefaultProperties Base="AntiAircraft.SON-9" Id="AntiAircraft.AAA.Radar.GCI">
+		<Criteria>
+			<Name>gci</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>GCI</ShortName>
+			<LongName>GCI Station</LongName>
+			<FullName>Ground Control Intercept Station</FullName>
+		</Properties>
+	</DefaultProperties>
+	
+	<DefaultProperties Base="FixedWing.E-3" Id="FixedWing.EC137R">
+		<Criteria>
+			<Name>EC-137R</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>EC-137R</ShortName>
+			<LongName>EC-137R Sentry</LongName>
+			<FullName>Boeing EC-137R Sentry</FullName>
+			<Shape>FixedWing.E-3.obj</Shape>
+		</Properties>
+	</DefaultProperties>
+	
+	<DefaultProperties Id="FixedWing.Jaguar" Base="FixedWing.Tornado">
+		<Criteria>
+			<Name>Jaguar-GR1</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>Jag</ShortName>
+			<LongName>Jaguar</LongName>
+			<FullName>Jaguar</FullName>
+			<Shape>FixedWing.Tornado.obj</Shape>
+		</Properties>
+	</DefaultProperties>
+	
+	<DefaultProperties Id="Missile.SAM.48N6" Base="Missile.SAM.Radar">
+		<Criteria>
+			<Name>48N6</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>48N6</ShortName>
+			<LongName>S48N6</LongName>
+			<FullName>48N6</FullName>
+			<Shape>Missile.9M330.obj</Shape>
+		</Properties>
+	</DefaultProperties>
+	
+	<DefaultProperties Id="Missile.SAM.9M317" Base="Missile.SAM.Radar">
+		<Criteria>
+			<Name>9M317</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>M317</ShortName>
+			<LongName>9M317</LongName>
+			<FullName>9M317</FullName>
+			<Shape>Missile.9M330.obj</Shape>
+		</Properties>
+	</DefaultProperties>
+
+	<DefaultProperties Id="Missile.SAM.GEM" Base="Missile.SAM.Radar">
+		<Criteria>
+			<Name>GEM</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>GEM</ShortName>
+			<LongName>GEM/T</LongName>
+			<FullName>Guidance Enhanced Missile</FullName>
+			<Shape>Missile.9M330.obj</Shape>
+		</Properties>
+	</DefaultProperties>
+
+	<DefaultProperties Id="Missile.SAM.Volga" Base="Missile.SAM.Radar">
+		<Criteria>
+			<Name>5Ya23</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>5Ya23</ShortName>
+			<LongName>Volga-M</LongName>
+			<FullName>5Ya23 Volga-M</FullName>
+			<Shape>Missile.9M330.obj</Shape>
+		</Properties>
+	</DefaultProperties>
+
+	<DefaultProperties Base="AntiAircraft.SAM.SA-11.9A310M1" Id="AntiAircraft.SAM.SA-5C">
+		<Criteria>
+			<Name>s-200</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>SA-5</ShortName>
+			<LongName>SA-5C Gammon</LongName>
+			<FullName>SA-5C Gammon (S-200D)</FullName>
+			<EngagementRange>300000</EngagementRange>
+		</Properties>
+	</DefaultProperties>
+
+	<DefaultProperties Id="Missile.SAM.KN06" Base="Missile.SAM.Radar">
+		<Criteria>
+			<Name>KN-06</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>KN-06</ShortName>
+			<LongName>KN-06</LongName>
+			<FullName>KN-06</FullName>
+			<Shape>Missile.9M330.obj</Shape>
+		</Properties>
+	</DefaultProperties>
+	
+	<DefaultProperties Id="Missile.AA.RB-99" Base="Missile.AA.AIM-120B">
+		<Criteria>
+			<Name>RB-99</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>RB-99</ShortName>
+			<LongName>RB-99 AMRAAM</LongName>
+			<FullName>RB-99 AMRAAM</FullName>
+		</Properties>
+	</DefaultProperties>
+	
+	<DefaultProperties Id="Missile.AA.MICA-EM" Base="Missile.AA.AIM-120D">
+		<Criteria>
+			<Name>MICA-EM</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>MICA-EM</ShortName>
+			<LongName>MICA-EM</LongName>
+			<FullName>MICA-EM</FullName>
+		</Properties>
+	</DefaultProperties>
+	
+	<DefaultProperties Id="Missile.AA.MICA-IR" Base="Missile.AA.AIM-120D">
+		<Criteria>
+			<Name>MICA-IR</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>MICA-IR</ShortName>
+			<LongName>MICA-IR</LongName>
+			<FullName>MICA-IR</FullName>
+		</Properties>
+	</DefaultProperties>
+
+	<DefaultProperties Id="Missile.AG.JSOW" Base="Missile.AG.Cruise">
+		<Criteria>
+			<Name>AGM-154A</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>AGM154</ShortName>
+			<LongName>AGM-154A</LongName>
+			<FullName>AGM-154A JSOW</FullName>
+			<Shape>Missile.Kh-101.obj</Shape>
+		</Properties>
+	</DefaultProperties>
+
+	<DefaultProperties Id="Missile.AG.JASSM" Base="Missile.AG.Cruise">
+		<Criteria>
+			<Name>AGM-158</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>AGM158</ShortName>
+			<LongName>AGM-158</LongName>
+			<FullName>AGM-158 JASSM</FullName>
+			<Shape>Missile.Kh-101.obj</Shape>
+		</Properties>
+	</DefaultProperties>
+
+	<DefaultProperties Id="FixedWing.SR-71A" Base="FixedWing.SR-71">
+		<Criteria>
+			<Name>Blackbird-SR71A</Name>
+		</Criteria>
+	</DefaultProperties>
+
+	<DefaultProperties Id="AntiAircraft.SAM.SA-6.2P25" Base="AntiAircraft.SAM.Launcher.Russian">
+		<Criteria>
+			<Name>SA-6</Name>				
+		</Criteria>
+		<Properties>
+			<ShortName>SA-6</ShortName>
+			<LongName>SA-6 Gainful</LongName>
+			<FullName>SA-6 Gainful (2K12 Kub Launcher)</FullName>
+			<EngagementRange>27780</EngagementRange>
+		</Properties>
+	</DefaultProperties>
+
+	<DefaultProperties Id="Missile.3M9M3" Base="Missile.SAM.Radar">
+		<Criteria>
+			<Name>3M9</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>3M9</ShortName>
+			<LongName>3M9M3</LongName>
+			<FullName>3M9M3 Surface to air missile</FullName>
+		</Properties>
+	</DefaultProperties>
+
+	<DefaultProperties Id="Missile.5V28V" Base="Missile.SAM.Radar">
+		<Criteria>
+			<Name>5V28V</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>5V28V</ShortName>
+			<LongName>5V28V Dubna</LongName>
+			<FullName>5V28V Dubna Surface to air missile</FullName>
+		</Properties>
+	</DefaultProperties>
+
+</DefaultPropertiesCollection>
