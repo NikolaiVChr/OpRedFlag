@@ -232,6 +232,18 @@
 		</Properties>
 	</DefaultProperties>
 
+	<DefaultProperties Id="AntiAircraft.SAM.S-75" Base="AntiAircraft.SAM.Launcher.Russian">
+		<Criteria>
+			<Name>S-75</Name>				
+		</Criteria>
+		<Properties>
+			<ShortName>S-75</ShortName>
+			<LongName>S-75 Volga</LongName>
+			<FullName>S-75M Volga (SA-2 Guideline)</FullName>
+			<EngagementRange>66672</EngagementRange>
+		</Properties>
+	</DefaultProperties>
+
 	<DefaultProperties Id="Missile.3M9M3" Base="Missile.SAM.Radar">
 		<Criteria>
 			<Name>3M9</Name>
