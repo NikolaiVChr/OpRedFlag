@@ -1,5 +1,7 @@
-# author: pinto
-# adapted by Nikolai V. Chr.
+# Copyright by Justin Nicholson (aka Pinto)
+# Released under the GNU General Public License version 2.0
+#
+# Authors: Pinto, Nikolai V. Chr., Colin Geniet
 
 var main_update_rate = 0.3;
 var write_rate = 10;
