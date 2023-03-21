@@ -3,6 +3,15 @@
 #
 # Authors: Pinto, Nikolai V. Chr., Colin Geniet
 
+# Short installation instructions:
+# - Add and load this file in the 'tacview' namespace.
+# - Adjust the four parameters just below.
+# - Set property /payload/d-config/tacview_supported=1
+# - Ensure the radar code sets 'tacobj' fields properly.
+#   In Nikolai/Richard generic 'radar-system.nas',
+#   this simply requires setting 'enable_tacobject=1'.
+# - Add some way to start/stop recording.
+
 ### Parameters to adjust (example values from the F-16)
 
 # Aircraft type string for tacview
@@ -31,6 +40,7 @@ var get_radar_range_nm = func {
 }
 
 ### End of parameters
+
 
 var main_update_rate = 0.3;
 var write_rate = 10;
