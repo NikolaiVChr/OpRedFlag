@@ -114,7 +114,7 @@ var mainloop = func() {
     writeMyPlanePos();
     writeMyPlaneAttributes();
     foreach (var cx; get_contacts_list()) {
-        if(cx.getType() == armament.ORDNANCE) {
+        if(cx.get_type() == armament.ORDNANCE) {
             continue;
         }
         if (cx["prop"] != nil and cx.prop.getName() == "multiplayer" and getprop("sim/multiplay/txhost") == "mpserver.opredflag.com") {
