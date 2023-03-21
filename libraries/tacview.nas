@@ -78,6 +78,9 @@ var speed = 0;
 var mutexWrite = thread.newlock();
 
 var startwrite = func() {
+    if (starttime)
+        return;
+
     timestamp = getprop("/sim/time/utc/year") ~ "-" ~ getprop("/sim/time/utc/month") ~ "-" ~ getprop("/sim/time/utc/day") ~ "T";
     timestamp = timestamp ~ getprop("/sim/time/utc/hour") ~ ":" ~ getprop("/sim/time/utc/minute") ~ ":" ~ getprop("/sim/time/utc/second") ~ "Z";
     var filetimestamp = string.replace(timestamp,":","-");
