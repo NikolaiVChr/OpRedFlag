@@ -207,7 +207,7 @@ var writeMyPlaneAttributes = func() {
     var rrange = ",RadarRange="~math.round(get_radar_range_nm()*NM2M,1);
     var fuel = ",FuelWeight="~math.round(0.4535*getprop("/consumables/fuel/total-fuel-lbs"),1);
     var gear = ",LandingGear="~math.round(getprop("gear/gear[0]/position-norm"),0.01);
-    var str = myplaneID ~ fuel~rmode~rrange~gear~",TAS="~getTas()~",CAS="~getCas()~",MACH="~getMach()~",AOA="~getAoA()~",HDG="~getHeading()~tgt~"\n";#",Throttle="~getThrottle()~",Afterburner="~getAfterburner()~
+    var str = myplaneID ~ fuel~rmode~rrange~gear~",TAS="~getTas()~",CAS="~getCas()~",Mach="~getMach()~",AOA="~getAoA()~",HDG="~getHeading()~tgt~"\n";#",Throttle="~getThrottle()~",Afterburner="~getAfterburner()~
     thread.lock(mutexWrite);
     write(str);
     thread.unlock(mutexWrite);
