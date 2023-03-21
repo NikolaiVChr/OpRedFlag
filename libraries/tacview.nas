@@ -87,10 +87,11 @@ var startwrite = func() {
     thread.unlock(mutexWrite);
     starttime = systime();
     setprop("/sim/screen/black","Starting Tacview recording");
-    settimer(func(){mainloop();}, main_update_rate);
+    main_timer.start();
 }
 
 var stopwrite = func() {
+    main_timer.stop();
     setprop("/sim/screen/black","Stopping Tacview recording");
     writetofile();
     starttime = 0;
@@ -101,9 +102,9 @@ var stopwrite = func() {
 
 var mainloop = func() {
     if (!starttime) {
+        main_timer.stop();
         return;
     }
-    settimer(func(){mainloop();}, main_update_rate);
     if (systime() - writetime > write_rate) {
         writetofile();
     }
@@ -183,6 +184,9 @@ var mainloop = func() {
     }
     explosion_timeout_loop();
 }
+
+var main_timer = maketimer(main_update_rate, mainloop);
+
 
 var writeMyPlanePos = func() {
     thread.lock(mutexWrite);
