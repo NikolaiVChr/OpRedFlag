@@ -3,6 +3,35 @@
 #
 # Authors: Pinto, Nikolai V. Chr., Colin Geniet
 
+### Parameters to adjust (example values from the F-16)
+
+# Aircraft type string for tacview
+var tacview_ac_type = getprop("sim/variant-id") < 3 ? "F-16A" : "F-16C";
+# Aircraft type as inserted in the output file name
+var filename_ac_type = "f16";
+
+# Function returning an array of "contact" objects, containing all aicrafts tacview is to show.
+# A contact object must
+# - implement the API specified by missile-code.nas
+# - have a getModel() method, which will be used as aircraft type designator in tacview.
+# - contain a field 'tacobj', which must be an instance of the 'tacobj' class below,
+#   and have the 'tacviewID' and 'valid' fields set appropriately.
+#
+var get_contacts_list = func {
+    return radar_system.getCompleteList();
+}
+
+# Function returning the focused/locked aircraft, as a "contact" object (or nil).
+var get_primary_contact = func {
+    return radar_system.apg68Radar.getPriorityTarget();
+}
+
+var get_radar_range_nm = func {
+    return getprop("instrumentation/radar/radar2-range");
+}
+
+### End of parameters
+
 var main_update_rate = 0.3;
 var write_rate = 10;
 
@@ -42,14 +71,10 @@ var startwrite = func() {
     timestamp = getprop("/sim/time/utc/year") ~ "-" ~ getprop("/sim/time/utc/month") ~ "-" ~ getprop("/sim/time/utc/day") ~ "T";
     timestamp = timestamp ~ getprop("/sim/time/utc/hour") ~ ":" ~ getprop("/sim/time/utc/minute") ~ ":" ~ getprop("/sim/time/utc/second") ~ "Z";
     filetimestamp = string.replace(timestamp,":","-");
-    output_file = getprop("/sim/fg-home") ~ "/Export/tacview-f16-" ~ filetimestamp ~ ".acmi";
+    output_file = getprop("/sim/fg-home") ~ "/Export/tacview-" ~ filename_ac_type ~ "-" ~ filetimestamp ~ ".acmi";
     # create the file
     f = io.open(output_file, "w");
     io.close(f);
-    var ownship = "F-16C";
-    if (getprop("sim/variant-id")<3) {
-        ownship = "F-16A";
-    }
     var color = ",Color=Blue";
     if (left(getprop("sim/multiplay/callsign"),5)=="OPFOR") {
         color=",Color=Red";
@@ -58,7 +83,7 @@ var startwrite = func() {
     thread.lock(mutexWrite);
     write("FileType=text/acmi/tacview\nFileVersion=2.1\n");
     write("0,ReferenceTime=" ~ timestamp ~ meta ~ "\n#0\n");
-    write(myplaneID ~ ",T=" ~ getLon() ~ "|" ~ getLat() ~ "|" ~ getAlt() ~ "|" ~ getRoll() ~ "|" ~ getPitch() ~ "|" ~ getHeading() ~ ",Name="~ownship~",CallSign="~getprop("/sim/multiplay/callsign")~color~"\n"); #
+    write(myplaneID ~ ",T=" ~ getLon() ~ "|" ~ getLat() ~ "|" ~ getAlt() ~ "|" ~ getRoll() ~ "|" ~ getPitch() ~ "|" ~ getHeading() ~ ",Name="~tacview_ac_type~",CallSign="~getprop("/sim/multiplay/callsign")~color~"\n"); #
     thread.unlock(mutexWrite);
     starttime = systime();
     setprop("/sim/screen/black","Starting Tacview recording");
@@ -87,7 +112,7 @@ var mainloop = func() {
     thread.unlock(mutexWrite);
     writeMyPlanePos();
     writeMyPlaneAttributes();
-    foreach (var cx; radar_system.getCompleteList()) {
+    foreach (var cx; get_contacts_list()) {
         if(cx.getType() == armament.ORDNANCE) {
             continue;
         }
@@ -103,7 +128,7 @@ var mainloop = func() {
             append(seen_ids, cx.tacobj.tacviewID);
             var model_is = cx.getModel();
             if (model_is=="Mig-28") {
-                model_is = "F-16C";
+                model_is = tacview_ac_type;
                 color=",Color=Red";
             }
             write(cx.tacobj.tacviewID ~ ",Name="~ model_is~ ",CallSign=" ~ cx.get_Callsign() ~color~"\n")
@@ -167,14 +192,15 @@ var writeMyPlanePos = func() {
 
 var writeMyPlaneAttributes = func() {
     var tgt = "";
-    if(radar_system.apg68Radar.getPriorityTarget() != nil) {
-        tgt= ",FocusedTarget="~radar_system.apg68Radar.getPriorityTarget().tacobj.tacviewID;
+    var contact = get_primary_contact();
+    if (contact != nil) {
+        tgt= ",FocusedTarget="~contact.tacobj.tacviewID;
     }
     var rmode = ",RadarMode=1";
     if (getprop("sim/multiplay/generic/int[2]")) {
         rmode = ",RadarMode=0";
     }
-    var rrange = ",RadarRange="~rounder(getprop("instrumentation/radar/radar2-range")*NM2M,1);
+    var rrange = ",RadarRange="~rounder(get_radar_range_nm()*NM2M,1);
     var fuel = ",FuelWeight="~rounder(0.4535*getprop("/consumables/fuel/total-fuel-lbs"),1);
     var gear = ",LandingGear="~rounder(getprop("gear/gear[0]/position-norm"),0.01);
     var str = myplaneID ~ fuel~rmode~rrange~gear~",TAS="~getTas()~",CAS="~getCas()~",MACH="~getMach()~",AOA="~getAoA()~",HDG="~getHeading()~tgt~"\n";#",Throttle="~getThrottle()~",Afterburner="~getAfterburner()~
