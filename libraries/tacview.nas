@@ -200,9 +200,9 @@ var writeMyPlaneAttributes = func() {
     if (getprop("sim/multiplay/generic/int[2]")) {
         rmode = ",RadarMode=0";
     }
-    var rrange = ",RadarRange="~rounder(get_radar_range_nm()*NM2M,1);
-    var fuel = ",FuelWeight="~rounder(0.4535*getprop("/consumables/fuel/total-fuel-lbs"),1);
-    var gear = ",LandingGear="~rounder(getprop("gear/gear[0]/position-norm"),0.01);
+    var rrange = ",RadarRange="~math.round(get_radar_range_nm()*NM2M,1);
+    var fuel = ",FuelWeight="~math.round(0.4535*getprop("/consumables/fuel/total-fuel-lbs"),1);
+    var gear = ",LandingGear="~math.round(getprop("gear/gear[0]/position-norm"),0.01);
     var str = myplaneID ~ fuel~rmode~rrange~gear~",TAS="~getTas()~",CAS="~getCas()~",MACH="~getMach()~",AOA="~getAoA()~",HDG="~getHeading()~tgt~"\n";#",Throttle="~getThrottle()~",Afterburner="~getAfterburner()~
     thread.lock(mutexWrite);
     write(str);
@@ -264,53 +264,44 @@ var getLon = func() {
 }
 
 var getAlt = func() {
-    return rounder(getprop("/position/altitude-ft") * FT2M,0.01);
+    return math.round(getprop("/position/altitude-ft") * FT2M,0.01);
 }
 
 var getRoll = func() {
-    return rounder(getprop("/orientation/roll-deg"),0.01);
+    return math.round(getprop("/orientation/roll-deg"),0.01);
 }
 
 var getPitch = func() {
-    return rounder(getprop("/orientation/pitch-deg"),0.01);
+    return math.round(getprop("/orientation/pitch-deg"),0.01);
 }
 
 var getHeading = func() {
-    return rounder(getprop("/orientation/heading-deg"),0.01);
+    return math.round(getprop("/orientation/heading-deg"),0.01);
 }
 
 var getTas = func() {
-    return rounder(getprop("fdm/jsbsim/velocities/vtrue-kts") * KT2MPS,1.0);
+    return math.round(getprop("fdm/jsbsim/velocities/vtrue-kts") * KT2MPS,1.0);
 }
 
 var getCas = func() {
-    return rounder(getprop("fdm/jsbsim/velocities/vc-kts") * KT2MPS,1.0);
+    return math.round(getprop("fdm/jsbsim/velocities/vc-kts") * KT2MPS,1.0);
 }
 
 var getMach = func() {
-    return rounder(getprop("/velocities/mach"),0.001);
+    return math.round(getprop("/velocities/mach"),0.001);
 }
 
 var getAoA = func() {
-    return rounder(getprop("/orientation/alpha-deg"),0.01);
+    return math.round(getprop("/orientation/alpha-deg"),0.01);
 }
 
 #var getThrottle = func() {
-#    return rounder(getprop("velocities/thrust"),0.01);
+#    return math.round(getprop("velocities/thrust"),0.01);
 #}
 
 #var getAfterburner = func() {
 #    return getprop("velocities/thrust")>0.61*0.61;
 #}
-
-var rounder = func(x, p) {
-    v = math.mod(x, p);
-    if ( v <= (p * 0.5) ) {
-        x = x - v;
-    } else {
-        x = (x + p) - v;
-    }
-}
 
 var find_in_array = func(arr,val) {
     forindex(var i; arr) {
