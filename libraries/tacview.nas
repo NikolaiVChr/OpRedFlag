@@ -44,7 +44,7 @@ var myplaneID = int(rand()*10000);
 var starttime = 0;
 var writetime = 0;
 
-seen_ids = [];
+var seen_ids = [];
 
 var tacobj = {
     tacviewID: 0,
@@ -70,7 +70,7 @@ var mutexWrite = thread.newlock();
 var startwrite = func() {
     timestamp = getprop("/sim/time/utc/year") ~ "-" ~ getprop("/sim/time/utc/month") ~ "-" ~ getprop("/sim/time/utc/day") ~ "T";
     timestamp = timestamp ~ getprop("/sim/time/utc/hour") ~ ":" ~ getprop("/sim/time/utc/minute") ~ ":" ~ getprop("/sim/time/utc/second") ~ "Z";
-    filetimestamp = string.replace(timestamp,":","-");
+    var filetimestamp = string.replace(timestamp,":","-");
     output_file = getprop("/sim/fg-home") ~ "/Export/tacview-" ~ filename_ac_type ~ "-" ~ filetimestamp ~ ".acmi";
     # create the file
     f = io.open(output_file, "w");
@@ -209,7 +209,7 @@ var writeMyPlaneAttributes = func() {
     thread.unlock(mutexWrite);
 }
 
-explo = {
+var explo = {
     tacviewID: 0,
     time: 0,
 };
