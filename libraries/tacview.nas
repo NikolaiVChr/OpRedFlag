@@ -35,6 +35,7 @@ var get_primary_contact = func {
     return radar_system.apg68Radar.getPriorityTarget();
 }
 
+# Radar range. May return nil if n/a
 var get_radar_range_nm = func {
     return getprop("instrumentation/radar/radar2-range");
 }
@@ -217,7 +218,12 @@ var writeMyPlaneAttributes = func() {
     if (getprop("sim/multiplay/generic/int[2]")) {
         rmode = ",RadarMode=0";
     }
-    var rrange = ",RadarRange="~math.round(get_radar_range_nm()*NM2M,1);
+    var rrange = get_radar_range_nm();
+    if (rrange != nil) {
+        rrange = ",RadarRange="~math.round(get_radar_range_nm()*NM2M,1);
+    } else {
+        rrange = "";
+    }
     var fuel = ",FuelWeight="~math.round(0.4535*getprop("/consumables/fuel/total-fuel-lbs"),1);
     var gear = ",LandingGear="~math.round(getprop("gear/gear[0]/position-norm"),0.01);
     var str = myplaneID ~ fuel~rmode~rrange~gear~",TAS="~getTas()~",CAS="~getCas()~",Mach="~getMach()~",AOA="~getAoA()~",HDG="~getHeading()~tgt~",VerticalGForce="~getG()~"\n";#",Throttle="~getThrottle()~",Afterburner="~getAfterburner()~
