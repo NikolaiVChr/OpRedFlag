@@ -243,12 +243,12 @@ var writeMyPlaneAttributes = func() {
     }
     var rrange = get_radar_range_nm();
     if (rrange != nil) {
-        rrange = ",RadarRange="~math.round(get_radar_range_nm()*NM2M,1);
+        rrange = sprintf(",RadarRange=%.0f", get_radar_range_nm()*NM2M);
     } else {
         rrange = "";
     }
-    var fuel = ",FuelWeight="~math.round(0.4535*input.fuel.getValue(),1);
-    var gear = ",LandingGear="~math.round(input.gear.getValue(),0.01);
+    var fuel = sprintf(",FuelWeight=%.0f", input.fuel.getValue());
+    var gear = sprintf(",LandingGear=%.2f", input.gear.getValue());
     var tas = getTas();
     if (tas != nil) {
         tas = ",TAS="~tas;
@@ -316,47 +316,47 @@ var getLon = func() {
 }
 
 var getAlt = func() {
-    return math.round(input.alt.getValue() * FT2M,0.01);
+    return sprintf("%.2f", input.alt.getValue() * FT2M);
 }
 
 var getRoll = func() {
-    return math.round(input.roll.getValue(),0.01);
+    return sprintf("%.2f", input.roll.getValue());
 }
 
 var getPitch = func() {
-    return math.round(input.pitch.getValue(),0.01);
+    return sprintf("%.2f", input.pitch.getValue());
 }
 
 var getHeading = func() {
-    return math.round(input.heading.getValue(),0.01);
+    return sprintf("%.2f", input.heading.getValue());
 }
 
 var getTas = func() {
     var tas = input.tas.getValue();
     if (tas != nil)
-        return math.round(tas * KT2MPS,1.0);
+        return sprintf("%.1f", tas * KT2MPS);
     else
         return nil;
 }
 
 var getCas = func() {
-    return math.round(input.cas.getValue() * KT2MPS,1.0);
+    return sprintf("%.1f", input.cas.getValue() * KT2MPS);
 }
 
 var getMach = func() {
-    return math.round(input.mach.getValue(),0.001);
+    return sprintf("%.3f", input.mach.getValue());
 }
 
 var getAoA = func() {
-    return math.round(input.aoa.getValue(),0.01);
+    return sprintf("%.2f", input.aoa.getValue());
 }
 
 var getG = func() {
-    return math.round(input.gforce.getValue(),0.01);
+    return sprintf("%.2f", input.gforce.getValue());
 }
 
 #var getThrottle = func() {
-#    return math.round(getprop("velocities/thrust"),0.01);
+#    return sprintf("%.2f", getprop("velocities/thrust");
 #}
 
 #var getAfterburner = func() {
