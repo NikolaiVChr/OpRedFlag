@@ -78,6 +78,29 @@ var heading = 0;
 var speed = 0;
 var mutexWrite = thread.newlock();
 
+var input = {
+    mp_host:    "sim/multiplay/txhost",
+    radar:      "sim/multiplay/generic/int[2]",
+    fuel:       "consumables/fuel/total-fuel-lbs",
+    gear:       "gear/gear[0]/position-norm",
+    lat:        "position/latitude-deg",
+    lon:        "position/longitude-deg",
+    alt:        "position/altitude-ft",
+    roll:       "orientation/roll-deg",
+    pitch:      "orientation/pitch-deg",
+    heading:    "orientation/heading-deg",
+    tas:        "fdm/jsbsim/velocities/vtrue-kts",
+    cas:        "velocities/airspeed-kt",
+    mach:       "velocities/mach",
+    aoa:        "orientation/alpha-deg",
+    gforce:     "accelerations/pilot-g",
+};
+
+foreach (var name; keys(input)) {
+    input[name] = props.globals.getNode(input[name], 1);
+}
+
+
 var startwrite = func() {
     if (starttime)
         return;
@@ -131,7 +154,7 @@ var mainloop = func() {
         if(cx.get_type() == armament.ORDNANCE) {
             continue;
         }
-        if (cx["prop"] != nil and cx.prop.getName() == "multiplayer" and getprop("sim/multiplay/txhost") == "mpserver.opredflag.com") {
+        if (cx["prop"] != nil and cx.prop.getName() == "multiplayer" and input.mp_host.getValue() == "mpserver.opredflag.com") {
             continue;
         }
         var color = ",Color=Blue";
@@ -215,7 +238,7 @@ var writeMyPlaneAttributes = func() {
         tgt= ",FocusedTarget="~contact.tacobj.tacviewID;
     }
     var rmode = ",RadarMode=1";
-    if (getprop("sim/multiplay/generic/int[2]")) {
+    if (input.radar.getBoolValue()) {
         rmode = ",RadarMode=0";
     }
     var rrange = get_radar_range_nm();
@@ -224,8 +247,8 @@ var writeMyPlaneAttributes = func() {
     } else {
         rrange = "";
     }
-    var fuel = ",FuelWeight="~math.round(0.4535*getprop("/consumables/fuel/total-fuel-lbs"),1);
-    var gear = ",LandingGear="~math.round(getprop("gear/gear[0]/position-norm"),0.01);
+    var fuel = ",FuelWeight="~math.round(0.4535*input.fuel.getValue(),1);
+    var gear = ",LandingGear="~math.round(input.gear.getValue(),0.01);
     var tas = getTas();
     if (tas != nil) {
         tas = ",TAS="~tas;
@@ -285,51 +308,51 @@ var writetofile = func() {
 }
 
 var getLat = func() {
-    return getprop("/position/latitude-deg");
+    return input.lat.getValue();
 }
 
 var getLon = func() {
-    return getprop("/position/longitude-deg");
+    return input.lon.getValue();
 }
 
 var getAlt = func() {
-    return math.round(getprop("/position/altitude-ft") * FT2M,0.01);
+    return math.round(input.alt.getValue() * FT2M,0.01);
 }
 
 var getRoll = func() {
-    return math.round(getprop("/orientation/roll-deg"),0.01);
+    return math.round(input.roll.getValue(),0.01);
 }
 
 var getPitch = func() {
-    return math.round(getprop("/orientation/pitch-deg"),0.01);
+    return math.round(input.pitch.getValue(),0.01);
 }
 
 var getHeading = func() {
-    return math.round(getprop("/orientation/heading-deg"),0.01);
+    return math.round(input.heading.getValue(),0.01);
 }
 
 var getTas = func() {
-    var tas = getprop("fdm/jsbsim/velocities/vtrue-kts");
+    var tas = input.tas.getValue();
     if (tas != nil)
-        return math.round(getprop("fdm/jsbsim/velocities/vtrue-kts") * KT2MPS,1.0);
+        return math.round(tas * KT2MPS,1.0);
     else
         return nil;
 }
 
 var getCas = func() {
-    return math.round(getprop("/velocities/airspeed-kt") * KT2MPS,1.0);
+    return math.round(input.cas.getValue() * KT2MPS,1.0);
 }
 
 var getMach = func() {
-    return math.round(getprop("/velocities/mach"),0.001);
+    return math.round(input.mach.getValue(),0.001);
 }
 
 var getAoA = func() {
-    return math.round(getprop("/orientation/alpha-deg"),0.01);
+    return math.round(input.aoa.getValue(),0.01);
 }
 
 var getG = func() {
-    getprop("accelerations/pilot-g");
+    return math.round(input.gforce.getValue(),0.01);
 }
 
 #var getThrottle = func() {
