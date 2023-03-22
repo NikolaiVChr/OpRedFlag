@@ -226,7 +226,13 @@ var writeMyPlaneAttributes = func() {
     }
     var fuel = ",FuelWeight="~math.round(0.4535*getprop("/consumables/fuel/total-fuel-lbs"),1);
     var gear = ",LandingGear="~math.round(getprop("gear/gear[0]/position-norm"),0.01);
-    var str = myplaneID ~ fuel~rmode~rrange~gear~",TAS="~getTas()~",CAS="~getCas()~",Mach="~getMach()~",AOA="~getAoA()~",HDG="~getHeading()~tgt~",VerticalGForce="~getG()~"\n";#",Throttle="~getThrottle()~",Afterburner="~getAfterburner()~
+    var tas = getTas();
+    if (tas != nil) {
+        tas = ",TAS="~tas;
+    } else {
+        tas = "";
+    }
+    var str = myplaneID ~ fuel~rmode~rrange~gear~tas~",CAS="~getCas()~",Mach="~getMach()~",AOA="~getAoA()~",HDG="~getHeading()~tgt~",VerticalGForce="~getG()~"\n";#",Throttle="~getThrottle()~",Afterburner="~getAfterburner()~
     thread.lock(mutexWrite);
     write(str);
     thread.unlock(mutexWrite);
@@ -303,11 +309,15 @@ var getHeading = func() {
 }
 
 var getTas = func() {
-    return math.round(getprop("fdm/jsbsim/velocities/vtrue-kts") * KT2MPS,1.0);
+    var tas = getprop("fdm/jsbsim/velocities/vtrue-kts");
+    if (tas != nil)
+        return math.round(getprop("fdm/jsbsim/velocities/vtrue-kts") * KT2MPS,1.0);
+    else
+        return nil;
 }
 
 var getCas = func() {
-    return math.round(getprop("fdm/jsbsim/velocities/vc-kts") * KT2MPS,1.0);
+    return math.round(getprop("/velocities/airspeed-kt") * KT2MPS,1.0);
 }
 
 var getMach = func() {
