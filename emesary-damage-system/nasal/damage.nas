@@ -27,8 +27,6 @@ var mlw_max=getprop("payload/d-config/mlw_max"); #
 var auto_flare_caller = getprop("payload/d-config/auto_flare_caller"); # If damage.nas should detect flare releases, or if function is called from somewhere in aircraft
 ############################################################################################################################
 
-var TRUE  = 1;
-var FALSE = 0;
 
 var hp = hp_max;
 setprop("sam/damage", math.max(0,100*hp/hp_max));#used in HUD
@@ -191,8 +189,8 @@ var radar_signatures = {
                 "E-8R":                     AIR_RADAR,
                 "EC-137D":                  AIR_RADAR,
                 "Mig-28":                   AIR_RADAR,
-                "SA-6":                     "gnd-11",#Air radar tone chosen so that there is at least some lock tone until asset-specific is created
-                "s-200":                    "gnd-20",#Air radar tone chosen so that there is at least some lock tone until asset-specific is created
+                "SA-6":                     "gnd-06",#Air radar tone chosen so that there is at least some lock tone until asset-specific is created
+                "s-200":                    "gnd-05",
                 "ZSU-23-4M":                "gnd-23",
                 "S-75":                     "gnd-02",
                 "buk-m2":                   "gnd-11",
@@ -304,6 +302,7 @@ var DamageRecipient =
                 var bearing = ownPos.course_to(notification.Position);
                 var radarOn = bits.test(notification.Flags, 0);
                 var thrustOn = bits.test(notification.Flags, 1);
+                var CWIOn = bits.test(notification.Flags, 2);
                 var index = notification.SecondaryKind-21;
                 var typ = id2warhead[index];
 
@@ -351,7 +350,7 @@ var DamageRecipient =
                       var extra2 = typ[2]==0?",Type=Weapon+Missile":",Type=Weapon+Bomb";
                       extra2 = typ[4]=="Flare"?",Type=Flare":extra2;
                       extra2 = typp=="Parachutist"?"":extra2;
-                      var color = radarOn?",Color=Red":",Color=Yellow";
+                      var color = radarOn or CWIOn?",Color=Red":",Color=Yellow";
                       thread.lock(tacview.mutexWrite);
                       tacview.write("#" ~ (systime() - tacview.starttime)~"\n");
                       tacview.write(tacID~",T="~notification.Position.lon()~"|"~notification.Position.lat()~"|"~notification.Position.alt()~extra~",Name="~typp~color~extra2~"\n");
@@ -379,7 +378,7 @@ var DamageRecipient =
                       setprop("payload/armament/MLW-launcher", notification.Callsign);
                       setprop("payload/armament/MLW-count", getprop("payload/armament/MLW-count")+1);
                       var out = sprintf("Missile Launch Warning from %03d degrees.", bearing);
-                      if (rwr_to_screen) screen.log.write(out, 1,1,0);# temporary till someone models a RWR in RIO seat
+                      if (rwr_to_screen) screen.log.write(out, 1,0.5,0);# temporary till someone models a RWR in RIO seat
                       print(out);
                       damageLog.push(sprintf("Missile Launch Warning from %03d degrees from %s.", bearing, notification.Callsign));
                       if (m28_auto) mig28.missileLaunch();
@@ -390,17 +389,27 @@ var DamageRecipient =
                 # Missile approach warning:
                 var callsign = processCallsign(getprop("sim/multiplay/callsign"));
                 if (notification.RemoteCallsign != callsign) return emesary.Transmitter.ReceiptStatus_OK;
-                if (!radarOn) return emesary.Transmitter.ReceiptStatus_OK;# this should be little more complex later
-                var heading = getprop("orientation/heading-deg");
-                var clock = geo.normdeg(bearing - heading);
-                setprop("payload/armament/MAW-bearing", bearing);
-                setprop("payload/armament/MAW-active", 1);# resets every 1 seconds
+                if (!radarOn and !CWIOn) return emesary.Transmitter.ReceiptStatus_OK;# this should be little more complex later
+                #var heading = getprop("orientation/heading-deg");
+                #var clock = geo.normdeg(bearing - heading);
+                if (radarOn) {
+                    setprop("payload/armament/MAW-bearing", bearing);
+                    setprop("payload/armament/MAW-active", 1);# resets every 1 seconds
+                } elsif (CWIOn) {
+                    setprop("payload/armament/MAW-semiactive", 1);# resets every 1 seconds
+                }
                 MAW_elapsed = elapsed;
                 var appr = approached[notification.Callsign~notification.UniqueIdentity];
                 if (appr == nil or elapsed - appr > 450) {
-                  printf("Missile Approach Warning from %03d degrees.", bearing);
-                  damageLog.push(sprintf("Missile Approach Warning from %03d degrees from %s.", bearing, notification.Callsign));
-                  if (rwr_to_screen) screen.log.write(sprintf("Missile Approach Warning from %03d degrees.", bearing), 1,1,0);# temporary till someone models a RWR in RIO seat
+                  if (radarOn) {
+                      #printf("Missile Approach Warning from %03d degrees.", bearing);
+                      damageLog.push(sprintf("Missile Approach Warning from %03d degrees from %s.", bearing, notification.Callsign));
+                      if (rwr_to_screen) screen.log.write(sprintf("Missile Approach Warning from %03d degrees.", bearing), 1,0.5,0);# temporary till someone models a RWR in RIO seat
+                  } else {
+                      #printf("Missile Approach Warning");
+                      damageLog.push(sprintf("Missile Approach Warning from %s.", notification.Callsign));
+                      if (rwr_to_screen) screen.log.write(sprintf("Missile Approach Warning (semi-active)."), 1,0.5,0);# temporary till someone models a RWR in RIO seat
+                  }
                   approached[notification.Callsign~notification.UniqueIdentity] = elapsed;
                   if (m28_auto) mig28.engagedBy(notification.Callsign, 1);
                 }
@@ -1242,7 +1251,7 @@ var processCallsigns = func () {
   var painted = 0;
   var paint_list = [];
   foreach (var player; players) {
-    if(player.getChild("valid") != nil and player.getChild("valid").getValue() == TRUE and player.getChild("callsign") != nil and player.getChild("callsign").getValue() != "" and player.getChild("callsign").getValue() != nil) {
+    if(player.getChild("valid") != nil and player.getChild("valid").getValue() == 1 and player.getChild("callsign") != nil and player.getChild("callsign").getValue() != "" and player.getChild("callsign").getValue() != nil) {
       var callsign = player.getChild("callsign").getValue();
       callsign_struct[callsign] = player;
       var str6 = player.getNode("sim/multiplay/generic/string[6]");
@@ -1256,6 +1265,7 @@ var processCallsigns = func () {
   }
   if (getprop("sim/time/elapsed-sec")-MAW_elapsed > 1.1) {
       setprop("payload/armament/MAW-active", 0);# resets every 1.1 seconds without warning
+      setprop("payload/armament/MAW-semiactive", 0);
   }
 
   # spike handling:
@@ -1302,7 +1312,7 @@ processCallsignsTimer.start();
 var code_ct = func () {
   #ANTIC
   if (getprop("payload/armament/msg")) {
-      setprop("sim/rendering/redout/enabled", TRUE);
+      setprop("sim/rendering/redout/enabled", 1);
       #call(func{fgcommand('dialog-close', multiplayer.dialog.dialog.prop())},nil,var err= []);# props.Node.new({"dialog-name": "location-in-air"}));
       if (!m28_auto) call(func{multiplayer.dialog.del();},nil,var err= []);
       if (!getprop("gear/gear[0]/wow")) {
@@ -1326,7 +1336,7 @@ code_ctTimer.simulatedTime = 1;
 
 
 
-setprop("/sim/failure-manager/display-on-screen", FALSE);
+setprop("/sim/failure-manager/display-on-screen", 0);
 
 code_ctTimer.start();
 
@@ -1414,6 +1424,7 @@ setlistener("sim/signals/exit", writeDamageLog, 0, 0);
 
 #screen.property_display.add("payload/armament/MAW-bearing");
 #screen.property_display.add("payload/armament/MAW-active");
+#screen.property_display.add("payload/armament/MAW-semiactive");
 #screen.property_display.add("payload/armament/MLW-bearing");
 #screen.property_display.add("payload/armament/MLW-count");
 #screen.property_display.add("payload/armament/MLW-launcher");
@@ -1421,6 +1432,8 @@ setlistener("sim/signals/exit", writeDamageLog, 0, 0);
 #screen.property_display.add("payload/armament/spike-air");
 #screen.property_display.add("payload/armament/spike-gnd-20");
 #screen.property_display.add("payload/armament/spike-gnd-02");
+#screen.property_display.add("payload/armament/spike-gnd-05");
+#screen.property_display.add("payload/armament/spike-gnd-06");
 #screen.property_display.add("payload/armament/spike-gnd-11");
 #screen.property_display.add("payload/armament/spike-gnd-23");
 #screen.property_display.add("payload/armament/spike-gnd-p2");
