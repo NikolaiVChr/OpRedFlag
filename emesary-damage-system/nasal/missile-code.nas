@@ -153,19 +153,11 @@ var slugs_to_lbm = SLUGS2LBM;# since various aircraft use this from outside miss
 var first_in_air = 0;# first missile is in the air, other missiles should not write to MP.
 var first_in_air_max_sec = 30;
 
-var versionString = getprop("sim/version/flightgear");
-var version = split(".", versionString);
-var major = num(version[0]);
-var minor = num(version[1]);
-var pica  = num(version[2]);
-var pickingMethod = 0;
-if ((major == 2017 and minor == 2 and pica >= 1) or (major == 2017 and minor > 2) or major > 2017) {
-	pickingMethod = 1;
-}
-var offsetMethod = 0;
-if ((major == 2017 and minor == 2 and pica >= 1) or (major == 2017 and minor > 2) or major > 2017) {
-	offsetMethod = 1;
-}
+#var versionString = getprop("sim/version/flightgear");
+#var version = split(".", versionString);
+#var major = num(version[0]);
+#var minor = num(version[1]);
+#var pica  = num(version[2]);
 
 var wingedGuideFactor = 0.1;
 
@@ -193,27 +185,28 @@ var contactPoint = nil;
 # get_type()      - (AIR, MARINE, SURFACE or ORDNANCE)
 # getUnique()     - Used when comparing 2 targets to each other and determining if they are the same target.
 # isValid()       - If this target is valid
-# getElevation()
-# get_bearing()
-# get_Callsign()
-# get_range()
+# getElevation()  - Pitch to target from launch vehicle
+# get_bearing()   - Bearing to target from launch vehicle
+# get_Callsign() 
+# get_range()     - NM
 # get_Coord()
-# get_altitude()
+# get_altitude()  - FT
 # get_Pitch()
 # get_Speed()
 # get_heading()
-# get_uBody()
-# get_vBody()
-# get_wBody()
+# get_uBody()     - Body velocities in ft/s. Forward component.
+# get_vBody()     - Right component
+# get_wBody()     - Down component
 # getLastGroundTrackBlep() - Used for sample guidance
 # getFlareNode()  - Used for flares.
 # getChaffNode()  - Used for chaff.
 # isPainted()     - Tells if this target is still being radar tracked by the launch platform, only used in semi-radar guided missiles.
 # isLaserPainted()     - Tells if this target is still being tracked by the launch platform, only used by laser guided ordnance.
 # isRadiating(coord) - Tell if anti-radiation missile is hit by radiation from target. coord is the weapon position.
-# isCommandActive()
+# isSpikingMe() - Tells if the target is STT locked on launch platform.
+# isCommandActive()  - If surface based launcher is still tracking (command guidance) or have a search blep (TVM) on target.
 # isVirtual()     - Tells if the target is just a position, and should not be considered for damage.
-# get_closure_rate()  -  closure rate in kt
+# get_closure_rate()  -  closure rate in kt to launch platform
 
 var AIM = {
 	lowestETA: nil,
@@ -312,9 +305,11 @@ var AIM = {
 		m.radarZ                = getprop(m.nodeString~"FCS-z");                      #    In future I will add direction to it also, for now its center gimbal is along -x axis.
 		m.expand_min            = getprop(m.nodeString~"expand-min-fire-range");      # Bool. Default false. If min fire range should expand with closing rate. Mainly use this for A/A missiles.
 		m.asc                   = getprop(m.nodeString~"attack-steering-cue-enabled");# Bool. ASC enabled.
+		m.powerOnRequired       = getprop(m.nodeString~"requires-power-on");          # Bool. ASC enabled.
+		m.powerOnBatteryTime    = getprop(m.nodeString~"power-on-battery-time");      # Seconds.
 		# navigation, guiding and seekerhead
 		m.max_seeker_dev        = getprop(m.nodeString~"seeker-field-deg") / 2;       # missiles own seekers total FOV diameter.
-		m.guidance              = getprop(m.nodeString~"guidance");                   # heat/radar/semi-radar/laser/gps/gps-laser/vision/unguided/level/gyro-pitch/radiation/inertial/remote/remote-stable/command/sample
+		m.guidance              = getprop(m.nodeString~"guidance");                   # heat/radar/semi-radar/tvm/laser/gps/gps-laser/vision/unguided/level/gyro-pitch/radiation/inertial/remote/remote-stable/command/sample
 		m.guidanceLaw           = getprop(m.nodeString~"navigation");                 # guidance-law: direct/direct-alt/OPN/PN/APN/PNxxyy/APNxxyy/LOS (use direct for pure pursuit, use PN for A/A missiles, use APN for modern SAM missiles PN for older, use PNxxyy/APNxxyy for surface to air where xx is degrees to aim above target, yy is seconds it will do that). GPN is APN for winged glidebombs.
 		m.guidanceLawHorizInit  = getprop(m.nodeString~"navigation-init-pure-15");    # Bool. Guide in horizontal plane using pure pursuit until target with 15 deg of nose, before switching to <navigation>
 		m.pro_constant          = getprop(m.nodeString~"proportionality-constant");   # Constant for how sensitive proportional navigation is to target speed/acc. Normally between 3-6. [optional]
@@ -410,6 +405,14 @@ var AIM = {
 
 		if (m.eject_speed == nil) {
           m.eject_speed = 0;
+        }
+
+        if (m.powerOnRequired == nil) {
+          m.powerOnRequired = 0;
+        }
+
+        if (m.powerOnBatteryTime == nil) {
+          m.powerOnBatteryTime = 0;# infinite
         }
 
         if (m.rail_forward == 1) {
@@ -572,7 +575,7 @@ var AIM = {
 			m.destruct_when_free = 0;
 		}
 		if (m.reaquire == nil) {
-			if (m.guidance == "semi-radar" or m.guidance == "laser" or m.guidance == "heat" or m.guidance == "vision") {
+			if (m.guidance == "semi-radar" or m.guidance == "laser" or m.guidance == "heat" or m.guidance == "vision" or m.guidance == "tvm") {
 				m.reaquire = 1;
 			} else {
 				m.reaquire = 0;
@@ -720,6 +723,7 @@ var AIM = {
         m.contacts              = [];# contacts that should be considered to lock onto. In slave it will only lock to the first.
         m.warm                  = 1;# normalized warm/cold
         m.ready_standby_time    = 0;# time when started from standby
+        m.power_on_time         = 0;# time when started from standby
         m.cooling               = 0;
         m.slave_to_radar        = m.seam_support?1:0;
         m.seeker_last_time      = 0;
@@ -728,6 +732,11 @@ var AIM = {
         m.seam_scan             = 0;
         m.cooling_last_time     = 0;
         m.cool_total_time       = 0;
+
+        m.powerOn               = 0;
+        m.powerAvailable        = m.powerOnBatteryTime;
+        m.powerOnPassedTime     = 0;
+        m.powerOnLastCheck      = 0;
 
 		#
 		# Emesary damage system
@@ -1351,7 +1360,11 @@ var AIM = {
 		# do NOT call this after launch
 		# see also release(vect)
 		if (me.status == MISSILE_FLYING) return;
-		me.contacts = vect;
+		me.contacts = vect;		
+	},
+
+	clearTgt: func {
+		me.Tgt = nil;
 	},
 
 	commandDir: func (heading_deg, pitch_deg) {
@@ -1408,6 +1421,28 @@ var AIM = {
 		return me.cooling;
 	},
 
+	togglePowerOn: func {
+		me.powerOn = !me.powerOn;
+		if (me.powerOn) {
+			me.power_on_time = getprop("sim/time/elapsed-sec");
+		}
+	},
+
+	setPowerOn: func (enable) {
+		me.powerOn = enable;
+		if (me.powerOn) {
+			me.power_on_time = getprop("sim/time/elapsed-sec");
+		}
+	},
+
+	isPowerOn: func {
+		return me.powerOn;
+	},
+
+	hasPowerEnough: func {
+		return !me.powerOnRequired or me.powerOnBatteryTime == 0 or me.powerAvailable > me.powerOnBatteryTime * 0.05;
+	},
+
 	start: func {
 		if (me.status == MISSILE_STANDBY) {
 			me.status = MISSILE_STARTING;
@@ -1421,7 +1456,15 @@ var AIM = {
 		if (me.status != MISSILE_FLYING) {
 			me.status = MISSILE_STANDBY;
 			#printf("stop  #%3d %s", me.ID, me.type);
+			if (me.guidance == "radiation") {
+				me.Tgt = nil;
+				me.contacts = [];
+			}
 		}
+	},
+
+	getStatus: func {
+		return me.status;
 	},
 
 	isCaged: func () {
@@ -1483,6 +1526,9 @@ var AIM = {
 		me.release = nil;# no calling this method twice
 		me.elapsed_last = systime();
 		me.status = MISSILE_FLYING;
+
+		me.powerOnLastCheck = 0;# switch to use me.life_time from elapsed sim time.
+		me.powerOn = 1;# If pilot releases while power off, we make sure it on now.
 
 		if (vect!= nil) {
 
@@ -1549,7 +1595,7 @@ var AIM = {
 				me.railEnd   = vector.Math.plus(me.railBegin, vector.Math.product(me.rail_dist_m, me.railvec));
 			}
 		}
-		if (offsetMethod and (!me.rail or me.rail_forward)) {
+		if (!me.rail or me.rail_forward) {
 			var pos = aircraftToCart({x:-me.x, y:me.y, z: -me.z});
 			init_coord = geo.Coord.new();
 			init_coord.set_xyz(pos.x, pos.y, pos.z);
@@ -2004,9 +2050,9 @@ var AIM = {
 		if (!me.rail and me.eject_speed != 0) {
 			me.printStats("Weapon will be ejected at %.1f feet/sec.",me.eject_speed);
 		}
-		if (me.guidance == "heat" or me.guidance == "radar" or me.guidance == "semi-radar") {
+		if (me.guidance == "heat" or me.guidance == "radar" or me.guidance == "semi-radar" or me.guidance == "tvm") {
 			me.printStats("COUNTER-MEASURES:");
-			if (me.guidance == "radar" or me.guidance == "semi-radar") {
+			if (me.guidance == "radar" or me.guidance == "semi-radar" or me.guidance == "tvm") {
 				me.printStats("Resistance to chaff is %d%%.",me.chaffResistance*100);
 			} elsif (me.guidance == "heat") {
 				me.printStats("Resistance to flares is %d%%.",me.flareResistance*100);
@@ -2093,6 +2139,13 @@ var AIM = {
 		}
 
 		me.life_time += me.dt;
+
+		me.consumeBattery(me.life_time);
+		if (!me.hasPowerEnough()) {
+			# Smart weapon reduced to dumb weapon
+			me.free = 1;
+			me.printStats("Ran out of battery, stopped guiding");
+		}
 
 		me.handleMidFlightFunc();
 
@@ -2394,12 +2447,8 @@ var AIM = {
 			# missile on rail, lets move it on the rail
 			if (me.rail_forward) {
 				var init_coord = nil;
-				if (offsetMethod) {
-					me.geodPos = aircraftToCart({x:-me.x, y:me.y, z: -me.z});
-					me.coord.set_xyz(me.geodPos.x, me.geodPos.y, me.geodPos.z);
-				} else {
-					me.coord = me.getGPS(me.x, me.y, me.z, OurPitch.getValue());
-				}
+				me.geodPos = aircraftToCart({x:-me.x, y:me.y, z: -me.z});
+				me.coord.set_xyz(me.geodPos.x, me.geodPos.y, me.geodPos.z);
 			} else {
 				me.coord = me.getGPS(-me.railPos[0], -me.railPos[1], me.railPos[2], OurPitch.getValue(), OurHdg.getValue());
 			}
@@ -2723,8 +2772,13 @@ var AIM = {
 			} else {
 				me.remote_control_pitch = 0;
 			}
-			if (me.settings["abort_midflight_function"] != nil) {
+			if (me.settings["seeker_fov"] != nil) {
+				me.max_seeker_dev = me.settings.seeker_fov;
+				me.printStats("Seeker FOV switched to %s",me.max_seeker_dev);
+			}
+			if (me.settings["abort_midflight_function"] == 1) {
 				me.mfFunction = nil;
+				me.printStats("Midflight function finished");
 			}
 		}
 	},
@@ -2872,7 +2926,7 @@ var AIM = {
 		}
 
 		if (!me.simple_drag) {
-			if (me.vector_thrust and me.thrust_lbf>0) N=N*0.35;
+			if (me.vector_thrust and me.thrust_lbf>0) N=N*0.15;
 			if (mach < 1.1) {
 				me.Cdi = (me.Cd_base+me.Cd_delta*me.deploy)*N;# N = normal force in G
 			} else {
@@ -3288,7 +3342,7 @@ var AIM = {
 		#
 		# Check for being fooled by chaff.
 		#
-		if (me.Tgt != nil and me.fovLost != 1 and (me.guidance == "radar" or me.guidance == "semi-radar" or me.guidance == "command") and !me.chaffLock and (me.life_time-me.chaffTime) > 1) {
+		if (me.Tgt != nil and me.fovLost != 1 and (me.guidance == "radar" or me.guidance == "semi-radar" or me.guidance == "command" or me.guidance == "tvm") and !me.chaffLock and (me.life_time-me.chaffTime) > 1) {
 			#
 			# TODO: Use Richards Emissary for this.
 			#
@@ -3301,7 +3355,7 @@ var AIM = {
 						me.chaffLast = me.chaffNumber;
 						me.chaffTime = me.life_time;
 						me.aspectDeg = me.aspectToExhaust(me.coord, me.Tgt) / 180;# 0 = viewing engine, 1 = front
-						me.redux = me.guidance == "semi-radar" or me.guidance == "command"?(me.gnd_launch?0.5:0.75):1;
+						me.redux = me.guidance == "semi-radar" or me.guidance == "command" or me.guidance == "tvm"?(me.gnd_launch?0.5:0.75):1;
 						me.chaffChance = (1-me.chaffResistance)*me.redux;
 						me.chaffLock = rand() < (me.chaffChance - (me.chaffChance * 0.5 * me.aspectDeg));# 50% less chance to be fooled if front aspect
 
@@ -3337,7 +3391,7 @@ var AIM = {
 	},
 
 	checkForLOS: func () {
-		if (pickingMethod and me.guidance != "gps" and me.guidance != "gps-laser" and me.guidance != "unguided" and me.guidance != "inertial" and me.guidance != "sample") {
+		if (me.guidance != "gps" and me.guidance != "gps-laser" and me.guidance != "unguided" and me.guidance != "inertial" and me.guidance != "sample") {
 			me.xyz          = {"x":me.coord.x(),                  "y":me.coord.y(),                 "z":me.coord.z()};
 		    me.directionLOS = {"x":me.t_coord.x()-me.coord.x(),   "y":me.t_coord.y()-me.coord.y(),  "z":me.t_coord.z()-me.coord.z()};
 
@@ -3390,8 +3444,8 @@ var AIM = {
 				me.printStats(me.type~": Not guiding (lost radar reflection, gave up)");
 				me.free = 1;
 			}
-		} elsif (me.guidance == "command" and (me.Tgt == nil or !me.Tgt.isCommandActive())) {
-			# if its command guided and the control no longer sends commands
+		} elsif ((me.guidance == "command" or me.guidance == "tvm") and (me.Tgt == nil or !me.Tgt.isCommandActive())) {
+			# if its command or TVM guided and the control no longer sends commands
 			me.guiding = 0;
 			me.printStats(me.type~": Not guiding (no commands from controller)");
 		} elsif (me.guidance == "radiation" and !me.is_radiating_me(me.Tgt)) {
@@ -3456,7 +3510,11 @@ var AIM = {
 				me.printStats(me.type~": Passed minimum speed for guiding after %.1f seconds. Target %d%% inside view.", me.life_time, me.normFOV*100);
 			}
 		}
-		if (me.chaffLock and (me.guidance == "command" or me.guidance == "semi-radar") and (me.life_time - me.chaffLockTime) > (me.gnd_launch?4:6)) {
+		if (me.guidance == "gps" or me.guidance == "inertial" or me.guidance == "sample") {
+			# To make sure deviation_deg is updated in midflight function.
+            me.FOV_check(me.hdg, me.pitch, me.curr_deviation_h, me.curr_deviation_e, me.max_seeker_dev, me.myMath);
+        }
+		if (me.chaffLock and (me.guidance == "command" or me.guidance == "semi-radar" or me.guidance == "tvm") and (me.life_time - me.chaffLockTime) > (me.gnd_launch?4:6)) {
 			me.chaffLock = 0;
 			me.printStats(me.type~": Chaff dissipated, regained track.");
 		}
@@ -4516,11 +4574,27 @@ var AIM = {
 		}
 	},
 
+	consumeBattery: func (curr_time) {
+		if (me.powerOnRequired) {
+			me.powerOnPassedTime = curr_time-me.powerOnLastCheck;
+			me.powerAvailable += (me.powerOn?-1:1)*me.powerOnPassedTime;
+			me.powerAvailable = math.clamp(me.powerAvailable, 0, me.powerOnBatteryTime);
+			me.powerOnLastCheck = curr_time;
+		}
+	},
+
 	standby: func {
 		# looping in standby mode
 		if (deltaSec.getValue()==0) {
+			# paused
 			settimer(func me.standby(), 0.5);
+			return;
 		}
+		me.printCode("In standby(%d)",me.status);
+
+		me.curr_time = getprop("sim/time/elapsed-sec");
+		me.consumeBattery(me.curr_time);
+
 		if(me.seam_support and me.uncage_auto) {
 			me.caged = 1;
 		}
@@ -4541,8 +4615,11 @@ var AIM = {
 		# looping in starting mode
 		#print("startup");
 		if (deltaSec.getValue()==0) {
+			# Paused
 			settimer(func me.startup(), 0.5);
+			return;
 		}
+		me.printCode("In startup()");
 		if(me.seam_support and me.uncage_auto) {
 			me.caged = 1;
 		}
@@ -4550,7 +4627,11 @@ var AIM = {
 			me.standby();
 			return;
 		}
-		if (me.ready_standby_time != 0 and getprop("sim/time/elapsed-sec") > (me.ready_standby_time+me.ready_time)) {
+
+		me.curr_time = getprop("sim/time/elapsed-sec");
+		me.consumeBattery(me.curr_time);
+
+		if (me.ready_standby_time != 0 and me.hasPowerEnough() and ((!me.powerOnRequired and me.curr_time > (me.ready_standby_time+me.ready_time)) or (me.powerOnRequired and (me.powerOn and me.curr_time > me.power_on_time + me.ready_time)))) {
 			me.status = MISSILE_SEARCH;
 			me.search();
 			return;
@@ -4593,7 +4674,7 @@ var AIM = {
 		if (!(me.tagt.get_type() == AIR and me.tagt.get_Speed()<15) and ((me.guidance != "semi-radar" or me.is_painted(me.tagt)) and (me.guidance !="laser" or me.is_laser_painted(me.tagt)))
 						and (me.guidance != "radiation" or me.is_radiating_aircraft(me.tagt))
 					    and me.rng < me.max_fire_range_nm and me.rng > me.getCurrentMinFireRange(me.tagt) and me.FOV_check(OurHdg.getValue(),OurPitch.getValue(),me.total_horiz, me.total_elev, me.slave_to_radar or contactPoint==me.tagt?(me.guidance == "heat" or me.guidance == "vision"?math.min(me.max_seeker_dev, me.fcs_fov):me.fcs_fov):me.max_seeker_dev, vector.Math)
-					    and (me.rng < me.detect_range_curr_nm or (me.guidance != "radar" and me.guidance != "semi-radar" and me.guidance != "sample" and me.guidance != "heat" and me.guidance != "vision" and me.guidance != "radiation"))
+					    and (me.rng < me.detect_range_curr_nm or (me.guidance != "radar" and me.guidance != "semi-radar" and me.guidance != "tvm" and me.guidance != "sample" and me.guidance != "heat" and me.guidance != "vision" and me.guidance != "radiation"))
 					    and (me.guidance != "heat" or (me.all_aspect or me.rear_aspect(geo.aircraft_position(), me.tagt)))
 					    and me.checkForView()) {
 			return 1;
@@ -4752,6 +4833,7 @@ var AIM = {
 		if (deltaSec.getValue()==0) {
 			settimer(func me.search(), 0.5);
 		}
+		me.printCode("In search()");
 		if (me.deleted) {
 			return;
 		} elsif ( me.status == MISSILE_FLYING ) {
@@ -4765,13 +4847,21 @@ var AIM = {
 			#me.trackWeak = 1;
 			me.standby();
 			return;
+		} elsif (me.powerOnRequired and (!me.powerOn or (me.powerOnBatteryTime > 0 and me.powerAvailable < me.powerOnBatteryTime * 0.05))) {
+			me.status = MISSILE_STARTING;
+			# Stand by.
+			me.SwSoundVol.setDoubleValue(0);
+			me.SwSoundOnOff.setBoolValue(0);
+			#me.trackWeak = 1;
+			me.standby();
+			return;
 		} elsif ( me.status == MISSILE_LOCK) {
 			# Locked.
 			me.printSearch("in search loop, but locked!");
 			me.return_to_search();
 			return;
 		}
-
+		me.consumeBattery(getprop("sim/time/elapsed-sec"));
 
 
 		me.printSearch("searching");
@@ -5130,6 +5220,15 @@ var AIM = {
 			#me.trackWeak = 1;
 			me.standby();
 			return;
+		} elsif (me.powerOnRequired and (!me.powerOn or (me.powerOnBatteryTime > 0 and me.powerAvailable < me.powerOnBatteryTime * 0.05))) {
+			me.status = MISSILE_STARTING;
+			me.reset_seeker();
+			# Stand by.
+			me.SwSoundVol.setDoubleValue(0);
+			me.SwSoundOnOff.setBoolValue(0);
+			#me.trackWeak = 1;
+			me.standby();
+			return;
 		} elsif (!me.Tgt.isValid()) {
 			# Lost of lock due to target disapearing:
 			# return to search mode.
@@ -5143,6 +5242,7 @@ var AIM = {
 			me.return_to_search();
 			return;
 		}
+		me.consumeBattery(getprop("sim/time/elapsed-sec"));
 		me.printSearch("lock (caged:%d slave:%d point:%s same:%d noCommon:%d)",me.caged,me.slave_to_radar,contactPoint!=nil,me.getContact() == me.Tgt,me.noCommonTarget);
 		# Time interval since lock time or last track loop.
 		#if (me.status == MISSILE_LOCK) {
@@ -5158,13 +5258,16 @@ var AIM = {
 		me.coolingSyst();
 		me.computeSeekerPos();
 		if (me.status != MISSILE_STANDBY ) {#TODO: should this also check for starting up?
-			me.in_view = me.check_t_in_fov();
 
-			if (!me.in_view) {
-				me.printSearch("out of view");
-				me.return_to_search();
-				return;
-			}
+			# This code does not seem needed anymore:
+			#me.in_view = me.check_t_in_fov();
+			#
+			#if (!me.in_view) {
+			#	if (me.noCommonTarget and me.guidance == "radiation") me.Tgt = nil;#Hack, todo fix this
+			#	me.printSearch("out of view");
+			#	me.return_to_search();
+			#	return;
+			#}
 
 			if (!me.caged or me.slave_to_radar) {
 				me.convertGlobalToSeekerViewDirection(me.Tgt.get_bearing(), me.Tgt.getElevation(), OurHdg.getValue(), OurPitch.getValue(), OurRoll.getValue());
@@ -5184,7 +5287,8 @@ var AIM = {
 			# Notice: seeker_xxxx_target is used both for denoting where seeker should move towards and where the target is. In this case its the latter:
 			me.convertGlobalToSeekerViewDirection(me.Tgt.get_bearing(), me.Tgt.getElevation(), OurHdg.getValue(), OurPitch.getValue(), OurRoll.getValue());
 			me.testSeeker();
-			if (!me.inBeam or (me.guidance == "semi-radar" and !me.is_painted(me.Tgt))) {
+			me.tagt = me.Tgt;# Used in checkForLock
+			if (!me.inBeam or !me.checkForLock()) {
 				me.printSearch("out of beam or no beam for fox 1");
 				me.status = MISSILE_SEARCH;
 				me.Tgt = nil;
@@ -5265,7 +5369,7 @@ var AIM = {
 		me.total_horiz = deviation_normdeg(OurHdg.getValue(), me.Tgt.get_bearing());    # deg.
 		# Check if in range and in the seeker FOV.
 		if (me.FOV_check(OurHdg.getValue(),OurPitch.getValue(),me.total_horiz, me.total_elev, me.slave_to_radar?(me.guidance == "heat" or me.guidance == "vision"?math.min(me.max_seeker_dev, me.fcs_fov):me.fcs_fov):me.max_seeker_dev, vector.Math) and me.Tgt.get_range() < me.max_fire_range_nm and me.Tgt.get_range() > me.getCurrentMinFireRange(me.Tgt)
-			and (me.Tgt.get_range() < me.detect_range_curr_nm or (me.guidance != "radar" and me.guidance != "semi-radar" and me.guidance != "sample" and me.guidance != "heat" and me.guidance != "vision" and me.guidance != "heat" and me.guidance != "radiation"))) {
+			and (me.Tgt.get_range() < me.detect_range_curr_nm or (me.guidance != "radar" and me.guidance != "semi-radar" and me.guidance != "tvm" and me.guidance != "sample" and me.guidance != "heat" and me.guidance != "vision" and me.guidance != "heat" and me.guidance != "radiation"))) {
 			return 1;
 		}
 		# Target out of FOV or range while still not launched, return to search loop.
@@ -5298,6 +5402,7 @@ var AIM = {
 			if (me.seeMe != nil and me.seeMe) {
 				return 1;
 			}
+			return target.isSpikingMe();
 		}
 		return 0;
 	},
@@ -5317,15 +5422,6 @@ var AIM = {
 		me.seeker_elev_target = 0;
 		me.seeker_head_target = 0;
 		me.moveSeeker();
-	},
-
-	clamp_min_max: func (v, mm) {
-		if ( v < -mm ) {
-			v = -mm;
-		} elsif ( v > mm ) {
-			v = mm;
-		}
-		return(v);
 	},
 
 	clamp: func(v, min, max) { v < min ? min : v > max ? max : v },
