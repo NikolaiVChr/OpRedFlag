@@ -1,8 +1,12 @@
+before starting Tacview:
+
+
+
+
 Copy flightgear-oprf.xml into C:\ProgramData\Tacview\Data\Database\Default Properties
 
-Copy all files in 'textures' into C:\ProgramData\Tacview\Data\Terrain\Textures
 
-before starting Tacview.
+
 
 To install better terrain:
 ==========================
@@ -11,3 +15,10 @@ Go to http://viewfinderpanoramas.org/Coverage%20map%20viewfinderpanoramas_org3.h
 Download the areas you want.
 
 Unzip the hgt files into C:\ProgramData\Tacview\Data\Terrain\SRTM3
+
+
+
+To get photo textures at LIPA and North Norway:
+===============================================
+
+Copy all files in 'textures' into C:\ProgramData\Tacview\Data\Terrain\Textures
