@@ -1,5 +1,13 @@
-Copy it into
+Copy flightgear-oprf.xml into C:\ProgramData\Tacview\Data\Database\Default Properties
 
-C:\ProgramData\Tacview\Data\Database\Default Properties
+Copy all files in 'textures' into C:\ProgramData\Tacview\Data\Terrain\Textures
 
 before starting Tacview.
+
+To install better terrain:
+==========================
+Go to http://viewfinderpanoramas.org/Coverage%20map%20viewfinderpanoramas_org3.htm
+
+Download the areas you want.
+
+Unzip the hgt files into C:\ProgramData\Tacview\Data\Terrain\SRTM3

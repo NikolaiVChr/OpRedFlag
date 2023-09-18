@@ -61,15 +61,30 @@
 		</Properties>
 	</DefaultProperties>
 	
-	<DefaultProperties Base="FixedWing.E-3" Id="FixedWing.EC137R">
+	<DefaultProperties Base="FixedWing.E-3" Id="FixedWing.E-3R">
 		<Criteria>
 			<Name>EC-137R</Name>
+			<Name>E-3R</Name>
 		</Criteria>
 		<Properties>
 			<ShortName>EC-137R</ShortName>
 			<LongName>EC-137R Sentry</LongName>
 			<FullName>Boeing EC-137R Sentry</FullName>
 			<Shape>FixedWing.E-3.obj</Shape>
+		</Properties>
+	</DefaultProperties>
+
+	<DefaultProperties Id="FixedWing.KC-137" Base="FixedWing.Tanker">
+		<Criteria>
+			<Name>KC-137R</Name>
+			<Name>KC-137R Stratotanker</Name>
+			<Name>Boeing KC-137</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>KC-137</ShortName>
+			<LongName>KC-137 Stratotanker</LongName>
+			<FullName>Boeing KC-137 Stratotanker</FullName>
+			<Shape>FixedWing.KC-135C.obj</Shape>
 		</Properties>
 	</DefaultProperties>
 	
@@ -263,6 +278,22 @@
 			<ShortName>5V28V</ShortName>
 			<LongName>5V28V Dubna</LongName>
 			<FullName>5V28V Dubna Surface to air missile</FullName>
+		</Properties>
+	</DefaultProperties>
+
+	<DefaultProperties Id="Watercraft.MissileFrigate" Base="Watercraft.Frigate">
+		<Criteria>
+			<Name>missile_frigate</Name>
+			<Name>USS-LakeChamplain</Name>
+			<Name>USS-SanAntonio</Name>
+			<Name>USS-NORMANDY</Name>
+			<Name>USS-OliverPerry</Name>
+			<Name>fleet</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>Missile Frigate</ShortName>
+			<LongName>Missile Frigate</LongName>
+			<FullName>Missile Frigate</FullName>
 		</Properties>
 	</DefaultProperties>
 
