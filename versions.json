@@ -1,0 +1,42 @@
+{
+  "vector": {
+    "version": "1.0.0",
+    "path": "emesary-damage-system/nasal/vector.nas"
+  },
+  "missile-code": {
+    "version": "1.0.0",
+    "path": "emesary-damage-system/nasal/missile-code.nas"
+  },
+  "radar-system": {
+    "version": "1.0.0",
+    "path": "radar/radar-system.nas"
+  },
+  "damage": {
+    "version": "1.0.0",
+    "path": "emesary-damage-system/nasal/damage.nas"
+  },
+  "iff": {
+    "version": "1.0.0",
+    "path": "libraries/iff.nas"
+  },
+  "datalink": {
+    "version": "1.0.0",
+    "path": "libraries/datalink.nas"
+  },
+  "station-manager": {
+    "version": "1.0.0",
+    "path": "libraries/station-manager.nas"
+  },
+  "rcs-mand": {
+    "version": "1.0.0",
+    "path": "radar/rcs.txt"
+  },
+  "hud-math": {
+    "version": "1.0.0",
+    "path": "libraries/hud_math.nas"
+  },
+  "armament-notification": {
+    "version": "1.0.0",
+    "path": "emesary-damage-system/nasal/ArmamentNotification.nas"
+  }
+}
