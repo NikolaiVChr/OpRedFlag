@@ -46,5 +46,9 @@
   "hack-canvas": {
     "version": "1.0.0",
     "path": "libraries/hackCanvas.nas"
+  },
+  "crash-and-stress": {
+    "version": "0.1.9",
+    "path": "libraries/crash-and-stress.nas"
   }
 }
