@@ -1,4 +1,3 @@
-
 var rcs_oprf_database = {
     #Revision DEC 09 2022
     # This list contains the mandatory RCS frontal values for OPRF (anno 1997), feel free to add non-OPRF to your aircraft, we don't care.
@@ -32,6 +31,7 @@ var rcs_oprf_database = {
     "C-137R":                   100,
     "RC-137R":                  100,
     "EC-137R":                  110,
+    "E-3R":                     110,
     "E-8R":                     100,
     "KC-10A":                   90,
     "KC-10A-GE":                90,
@@ -87,7 +87,7 @@ var rcs_oprf_database = {
     "USS-NORMANDY":             450,    
     "USS-LakeChamplain":        450,    
     "USS-OliverPerry":          450,    
-    "USS-SanAntonio":           450,    
+    "USS-SanAntonio":           450,  
 };
 
 
