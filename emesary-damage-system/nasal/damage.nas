@@ -183,6 +183,7 @@ var radar_signatures = {
                 "m2000-5B":                 AIR_RADAR,
                 "MiG-21bis":                AIR_RADAR,
                 "MiG-21MF-75":              AIR_RADAR,
+                "Mig-23MLD":                AIR_RADAR,
                 "MiG-29":                   AIR_RADAR,
                 "SU-27":                    AIR_RADAR,
                 "EC-137R":                  AIR_RADAR,
@@ -196,7 +197,7 @@ var radar_signatures = {
                 "s-200":                    "gnd-05",
                 "ZSU-23-4M":                "gnd-23",
                 "S-75":                     "gnd-02",
-                "buk-m2":                   "gnd-11",
+                "buk-m2":                   "gnd-17",
                 "s-300":                    "gnd-20",
                 "MIM104D":                  "gnd-p2",
                 "missile_frigate":          "gnd-nk",
@@ -1458,7 +1459,7 @@ setlistener("sim/signals/exit", writeDamageLog, 0, 0);
 #screen.property_display.add("payload/armament/spike-gnd-02");
 #screen.property_display.add("payload/armament/spike-gnd-05");
 #screen.property_display.add("payload/armament/spike-gnd-06");
-#screen.property_display.add("payload/armament/spike-gnd-11");
+#screen.property_display.add("payload/armament/spike-gnd-17");
 #screen.property_display.add("payload/armament/spike-gnd-23");
 #screen.property_display.add("payload/armament/spike-gnd-p2");
 #screen.property_display.add("payload/armament/spike-gnd-nk");
