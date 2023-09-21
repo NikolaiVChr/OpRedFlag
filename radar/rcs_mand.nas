@@ -108,13 +108,13 @@ var use_real_ground_RCS = func {
 }
 
 
-RADARS:
-=======
-JA37       40 3.2     PS 46/A
-F14        89 3.2     AWG-9
-F15        80 3.2     APG-63 v1
-F16        70 3.2     APG-68
-MIG21       ?   ?
-EC-137R   300 150 
-AJ37        ?   ?     PS 37
-M2000      60 3.2     RDY
+#RADARS:
+#=======
+#JA37       40 3.2     PS 46/A
+#F14        89 3.2     AWG-9
+#F15        80 3.2     APG-63 v1
+#F16        70 3.2     APG-68
+#MIG21       ?   ?
+#E-3R      300 150 
+#AJ37        ?   ?     PS 37
+#M2000      60 3.2     RDY
