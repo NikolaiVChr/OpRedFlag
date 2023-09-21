@@ -1,6 +1,6 @@
 {
   "vector": {
-    "version": "1.0.0",
+    "version": "2.0.2",
     "path": "emesary-damage-system/nasal/vector.nas"
   },
   "missile-code": {
@@ -20,7 +20,7 @@
     "path": "libraries/iff.nas"
   },
   "datalink": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "path": "libraries/datalink.nas"
   },
   "station-manager": {
@@ -29,7 +29,7 @@
   },
   "rcs-mand": {
     "version": "1.0.0",
-    "path": "radar/rcs.txt"
+    "path": "radar/rcs_mand.nas"
   },
   "hud-math": {
     "version": "1.0.0",
