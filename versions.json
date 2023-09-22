@@ -50,5 +50,13 @@
   "crash-and-stress": {
     "version": "0.1.9",
     "path": "libraries/crash-and-stress.nas"
+  },
+  "asset-fire-control": {
+    "version": "1.0.0",
+    "path": "assets/fire-control.nas"
+  },
+  "asset-radar-logic": {
+    "version": "1.0.0",
+    "path": "assets/radar-logic.nas"
   }
 }
