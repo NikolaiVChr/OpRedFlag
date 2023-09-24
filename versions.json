@@ -32,7 +32,7 @@
     "path": "libraries/station-manager.nas"
   },
   "rcs-mand": {
-    "version": "1.0.2",
+    "version": "1.0.3",
     "path": "radar/rcs_mand.nas"
   },
   "hud-math": {
