@@ -15,6 +15,8 @@ var BaseEntry = {
 	rwrCode: "U",          # Used by RWR display and anti-radiation weapon systems (Radar Emitter Code)
 	baseThreat: func (my_deviation_from_him_deg) {return 0;},
 	killZone: 50,
+	# TODO: rwrStrength=Distance factor for rwr being able to pick it up.
+	#                   This should be scalable in some way, so older and newer EWS can use it both.
 };
 
 var defaultFighterThreat = func (my_deviation_from_him_deg) {return ((180-my_deviation_from_him_deg)/180)*0.30;};
@@ -258,9 +260,9 @@ foreach(entry ; keys(rcs.rcs_oprf_database)) {
 
 foreach (entry ; keys(Database)) {
 	if (Database[entry]["rcsFrontal"] == nil) {
-		if (debugLevel > 0) print("Database: ",entry," is missing rcsFrontal, using default");
+		if (debugDatabaseLevel > 0) print("Database: ",entry," is missing rcsFrontal, using default");
 	}
 	Database[entry]["parents"] = [BaseEntry];
 }
 
-var debugLevel = 1;
+var debugDatabaseLevel = 1;
