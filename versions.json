@@ -8,11 +8,11 @@
     "path": "emesary-damage-system/nasal/missile-code.nas"
   },
   "radar-system": {
-    "version": "1.0.1",
+    "version": "2.0.0",
     "path": "radar/radar-system.nas"
   },
   "radar-system-database": {
-    "version": "1.0.3",
+    "version": "1.0.4",
     "path": "radar/radar-system-database.nas"
   },
   "damage": {
@@ -32,7 +32,7 @@
     "path": "libraries/station-manager.nas"
   },
   "rcs-mand": {
-    "version": "1.0.1",
+    "version": "1.0.2",
     "path": "radar/rcs_mand.nas"
   },
   "hud-math": {
