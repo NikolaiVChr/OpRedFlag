@@ -55,6 +55,10 @@
     "version": "0.1.9",
     "path": "libraries/crash-and-stress.nas"
   },
+  "airbases": {
+    "version": "1.0.0",
+    "path": "libraries/airbases.nas"
+  },
   "asset-fire-control": {
     "version": "1.0.0",
     "path": "assets/fire-control.nas"
