@@ -1,20 +1,24 @@
-These instructions are to convert old damage/missile system to emesary.
-Its not a full guide to convert a non armed aircraft to an armed damagable aircraft.
+These instructions are to add damage system to any aircraft.
 
-Set file
-========
-Add a menu button or item to open the dialog 'flightlog'.
+NOTICE: Everything here is case sensitive, so upper and lower case matters.
 
-NASAL
-=====
-Find where cannon hit sends out msgs, and convert to send out notifications. (Same with submodel bombs). And same with where create craters from submodels.
-Remove fire msgs (fox3 etc)
-Put in damage.damageLog.push(phrase); where appropiate to add stuff to event-log.
+Add menu to set file (optional)
+====================
+Add a menu button or item to open the dialog 'flightlog':
+
+Find the <menu> xml tag, then add this menu item under it:
+
+<item>
+        <label>Event Log</label>
+        <binding>
+            <command>dialog-show</command>
+            <dialog-name>flightlog</dialog-name>
+        </binding>
+</item>
+
 
 Set file's payload section
 =========================-
-In -set file add <type-id> to each weapon stats. Make sure number match the list in damage.nas.
-Remove chaff/flare resistance in weapon stats.
 In -set file add these to /payload/armament:
 	<enable-craters type="bool">true</enable-craters>
 	<MLW-bearing type="double">0</MLW-bearing>
@@ -22,7 +26,10 @@ In -set file add these to /payload/armament:
 	<MLW-launcher type="string"></MLW-launcher>
 	<MAW-bearing type="double">0</MAW-bearing>
 	<MAW-active type="bool">false</MAW-active>
+        <MAW-semiactive type="bool">false</MAW-semiactive>
+        <msg type="bool">true</msg>
 	<spike type="bool">false</spike>
+        <models type="string">Aircraft/myAircraftFolder/Models/emesary/</models>
 
 And these to /payload/d-config: (remember to adjust those that need, see comments at top of damage.nas)
         <full_damage_dist_m type="double">3</full_damage_dist_m>
@@ -35,14 +42,13 @@ And these to /payload/d-config: (remember to adjust those that need, see comment
         <rwr_audio_extended type="bool">false</rwr_audio_extended>
         <tacview_supported type="bool">false</tacview_supported>
         <m28_auto type="bool">false</m28_auto>
-        <mlw_max type="double">2.25</mlw_max>
+        <mlw_max type="double">0</mlw_max>
         <auto_flare_caller type="bool">false</auto_flare_caller>
 
-Files
-=====
-Add ArmamentNotification.nas and GeoBridgedTransmitter.nas into namespace 'notifications'.
-Add damage.nas to namespace 'damage'.
-Add missile-code.nas to namespace 'armament'.
-Add vector.nas to namespace 'vector'.
-The model files should be in the folder listed in /payload/armament/models
-The event-log.xml should be placed in aircraft-folder/gui/dialogs
+Copy files in and enable them
+=============================
+Copy ArmamentNotification.nas, GeoBridgedTransmitter.nas and damage.nas to the Nasal folder in your aircraft.
+Add ArmamentNotification.nas and GeoBridgedTransmitter.nas into namespace 'notifications' in the <nasal> section of the set file.
+Add damage.nas to namespace 'damage' in the <nasal> section of the set file.
+The files in the models folder should be added into the folder listed in /payload/armament/models
+The event-log.xml should be placed in the gui/dialogs folder in your aircraft.
