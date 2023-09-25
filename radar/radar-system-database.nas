@@ -243,7 +243,7 @@ var Database = {
 	"F-23C_BlackWidow-II":    {},
 };
 
-var debugDatabaseLevel = 1;
+var debugDatabaseLevel = 0;
 
 if (rcs["rcs_database"] != nil) {
 	foreach(entry ; keys(rcs.rcs_database)) {
