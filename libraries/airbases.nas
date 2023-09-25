@@ -1595,3 +1595,19 @@ var db = {
 	ZYJX: "CHN China",
 };
 # Contains 1590 bases
+
+# The above list is auto-generated, put custom changes here:
+
+# ADD
+#
+db.EHDP = "NLD Netherlands";
+db.EHSB = "NLD Netherlands";
+db.EHTW = "NLD Netherlands";
+db.EHVB = "NLD Netherlands";
+db.EHKD = "NLD Netherlands";
+
+# REMOVE
+#
+delete(db.EHAM);
+delete(db.EHDR);
+delete(db.EHLE);
