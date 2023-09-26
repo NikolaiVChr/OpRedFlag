@@ -1634,7 +1634,7 @@ var db = {
 # Contains 1624 bases
 
 
-# Countries checked: Netherlands (PHJake), Denmark (Leto), UK (Sammy), Cyprus (Leto).
+# Countries checked: Netherlands (PHJake), Denmark (Leto), UK (Sammy), Cyprus (Leto), part of USA (pinto).
 #
 # The above list is auto-generated, put custom changes here:
 
@@ -1667,6 +1667,10 @@ db.EGYE = "GBR United Kingdom";
 db.EGUB = "GBR United Kingdom";
 db.LCRE = "CYP Cyprus [UK]";#British Overseas Territory on the island of Cyprus
 db.LCGK = "CYP Turkish Republic of Northern Cyprus";
+db.KSKA = "USA United States"; # Fairchild (USAF)
+db.KGFA = "USA United States"; # Malmstrom (USAF)
+db.FJDG = "USA United States"; # Diego Garcia (British Royal Navy/USN/CIA)
+db.KPUB = "USA United States"; # Pueblo Memorial (USAF)
 
 
 # REMOVE
@@ -1715,3 +1719,28 @@ var pruneDB = func {
 	print("Optimized airbase DB, it now has "~size(keys(db))~" entries.");
 }
 #pruneDB(); # it only removes around 150 bases, so not worth it
+
+
+# These 2 function is how you use the DB:
+
+var lookUp = func (icao) {
+	icao = string.uc(icao);
+	if (contains(db, icao)) return 1;
+	if (icao == "8KS3") {
+		# ICAOs that starts with number go in these functions
+		#
+		# 8KS3  Davis Airfield (USAF)
+		#
+		return 1;
+	}
+	return 0;
+}
+
+var country = func (icao) {
+	icao = string.uc(icao);
+	if (contains(db, icao)) return db[icao];
+	if (icao == "8KS3") {
+		return "USA United States";
+	}
+	return "";
+}
