@@ -1634,7 +1634,7 @@ var db = {
 # Contains 1624 bases
 
 
-# Countries checked: Netherlands, Denmark, UK.
+# Countries checked: Netherlands (PHJake), Denmark (Leto), UK (Sammy).
 #
 # The above list is auto-generated, put custom changes here:
 
@@ -1645,7 +1645,7 @@ db.EHSB = "NLD Netherlands";
 db.EHTW = "NLD Netherlands";
 db.EHVB = "NLD Netherlands";
 db.EHKD = "NLD Netherlands";
-db.EKAV = "DNK Denmark";      # Avnø Air Base
+db.EKAV = "DNK Denmark";        # Avnø Air Base
 db.EGKN = "GBR United Kingdom";
 db.EGKT = "GBR United Kingdom";
 db.EGQL = "GBR United Kingdom";
@@ -1654,6 +1654,18 @@ db.EGDI = "GBR United Kingdom";
 db.EGOQ = "GBR United Kingdom";
 db.EGDN = "GBR United Kingdom";
 db.EGOW = "GBR United Kingdom";
+db.EGXY = "GBR United Kingdom";
+db.EGOE = "GBR United Kingdom";
+db.EGDJ = "GBR United Kingdom";
+db.EGXW = "GBR United Kingdom";
+db.EGUW = "GBR United Kingdom";
+db.EGPK = "GBR United Kingdom";
+db.EGVA = "GBR United Kingdom";
+db.EGYD = "GBR United Kingdom";
+db.EGXC = "GBR United Kingdom";
+db.EGYE = "GBR United Kingdom";
+db.EGUB = "GBR United Kingdom";
+#db.CYCQ = "CAN Canada"; # UK airbase in canada?
 
 # REMOVE
 #
