@@ -6,6 +6,11 @@
 # List was auto-generated from APT 1100 file. Heliports are auto commented.
 #
 var db = {
+	DNGO: "",                                             # Gombe
+	HESG: "",                                             # Sohag Intl
+	UAOL: "",                                             # Krayniy
+	VEAB: "",                                             # Allahabad
+	VERP: "",                                             # Raipur
 	OAHR: "AFG Afghanistan",                              # Khwaja Abdullah Ansari Intl
 	OAIX: "AFG Afghanistan",                              # Bagram
 	OAJL: "AFG Afghanistan",                              # Jalalabad
@@ -1626,7 +1631,8 @@ var db = {
 	FAYP: "ZAF South Africa",                             # Ysterplaat
 	FVTL: "ZWE Zimbabwe",                                 # Gweru-Thornhill Air Base
 };
-# Contains 1619 bases
+# Contains 1624 bases
+
 
 
 # The above list is auto-generated, put custom changes here:
