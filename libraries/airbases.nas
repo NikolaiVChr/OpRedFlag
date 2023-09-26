@@ -1,8 +1,8 @@
 #
 # License: GPL 2.0, Copyright: Laminar research
 #
-# Requirements to be in list:
-#  Must have ICAO. Must have country listed. Must have either a MIL sign, parking spots for fighters or runways used for military.
+# Requirements used for making list:
+#  Must have ICAO. Must have either a MIL sign, parking spots for fighters or runways used for military.
 # List was auto-generated from APT 1100 file. Heliports are auto commented.
 #
 var db = {
@@ -1644,7 +1644,7 @@ db.EHSB = "NLD Netherlands";
 db.EHTW = "NLD Netherlands";
 db.EHVB = "NLD Netherlands";
 db.EHKD = "NLD Netherlands";
-db.EKAV = "DNK Denmark";
+db.EKAV = "DNK Denmark";      # Avnø Air Base
 
 # REMOVE
 #
@@ -1654,6 +1654,15 @@ delete(db,"EHLE");
 delete(db,"EKMB");
 delete(db,"EKAH");
 delete(db,"KLAS");
+
+# MODIFY
+#
+db.DNGO = "NGA Nigeria";
+db.HESG = "EGY Egypt";
+db.UAOL = "KAZ Kazakhstan";
+db.VEAB = "IND India";
+db.VERP = "IND India";
+db.VEBR = "IND India";
 
 var pruneDB = func {
 	# Optimize DB by removing airbases FG does not support
