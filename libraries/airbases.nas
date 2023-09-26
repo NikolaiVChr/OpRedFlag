@@ -1634,7 +1634,8 @@ var db = {
 # Contains 1624 bases
 
 
-
+# Countries checked: Netherlands, Denmark, UK.
+#
 # The above list is auto-generated, put custom changes here:
 
 # ADD
@@ -1645,6 +1646,14 @@ db.EHTW = "NLD Netherlands";
 db.EHVB = "NLD Netherlands";
 db.EHKD = "NLD Netherlands";
 db.EKAV = "DNK Denmark";      # Avnø Air Base
+db.EGKN = "GBR United Kingdom";
+db.EGKT = "GBR United Kingdom";
+db.EGQL = "GBR United Kingdom";
+db.EGVL = "GBR United Kingdom";
+db.EGDI = "GBR United Kingdom";
+db.EGOQ = "GBR United Kingdom";
+db.EGDN = "GBR United Kingdom";
+db.EGOW = "GBR United Kingdom";
 
 # REMOVE
 #
@@ -1654,6 +1663,22 @@ delete(db,"EHLE");
 delete(db,"EKMB");
 delete(db,"EKAH");
 delete(db,"KLAS");
+delete(db,"EGKB");
+delete(db,"EGBJ");
+delete(db,"EGDL");
+delete(db,"EGGP");
+delete(db,"EGHF");# 1990's
+delete(db,"EGHG");
+delete(db,"EGHH"); #- 1969
+delete(db,"EGHI"); #- 1946?
+delete(db,"EGHR"); #- 1940s
+delete(db,"EGKA"); #- ~1945
+delete(db,"EGLL"); #- Never. It's Heathrow.
+delete(db,"EGMH");
+delete(db,"EGSC");
+delete(db,"EGSH");
+delete(db,"EGTD");
+delete(db,"EGTE");
 
 # MODIFY
 #
