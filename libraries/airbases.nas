@@ -1634,7 +1634,7 @@ var db = {
 # Contains 1624 bases
 
 
-# Countries checked: Netherlands (PHJake), Denmark (Leto), UK (Sammy).
+# Countries checked: Netherlands (PHJake), Denmark (Leto), UK (Sammy), Cyprus (Leto).
 #
 # The above list is auto-generated, put custom changes here:
 
@@ -1665,7 +1665,9 @@ db.EGYD = "GBR United Kingdom";
 db.EGXC = "GBR United Kingdom";
 db.EGYE = "GBR United Kingdom";
 db.EGUB = "GBR United Kingdom";
-#db.CYCQ = "CAN Canada"; # UK airbase in canada?
+db.LCRE = "CYP Cyprus [UK]";#British Overseas Territory on the island of Cyprus
+db.LCGK = "CYP Turkish Republic of Northern Cyprus";
+
 
 # REMOVE
 #
@@ -1700,6 +1702,8 @@ db.UAOL = "KAZ Kazakhstan";
 db.VEAB = "IND India";
 db.VERP = "IND India";
 db.VEBR = "IND India";
+db.LCPH = "CYP Republic of Cyprus";
+db.LCRA = "CYP Cyprus [UK]";#British Overseas Territory on the island of Cyprus
 
 var pruneDB = func {
 	# Optimize DB by removing airbases FG does not support
