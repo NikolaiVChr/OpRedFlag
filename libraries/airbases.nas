@@ -358,6 +358,7 @@ var db = {
 	GCLP: "ESP Spain",                                    # Gran Canaria
 	GCRR: "ESP Spain",                                    # Lanzarote
 	GCTS: "ESP Spain",                                    # Tenerife Sur
+	GEML: "ESP Spain",                                    # Melilla
 	LEAB: "ESP Spain",                                    # Albacete
 	LEAS: "ESP Spain",                                    # Asturias
 	LECO: "ESP Spain",                                    # A Coruna
@@ -1211,6 +1212,7 @@ var db = {
 	KCBM: "USA United States",                            # COLUMBUS AFB
 	KCGF: "USA United States",                            # CUYAHOGA CO
 	KCHS: "USA United States",                            # Charleston AFB Intl
+	KCID: "USA United States",                            # The Eastern Iowa
 	KCJR: "USA United States",                            # Culpeper Regl
 	KCLT: "USA United States",                            # Charlotte Douglas Intl
 	KCNW: "USA United States",                            # TSTC Waco
@@ -1321,6 +1323,7 @@ var db = {
 	KHHG: "USA United States",                            # Huntington Muni
 	KHIF: "USA United States",                            # Hill AFB
 	KHII: "USA United States",                            # Lake Havasu City
+	KHKS: "USA United States",                            # HAWKINS FLD
 	KHLN: "USA United States",                            # Helena Regl
 	KHMN: "USA United States",                            # Holloman AFB
 	KHOP: "USA United States",                            # Campbell AAF
@@ -1623,7 +1626,8 @@ var db = {
 	FAYP: "ZAF South Africa",                             # Ysterplaat
 	FVTL: "ZWE Zimbabwe",                                 # Gweru-Thornhill Air Base
 };
-# Contains 1616 bases
+# Contains 1619 bases
+
 
 # The above list is auto-generated, put custom changes here:
 
