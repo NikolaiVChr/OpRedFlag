@@ -1644,3 +1644,14 @@ delete(db,"EHLE");
 delete(db,"EKMB");
 delete(db,"EKAH");
 delete(db,"KLAS");
+
+var pruneDB = func {
+	# Optimize DB by removing airbases FG does not support
+	foreach (var key ; keys(db)) {
+		if (airportinfo(key) == nil) {
+			delete(db, key);
+		}
+	}
+	print("Optimized airbase DB, it now has "~size(keys(db))~" entries.");
+}
+#pruneDB(); # it only removes around 150 bases, so not worth it
