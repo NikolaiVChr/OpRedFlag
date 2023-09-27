@@ -1683,6 +1683,7 @@ db.ESCF = "SWE Sweden";
 db.ESFR = "SWE Sweden";
 db.ESPE = "SWE Sweden";
 db.ESSV = "SWE Sweden";
+db.ESIB = "SWE Sweden";
 db.ENOL = "NOR Norway";
 db.ENRY = "NOR Norway";
 db.EBFS = "BEL Belgium"; # Florennes
@@ -1738,11 +1739,11 @@ delete(db,"YPPD"); #: "AUS Australia",                                # Port Hed
 delete(db,"YSCB"); #: "AUS Australia",                                # Canberra
 delete(db,"YSHW"); #: "AUS Australia",                                # Holsworthy
 delete(db,"YTCK"); #: "AUS Australia",                                # Torrens Creek
-delete(db,"ESDF");# "SWE Sweden",                                   # Ronneby Kallinge
-delete(db,"ESGG");# "SWE Sweden",                                   # Göteborg Landvetter
-delete(db,"ESOE");# "SWE Sweden",                                   # Orebro
-delete(db,"ESOK");# "SWE Sweden",                                   # Karlstad
-delete(db,"ESPA");# "SWE Sweden",                                   # Luleå Kallax
+#delete(db,"ESDF");# "SWE Sweden",                                   # Ronneby Kallinge
+#delete(db,"ESGG");# "SWE Sweden",                                   # Göteborg Landvetter
+#delete(db,"ESOE");# "SWE Sweden",                                   # Orebro
+#delete(db,"ESOK");# "SWE Sweden",                                   # Karlstad
+#delete(db,"ESPA");# "SWE Sweden",                                   # Luleå Kallax
 delete(db,"ENKR");# "NOR Norway",                                   # Kirkenes Høybuktmoen
 delete(db,"ENVA");# "NOR Norway",                                   # Trondheim Vaernes
 delete(db,"EBSU");# BEL
