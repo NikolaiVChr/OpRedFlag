@@ -1635,7 +1635,7 @@ var db = {
 
 
 # Countries checked: Netherlands (PHJake), Denmark (Leto), UK (Sammy), Cyprus (Leto), part of USA (pinto),
-#                    Australia (sryu1), Sweden (Leto), Norway (Leto).
+#                    Australia (sryu1), Sweden (Leto), Norway (Leto), Belgium (Bat).
 #
 # The above list is auto-generated, put custom changes here:
 
@@ -1685,6 +1685,8 @@ db.ESPE = "SWE Sweden";
 db.ESSV = "SWE Sweden";
 db.ENOL = "NOR Norway";
 db.ENRY = "NOR Norway";
+db.EBFS = "BEL Belgium"; # Florennes
+db.EBBL = "BEL Belgium"; # Kleine-Brogel
 
 # REMOVE
 #
@@ -1743,9 +1745,8 @@ delete(db,"ESOK");# "SWE Sweden",                                   # Karlstad
 delete(db,"ESPA");# "SWE Sweden",                                   # Luleå Kallax
 delete(db,"ENKR");# "NOR Norway",                                   # Kirkenes Høybuktmoen
 delete(db,"ENVA");# "NOR Norway",                                   # Trondheim Vaernes
-
-
-
+delete(db,"EBSU");# BEL
+delete(db,"EBTN");# BEL
 
 # MODIFY
 #
