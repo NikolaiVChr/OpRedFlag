@@ -1635,7 +1635,7 @@ var db = {
 
 
 # Countries checked: Netherlands (PHJake), Denmark (Leto), UK (Sammy), Cyprus (Leto), part of USA (pinto),
-#                    Australia (sryu1).
+#                    Australia (sryu1), Sweden (Leto), Norway (Leto).
 #
 # The above list is auto-generated, put custom changes here:
 
@@ -1675,6 +1675,16 @@ db.KPUB = "USA United States"; # Pueblo Memorial (USAF)
 db.YPLM = "AUS Australia";#  RAAF Base Learmonth
 db.YGNB = "AUS Australia";#  RAAF Base Glenbrook
 db.YBSG = "AUS Australia";#  RAAF Base Scherger
+db.ESQO = "SWE Sweden";
+db.ESMV = "SWE Sweden";
+db.ESNJ = "SWE Sweden";
+db.ESIA = "SWE Sweden";
+db.ESCF = "SWE Sweden";
+db.ESFR = "SWE Sweden";
+db.ESPE = "SWE Sweden";
+db.ESSV = "SWE Sweden";
+db.ENOL = "NOR Norway";
+db.ENRY = "NOR Norway";
 
 # REMOVE
 #
@@ -1726,6 +1736,16 @@ delete(db,"YPPD"); #: "AUS Australia",                                # Port Hed
 delete(db,"YSCB"); #: "AUS Australia",                                # Canberra
 delete(db,"YSHW"); #: "AUS Australia",                                # Holsworthy
 delete(db,"YTCK"); #: "AUS Australia",                                # Torrens Creek
+delete(db,"ESDF");# "SWE Sweden",                                   # Ronneby Kallinge
+delete(db,"ESGG");# "SWE Sweden",                                   # Göteborg Landvetter
+delete(db,"ESOE");# "SWE Sweden",                                   # Orebro
+delete(db,"ESOK");# "SWE Sweden",                                   # Karlstad
+delete(db,"ESPA");# "SWE Sweden",                                   # Luleå Kallax
+delete(db,"ENKR");# "NOR Norway",                                   # Kirkenes Høybuktmoen
+delete(db,"ENVA");# "NOR Norway",                                   # Trondheim Vaernes
+
+
+
 
 # MODIFY
 #
