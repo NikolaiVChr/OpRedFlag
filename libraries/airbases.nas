@@ -1666,6 +1666,7 @@ db.EGYD = "GBR United Kingdom";
 db.EGXC = "GBR United Kingdom";
 db.EGYE = "GBR United Kingdom";
 db.EGUB = "GBR United Kingdom";
+db.EGYP = "FLK Falkland Islands";
 db.LCRE = "CYP Cyprus [UK]";#British Overseas Territory on the island of Cyprus
 db.LCGK = "CYP Turkish Republic of Northern Cyprus";
 db.KSKA = "USA United States"; # Fairchild (USAF)
