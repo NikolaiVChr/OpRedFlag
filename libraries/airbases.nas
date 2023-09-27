@@ -1747,6 +1747,7 @@ delete(db,"ENKR");# "NOR Norway",                                   # Kirkenes H
 delete(db,"ENVA");# "NOR Norway",                                   # Trondheim Vaernes
 delete(db,"EBSU");# BEL
 delete(db,"EBTN");# BEL
+delete(db,"EBBR");# BEL
 
 # MODIFY
 #
