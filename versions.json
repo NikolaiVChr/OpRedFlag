@@ -44,7 +44,7 @@
     "path": "emesary-damage-system/nasal/ArmamentNotification.nas"
   },
   "geo-bridged-transmitter": {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "path": "emesary-damage-system/nasal/GeoBridgedTransmitter.nas"
   },
   "hack-canvas": {
