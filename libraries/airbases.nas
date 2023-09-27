@@ -1666,7 +1666,6 @@ db.EGYD = "GBR United Kingdom";
 db.EGXC = "GBR United Kingdom";
 db.EGYE = "GBR United Kingdom";
 db.EGUB = "GBR United Kingdom";
-db.EGYP = "FLK Falkland Islands";
 db.LCRE = "CYP Cyprus [UK]";#British Overseas Territory on the island of Cyprus
 db.LCGK = "CYP Turkish Republic of Northern Cyprus";
 db.KSKA = "USA United States"; # Fairchild (USAF)
@@ -1738,6 +1737,7 @@ db.VERP = "IND India";
 db.VEBR = "IND India";
 db.LCPH = "CYP Republic of Cyprus";
 db.LCRA = "CYP Cyprus [UK]";#British Overseas Territory on the island of Cyprus
+db.EGYP = "FLK Falkland Islands [UK]";
 
 var pruneDB = func {
 	# Optimize DB by removing airbases FG does not support
