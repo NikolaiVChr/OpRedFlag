@@ -1,1 +1,1 @@
-# OpRedFlag - Meta data for Operation Red Flag Aircraft and assets
+# OpRedFlag - Shared data and code for Operation Red Flag Aircraft and assets
