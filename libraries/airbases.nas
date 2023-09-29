@@ -660,36 +660,41 @@ var db = {
 	LLBG: "ISR Israel",                                   # Tel Aviv Ben Gurion
 	LLEK: "ISR Israel",                                   # Tel Nof
 	LLHS: "ISR Israel",                                   # Hatzor
-	LIPH: "ITA",                                          # Treviso Sant Angelo
-	LIAP: "ITA Italy",                                    # Aeroporto dei Parchi
 	LIBA: "ITA Italy",                                    # Amendola
 #	LIBJ: "ITA Italy",                                    # [H] Vibo Valentia Mil.  (heliport)
 	LIBN: "ITA Italy",                                    # Lecce - Galatina
-	LIBP: "ITA Italy",                                    # Pescara
-	LICA: "ITA Italy",                                    # Lamezia Terme
+	LIBR: "ITA Italy",                                    # Brindisi Casale
+	LIBV: "ITA Italy",                                    # Gioia Del Colle
+	LIRH: "ITA Italy",                                    # Frosinone
 	LICD: "ITA Italy",                                    # Lampedusa
-	LICP: "ITA Italy",                                    # Palermo Bocca di Falco
+	LICG: "ITA Italy",                                    # Pantelleria
+	LIRG: "ITA Italy",                                    # Guidonia
 	LICR: "ITA Italy",                                    # Reggio Calabria
 	LICT: "ITA Italy",                                    # Trapani Birgi
+	LICZ: "ITA Italy",                                    # Sigonella NAS
 	LIDT: "ITA Italy",                                    # Trento - Mattarello G. Caproni
-	LIEE: "ITA Italy",                                    # Cagliari Elmas
+	LIED: "ITA Italy",                                    # Decimomannu
 	LILH: "ITA Italy",                                    # VOGHERA
 	LILN: "ITA Italy",                                    # Venegono
 	LIMB: "ITA Italy",                                    # Bresso
 	LIMG: "ITA Italy",                                    # Albenga
-	LIMJ: "ITA Italy",                                    # Genova Sestri
+	LIRM: "ITA Italy",                                    # Grazzanise
 	LIMN: "ITA Italy",                                    # Cameri
 	LIPA: "ITA Italy",                                    # Aviano AB
-	LIPK: "ITA Italy",                                    # Forli
-	LIPO: "ITA Italy",                                    # Montichiari
+	LIPC: "ITA Italy",                                    # Cervia
+	LIPE: "ITA Italy",                                    # Pratica di Mare
+	LIPI: "ITA Italy",                                    # Rivolto
+	LIPH: "ITA Italy",                                    # Treviso Sant'Angelo
+	LIPK: "ITA Italy",                                    # Forlì
+	LIPL: "ITA Italy",                                    # Ghedi
 	LIPR: "ITA Italy",                                    # Rimini
 	LIPS: "ITA Italy",                                    # Istrana
 	LIPX: "ITA Italy",                                    # Verona Villafranca
 	LIPZ: "ITA Italy",                                    # Venezia Tessera
-	LIQQ: "ITA Italy",                                    # Serristori
 	LIQW: "ITA Italy",                                    # Sarzana Luni
 	LIRA: "ITA Italy",                                    # Ciampino
 	LIRP: "ITA Italy",                                    # Pisa
+	LIRL: "ITA Italy",                                    # Latina
 	LIRS: "ITA Italy",                                    # Grosseto
 	MKJP: "JAM Jamaica",                                  # Norman Manley Intl
 	OJAM: "JOR Jordan",                                   # Amman Marka Intl
