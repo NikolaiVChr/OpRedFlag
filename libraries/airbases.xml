@@ -57,8 +57,7 @@
 
           if (info.has_metar) {
             # Retrieve an updated METAR, and indicate that we've not got one currently.
-            fgcommand("request-metar", var n = props.Node.new({ "path": "/sim/gui/dialogs/airbases/selected-airport/metar",
-                                                         "station": airport_id}));
+            fgcommand("request-metar", var n = props.Node.new({ "path": "/sim/gui/dialogs/airbases/selected-airport/metar", "station": airport_id}));
           } else {
             # This airport has no METAR. Rather than cancelling the retrieve-metar command, simply set the TTL
             # to a very long time so it won't over-ride our message.
@@ -89,6 +88,13 @@
               fcount += 1;
             }
           }
+          
+          ##var info = airportinfo();#
+          #var na = findNavaidsWithinRange(info.lat, info.lon, 10, "tac");#
+
+          #if (na != nil and size(na)) {#
+          #  debug.dump(na[0]);#
+          #}#
 
           while (fcount < 13) {
             # zero remaining comms channels
