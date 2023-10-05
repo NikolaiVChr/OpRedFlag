@@ -300,6 +300,10 @@ var Station = {
 		}
 	},
 
+	reloadCurrentSet: func {
+		me.loadSet(me.currentSet);
+	},
+
 	loadingSet: func (set) {
 		# Override this function. Gets called after a set is loaded, but before any mass, fdm, gui settings is applied.
 	},
