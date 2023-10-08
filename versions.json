@@ -8,7 +8,7 @@
     "path": "emesary-damage-system/nasal/missile-code.nas"
   },
   "radar-system": {
-    "version": "2.0.1",
+    "version": "2.0.2",
     "path": "radar/radar-system.nas"
   },
   "radar-system-database": {
