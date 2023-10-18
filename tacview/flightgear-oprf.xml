@@ -74,6 +74,30 @@
 		</Properties>
 	</DefaultProperties>
 
+	<DefaultProperties Id="Bomb.M-71">
+		<Criteria>
+			<Name>M71</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>M-71</ShortName>
+			<LongName>M-71</LongName>
+			<FullName>M-71</FullName>
+			<Shape>Bomb.GBU-12.obj</Shape>
+		</Properties>
+	</DefaultProperties>
+
+	<DefaultProperties Id="Bomb.M-71R">
+		<Criteria>
+			<Name>M71R</Name>
+		</Criteria>
+		<Properties>
+			<ShortName>M-71R</ShortName>
+			<LongName>M-71 Retarded</LongName>
+			<FullName>M-71 Retarded</FullName>
+			<Shape>Bomb.GBU-12.obj</Shape>
+		</Properties>
+	</DefaultProperties>
+
 	<DefaultProperties Id="FixedWing.KC-137" Base="FixedWing.Tanker">
 		<Criteria>
 			<Name>KC-137R</Name>
