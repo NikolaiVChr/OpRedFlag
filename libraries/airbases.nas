@@ -1709,6 +1709,11 @@ db.LIRM = "ITA Italy";                                    # Grazzanise
 db.EDUR = "DEU Germany (UK)" # Bruggen 
 db.ETUO = "DEU Germany (UK)" # Gutersloh
 db.ETUL = "DEU Germany (UK)" # Laarbruch
+db.ETAR = "DEU Germany (USA)" # Ramstein 
+db.ETSE = "DEU Germany" # Erding
+db.ETAD = "DEU Germany (USA)" # Spangdahlem Air Base  ETAD, former code EDAD)
+db.EDAD = "DEU Germany (USA)";
+db.ETOU = "DEU Germany (USA)" # Lucius D. Clay Kaserne
 
 # REMOVE
 #
