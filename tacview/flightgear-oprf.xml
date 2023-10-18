@@ -74,7 +74,7 @@
 		</Properties>
 	</DefaultProperties>
 
-	<DefaultProperties Id="Bomb.M-71">
+	<DefaultProperties Id="Bomb.M-71" Base="Bomb.Unguided">
 		<Criteria>
 			<Name>M71</Name>
 		</Criteria>
@@ -86,7 +86,7 @@
 		</Properties>
 	</DefaultProperties>
 
-	<DefaultProperties Id="Bomb.M-71R">
+	<DefaultProperties Id="Bomb.M-71R" Base="Bomb.Unguided">
 		<Criteria>
 			<Name>M71R</Name>
 		</Criteria>
