@@ -419,8 +419,8 @@ var DamageRecipient =
                       #printf("Missile Approach Warning from %03d degrees.", bearing);
                       damageLog.push(sprintf("Missile Approach Warning from %03d degrees from %s.", bearing, notification.Callsign));
                       if (rwr_to_screen) screen.log.write(sprintf("Missile Approach Warning from %03d degrees.", bearing), 1,0.5,0);# temporary till someone models a RWR in RIO seat
-                  } else {
-                      #printf("Missile Approach Warning");
+                  } elsif (CWIOn) {
+                      #printf("Missile Approach Warning (semi-active).");
                       damageLog.push(sprintf("Missile Approach Warning from %s.", notification.Callsign));
                       if (rwr_to_screen) screen.log.write(sprintf("Missile Approach Warning (semi-active)."), 1,0.5,0);# temporary till someone models a RWR in RIO seat
                   }
