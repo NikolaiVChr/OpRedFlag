@@ -64,7 +64,7 @@
     "path": "libraries/airbases.xml"
   },
   "asset-fire-control": {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "path": "assets/fire-control.nas"
   },
   "asset-radar-logic": {
