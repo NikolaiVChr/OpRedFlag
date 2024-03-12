@@ -170,7 +170,7 @@ var Database = {
 	"F-111C":                 {hasAirRadar:1, rwrCode:"F1", baseThreat:defaultFighterThreat},
 	"daVinci_F-111G":         {hasAirRadar:1, rwrCode:"F1", baseThreat:defaultFighterThreat},
 	"A-10-modelB":            {baseThreat:defaultFighterThreat},
-	"Su-15":                  {hasAirRadar:1, rwrCode: "SU", baseThreat:defaultFighterThreat},
+	"Su-15":                  {hasAirRadar:1, rwrCode:"SU", baseThreat:defaultFighterThreat},
 	"jaguar":                 {baseThreat:defaultFighterThreat},
 	"Jaguar-GR3":             {baseThreat:defaultFighterThreat},
 	"E3B":                    {hasAirRadar:1, rwrCode:"S", radarHorzRadius: 180, isAwacs: 1},
