@@ -161,6 +161,7 @@ var Database = {
 	"F-15J_ADTW":             {hasAirRadar:1, rwrCode:"15", baseThreat:defaultFighterThreat},
 	"F-15DJ_ADTW":            {hasAirRadar:1, rwrCode:"15", baseThreat:defaultFighterThreat},
 	"f16":                    {hasAirRadar:1, rwrCode:"16", baseThreat:defaultFighterThreat},
+	"Mig-28":                 {hasAirRadar:1, rwrCode:"16", baseThreat:defaultFighterThreat},# Scenario opponent
 	"F-16CJ":                 {hasAirRadar:1, rwrCode:"16", baseThreat:defaultFighterThreat},
 	"FA-18C_Hornet":          {hasAirRadar:1, rwrCode:"18", baseThreat:defaultFighterThreat},
 	"FA-18D_Hornet":          {hasAirRadar:1, rwrCode:"18", baseThreat:defaultFighterThreat},
