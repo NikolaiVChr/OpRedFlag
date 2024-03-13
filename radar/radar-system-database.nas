@@ -225,7 +225,7 @@ var Database = {
 	"MiG-25":                 {hasAirRadar:1, rwrCode:"25", baseThreat:defaultFighterThreat},
 	"A-6E":                   {hasAirRadar:1, rwrCode:"A6", baseThreat:defaultFighterThreat},
 	"ea-6b":                  {hasAirRadar:1, rwrCode:"A6", baseThreat:defaultFighterThreat},
-	"F-117":                  {baseThreat:defaultFighterThreat},
+	"F-117":                  {},
 	"F-22-Raptor":            {hasAirRadar:1, rwrCode:"22", baseThreat:defaultFighterThreat},
 	"F-35A":                  {hasAirRadar:1, rwrCode:"35", baseThreat:defaultFighterThreat},
 	"F-35B":                  {hasAirRadar:1, rwrCode:"35", baseThreat:defaultFighterThreat},
