@@ -91,7 +91,7 @@ public class ScrapeAPT {
         		if (current.isReady()) bases.add(current);
         	}
 		}
-		System.out.println("#\n# License: GPL 2.0, Copyright: Laminar research\n#");
+		System.out.println("#\n# License: GPL 2.0 or later, Copyright: Laminar research\n#");
 		System.out.println("# Requirements to be in list:\n#  Must have ICAO. Must have country listed. Must have either a MIL sign, parking spots for fighters or runways used for military.");
 		System.out.println("# List was auto-generated from APT 1100 file. Heliports are auto commented.\n#");
 		System.out.println("var db = {");

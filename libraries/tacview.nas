@@ -1,5 +1,5 @@
 # Copyright by Justin Nicholson (aka Pinto)
-# Released under the GNU General Public License version 2.0
+# Released under the GNU General Public License version 2.0 or any later version
 #
 # Authors: Pinto, Nikolai V. Chr., Colin Geniet
 
