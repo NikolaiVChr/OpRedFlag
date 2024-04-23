@@ -4,11 +4,11 @@
     "path": "emesary-damage-system/nasal/vector.nas"
   },
   "missile-code": {
-    "version": "1.1.4",
+    "version": "1.1.5",
     "path": "emesary-damage-system/nasal/missile-code.nas"
   },
   "radar-system": {
-    "version": "2.0.4",
+    "version": "2.0.5",
     "path": "radar/radar-system.nas"
   },
   "radar-system-database": {
@@ -16,7 +16,7 @@
     "path": "radar/radar-system-database.nas"
   },
   "damage": {
-    "version": "1.4.4",
+    "version": "1.4.5",
     "path": "emesary-damage-system/nasal/damage.nas"
   },
   "iff": {
@@ -24,7 +24,7 @@
     "path": "libraries/iff.nas"
   },
   "datalink": {
-    "version": "1.1.0",
+    "version": "1.1.1",
     "path": "libraries/datalink.nas"
   },
   "station-manager": {
@@ -64,7 +64,7 @@
     "path": "libraries/airbases.xml"
   },
   "asset-fire-control": {
-    "version": "1.0.1",
+    "version": "1.0.2",
     "path": "assets/fire-control.nas"
   },
   "asset-radar-logic": {
