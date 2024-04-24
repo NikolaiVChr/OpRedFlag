@@ -7,7 +7,6 @@ Next release:
 Bigger tasks
 ============
 ECM over emesary
-Change warhead/shell/rocket index to be 2 bytes in emesary, we are running out of room.
 
 Done needs testing
 ==================
@@ -16,4 +15,3 @@ WWI
 ===
 Damage shader: albedo, scorched and alpha.
 Localized damage: Calc location on shooter.
-Many hits: Average somehow.

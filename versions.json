@@ -16,7 +16,7 @@
     "path": "radar/radar-system-database.nas"
   },
   "damage": {
-    "version": "1.4.6",
+    "version": "1.4.7",
     "path": "emesary-damage-system/nasal/damage.nas"
   },
   "iff": {
