@@ -73,10 +73,14 @@
   },
   "scenario-aircraft-homey": {
     "version": "1.0.0",
-    "path": "AI/Aircraft/Moving_Targets_at_KXTA.xml"
+    "path": "AI/Moving_Targets_at_KXTA.xml"
   },
   "scenario-factory-homey": {
     "version": "1.0.0",
-    "path": "AI/Aircraft/KXTA_factory.xml"
+    "path": "AI/KXTA_factory.xml"
+  },
+  "scenario-targets-tonopah": {
+    "version": "1.0.0",
+    "path": "AI/target_range_near_KTNX.xml"
   }
 }
