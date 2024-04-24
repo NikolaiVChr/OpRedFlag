@@ -72,7 +72,7 @@
     "path": "assets/radar-logic.nas"
   },
   "scenario-aircraft-homey": {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "path": "AI/Moving_Targets_at_KXTA.xml"
   },
   "scenario-factory-homey": {
