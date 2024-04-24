@@ -5,15 +5,43 @@
 	<scenario>
 
 		<description>
-			The following scenario creates a factory around KXTA.
-			Make sure to enable the KXTA-demo (download here:
-			https://raw.githubusercontent.com/NikolaiVChr/OpRedFlag/master/AI/Moving_Targets_at_KXTA.xml)
-			first and then activate this scenario,
-			after enabling the KXTA-demo you can
-			disable the scenario again.
+			The following scenario creates a factory near KXTA.
 
 			VFA-101 "Grimreapers" (OPRF-member)
 		</description>
+
+		<nasal>
+			<load>
+				<![CDATA[
+				  var finish = 0;
+
+				  var loop2 = func () {
+				  	  # put everything on ground level
+				      foreach( var tanker; props.globals.getNode("/ai/models",1).getChildren("ship") ) {
+				        var lat = tanker.getNode("position/latitude-deg").getValue();
+				        var lon = tanker.getNode("position/longitude-deg").getValue();
+				        var node = tanker.getNode("position/altitude-ft", 1 );
+				        var alt = geo.elevation(lat, lon);
+				        node.setDoubleValue(alt==nil?0:alt*M2FT+1.5);
+				        tanker.getNode("controls/tgt-speed-kts", 1).setDoubleValue(0); # hmm, this control seems to have changed in 2019.1?! Well works now.               
+				      }
+				      if (finish == 0) {
+				        settimer(loop2, 10.00);
+				        return;
+				      }
+				      print("Factory scenario proper unloaded.");
+				  }
+				  loop2();
+				    debug.dump('Factory scenario load script complete');
+				]]>
+			</load>
+			<unload>
+				<![CDATA[
+				  finish = 1;
+				  debug.dump('Factory scenario unload script complete');
+				  ]]>
+			</unload>
+		</nasal>
 
 		<entry>
 			<type>ship</type>
