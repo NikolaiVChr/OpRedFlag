@@ -107,7 +107,7 @@
       <heading type="double">030</heading>
       <altitude type="double">4750</altitude>
       <collision-length>5</collision-length><!-- meters of bounding circle radius -->
-      <collision-height>5</collision-height><!-- bounding circle top cut off from center (and its similar cut below) -->
+      <collision-height>5</collision-height><!-- bounding circle top cut off from center (and its similar cut below). These 'cuts' do not roll or bank with the AI model, its an altitude comparison. -->
       <search-order>PREFER_DATA</search-order><!-- "DATA_ONLY", "PREFER_AI", "PREFER_DATA" -->
     </entry>
 
