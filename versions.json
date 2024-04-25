@@ -76,7 +76,7 @@
     "path": "AI/Moving_Targets_at_KXTA.xml"
   },
   "scenario-factory-homey": {
-    "version": "1.0.1",
+    "version": "1.0.2",
     "path": "AI/KXTA_factory.xml"
   },
   "scenario-targets-tonopah": {
