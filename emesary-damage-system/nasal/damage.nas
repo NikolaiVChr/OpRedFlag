@@ -358,6 +358,7 @@ var DamageRecipient =
                       } elsif (index == 95) {
                         smoke = 3;
                         if (notification.Position.distance_to(ownPos)*M2NM > 5) {
+                          # Don't bother to show flares further than 5 nm
                           return emesary.Transmitter.ReceiptStatus_OK;
                         }
                       } else {
