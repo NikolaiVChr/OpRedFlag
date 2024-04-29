@@ -382,7 +382,7 @@ var DamageRecipient =
                 if (tacview_supported and (getprop("sim/multiplay/txhost") != "mpserver.opredflag.com" or m28_auto)) {
                   # Record armament flightpath in tacview
                   if (tacview.starttime) {
-                    var tacID = left(md5(notification.Callsign~notification.UniqueIdentity),6);
+                    var tacID = left(md5(notification.Callsign~notification.UniqueIdentity~typ[4]),6);
                     var elapsed = getprop("sim/time/elapsed-sec");
                     lastSeenTacObject[tacID] = elapsed;
                     if (notification.Kind == DESTROY) {
