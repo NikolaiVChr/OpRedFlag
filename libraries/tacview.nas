@@ -118,7 +118,7 @@ var startwrite = func() {
     }
     var meta = sprintf(",DataSource=FlightGear %s,DataRecorder=%s v%s", getprop("sim/version/flightgear"), getprop("sim/description"), getprop("sim/aircraft-version"));
     thread.lock(mutexWrite);
-    write("FileType=text/acmi/tacview\nFileVersion=2.1\n");
+    write("FileType=text/acmi/tacview\nFileVersion=2.2\n");
     write("0,ReferenceTime=" ~ timestamp ~ meta ~ "\n#0\n");
     write(myplaneID ~ ",T=" ~ getLon() ~ "|" ~ getLat() ~ "|" ~ getAlt() ~ "|" ~ getRoll() ~ "|" ~ getPitch() ~ "|" ~ getHeading() ~ ",Name="~tacview_ac_type~",CallSign="~getprop("/sim/multiplay/callsign")~color~"\n"); #
     thread.unlock(mutexWrite);
