@@ -861,12 +861,15 @@ var db = {
 	DNMK: "NGA Nigeria",                                  # Makurdi
 	DNMM: "NGA Nigeria",                                  # Murtala Muhammed Intl
 	MNMG: "NIC Nicaragua",                                # Managua Sandino Intl
-	EHAM: "NLD Netherlands",                              # 
-	EHDR: "NLD Netherlands",                              # Drachten
+	EHDL: "NLD Netherlands",                              # Deelen
+	EHDP: "NLD Netherlands",                              # De Peel
 	EHEH: "NLD Netherlands",                              # Eindhoven
 	EHGR: "NLD Netherlands",                              # Gilze Rijen
-	EHLE: "NLD Netherlands",                              # 
+	EHKD: "NLD Netherlands",                              # De Kooy
 	EHLW: "NLD Netherlands",                              # Leeuwarden
+	EHSB: "NLD Netherlands",                              # Soesterberg
+	EHTW: "NLD Netherlands",                              # Twente
+	EHVB: "NLD Netherlands",                              # Valkenburg
 	EHVK: "NLD Netherlands",                              # Volkel
 	EHWO: "NLD Netherlands",                              # Woensdrecht
 	ENAN: "NOR Norway",                                   # Andøya Andenes
