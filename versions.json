@@ -28,7 +28,7 @@
     "path": "libraries/datalink.nas"
   },
   "station-manager": {
-    "version": "1.2.1",
+    "version": "1.2.2",
     "path": "libraries/station-manager.nas"
   },
   "rcs-mand": {
