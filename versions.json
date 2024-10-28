@@ -12,7 +12,7 @@
     "path": "radar/radar-system.nas"
   },
   "radar-system-database": {
-    "version": "1.1.15",
+    "version": "1.1.16",
     "path": "radar/radar-system-database.nas"
   },
   "damage": {
